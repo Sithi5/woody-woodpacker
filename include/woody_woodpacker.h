@@ -13,9 +13,11 @@
 #ifndef WOODY_WOODPACKER_H
 #define WOODY_WOODPACKER_H
 
-#include <stdio.h>
-#include <fcntl.h> //OPEN
-
-#include <unistd.h> //READ REMOVE WHEN NOT NEEDED
-
+#include <stdio.h> // FFLUSH FPUTS PERROR
+#include <fcntl.h> // OPEN
+#include <sys/syscall.h> // SYSCALL
+#include <string.h> // STRERROR
+#include <sys/mman.h> // MMAP MUNMAP
+#include <unistd.h> // CLOSE EXIT LSEEK
+#include <errno.h>
 #endif
