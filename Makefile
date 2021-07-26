@@ -12,7 +12,7 @@ DEBUG				=	no
 O2					=	no
 
 CC					:=	gcc
-GEN					:=	"Generation in mode"
+GEN					:=	Generation in mode
 
 ifeq ($(WALL), yes)
 	CC				:=	$(CC) -Wall
@@ -49,9 +49,9 @@ ifeq ($(GEN), "Generation in mode")
 endif
 
 # Name
-SRC_NAME		=	main.c							\
+SRC_NAME		=	main.c				\
 
-INCLUDE_NAME		=	woody_woodpacker.h						\
+INCLUDE_NAME	=	woody_woodpacker.h	\
 
 
 # Path
@@ -59,42 +59,42 @@ SRC_PATH		=	./src/
 
 OBJ_PATH 		=	./obj/
 
-INCLUDE_PATH		=	./include/
+INCLUDE_PATH	=	./include/
 
 # Name + Path
-SRC				=	$(addprefix	$(SRC_PATH),		$(SRC_NAME))
+SRC				=	$(addprefix $(SRC_PATH), $(SRC_NAME))
 
-OBJ				=	$(patsubst	$(SRC_PATH)%.c,	$(OBJ_PATH)%.o,	$(SRC))
+OBJ				=	$(patsubst $(SRC_PATH)%.c, $(OBJ_PATH)%.o,	$(SRC))
 
-INCLUDE			=	$(addprefix	$(INCLUDE_PATH),	$(INCLUDE_NAME))
+INCLUDE			=	$(addprefix $(INCLUDE_PATH), $(INCLUDE_NAME))
 
 # Text format
-_DEF				=	$'\033[0m
-_END				=	$'\033[0m
-_GRAS				=	$'\033[1m
-_SOUL				=	$'\033[4m
-_CLIG				=	$'\033[5m
-_SURL				=	$'\033[7m
+_DEF		=	\033[0m
+_END		=	\033[0m
+_GRAS		=	\033[1m
+_SOUL		=	\033[4m
+_CLIG		=	\033[5m
+_SURL		=	\033[7m
 
 # Colors
-_BLACK				=	$'\033[30m
-_RED				=	$'\033[31m
-_GREEN				=	$'\033[32m
-_YELLOW				=	$'\033[33m
-_BLUE				=	$'\033[34m
-_PURPLE				=	$'\033[35m
-_CYAN				=	$'\033[36m
-_GREY				=	$'\033[37m
+_BLACK		=	\033[30m
+_RED		=	\033[31m
+_GREEN		=	\033[32m
+_YELLOW		=	\033[33m
+_BLUE		=	\033[34m
+_PURPLE		=	\033[35m
+_CYAN		=	\033[36m
+_GREY		=	\033[37m
 
 # Background
-_IBLACK				=	$'\033[40m
-_IRED				=	$'\033[41m
-_IGREEN				=	$'\033[42m
-_IYELLOW			=	$'\033[43m
-_IBLUE				=	$'\033[44m
-_IPURPLE			=	$'\033[45m
-_ICYAN				=	$'\033[46m
-_IGREY				=	$'\033[47m
+_IBLACK		=	\033[40m
+_IRED		=	\033[41m
+_IGREEN		=	\033[42m
+_IYELLOW	=	\033[43m
+_IBLUE		=	\033[44m
+_IPURPLE	=	\033[45m
+_ICYAN		=	\033[46m
+_IGREY		=	\033[47m
 
 all: $(NAME)
 
