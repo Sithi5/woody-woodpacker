@@ -12,12 +12,13 @@
 
 #include "woody_woodpacker.h"
 
-// illegal funtion needed for debug
 void print_loop(int fd) {
     char buf[11];
+    int l;
     printf("fd = %d \n", fd);
-    while (read(fd, &buf, 10) > 0)
-    {
+    while ((l = read(fd, &buf, 10)) > 0)
+    {  
+        buf[l] = '\0';
         printf("%s", buf);
     }
 }
