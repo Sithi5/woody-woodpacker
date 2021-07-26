@@ -1,3 +1,9 @@
+# Clion
+.idea
+
+# vscode
+.vscode
+
 # Prerequisites
 *.d
 
