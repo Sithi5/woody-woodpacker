@@ -14,5 +14,8 @@
 #define WOODY_WOODPACKER_H
 
 #include <stdio.h>
+#include <fcntl.h> //OPEN
+
+#include <unistd.h> //READ REMOVE WHEN NOT NEEDED
 
 #endif
