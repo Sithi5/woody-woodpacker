@@ -6,7 +6,7 @@
 /*   By: mabouce <ma.sithis@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/26 12:12:08 by mabouce           #+#    #+#             */
-/*   Updated: 2021/07/27 09:51:52 by mabouce          ###   ########.fr       */
+/*   Updated: 2021/07/27 09:55:01 by mabouce          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,5 +77,8 @@ int main(int ac, char **av)
     {
         error(ERROR_CLOSE, woody);
     }
+
+    free(woody->file_data);
+    free(woody);
     return 0;
 }
