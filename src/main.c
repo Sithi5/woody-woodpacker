@@ -6,7 +6,7 @@
 /*   By: mabouce <ma.sithis@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/26 12:12:08 by mabouce           #+#    #+#             */
-/*   Updated: 2021/07/27 15:07:03 by mabouce          ###   ########.fr       */
+/*   Updated: 2021/07/27 15:12:02 by mabouce          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void cipher_woody_file_data(t_woody *woody)
 void write_woody_file(t_woody *woody)
 {
     int fd;
-    if ((fd = open("woody", O_WRONLY | O_CREAT, 0777)) == -1)
+    if ((fd = open("woody", O_WRONLY | O_CREAT, S_IRWXU)) == -1)
     {
         error(ERROR_OPEN, woody);
     }
