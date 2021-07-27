@@ -28,12 +28,12 @@ typedef struct s_woody
     int fd;
     int file_data_len;
     int cipher_len;
+    unsigned long int *addr_entrypoint;
 
     const char *file_name;
     char *file_data;
     char *cipher;
     char *architecture;
-    char *addr_entrypoint;
 
     void *mmap_ptr;
 } t_woody;
