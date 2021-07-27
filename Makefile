@@ -50,6 +50,7 @@ endif
 
 # Name
 SRC_NAME		=	main.c				\
+					crypto.c			\
 					utils.c				\
 					error.c				\
 
