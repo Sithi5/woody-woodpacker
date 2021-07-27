@@ -6,7 +6,7 @@
 /*   By: mabouce <ma.sithis@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/26 12:22:18 by mabouce           #+#    #+#             */
-/*   Updated: 2021/07/27 09:21:19 by mabouce          ###   ########.fr       */
+/*   Updated: 2021/07/27 15:07:03 by mabouce          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,18 @@
 #include <sys/syscall.h> // SYSCALL
 #include <string.h>      // STRERROR
 #include <sys/mman.h>    // MMAP MUNMAP
-#include <unistd.h>      // CLOSE EXIT LSEEK
+#include <unistd.h>      // CLOSE EXIT LSEEK WRITE
 #include <errno.h>
 
 typedef struct s_woody
 {
     int fd;
+    int file_data_len;
+    int cipher_len;
 
     const char *file_name;
     char *file_data;
+    char *cipher;
 } t_woody;
 
 /*
@@ -61,5 +64,6 @@ typedef struct s_woody
 #define B_CYA "\033[1;36m"
 
 void error(int err, t_woody *woody);
+void free_woody(t_woody *woody);
 
 #endif

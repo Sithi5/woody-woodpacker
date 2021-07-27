@@ -50,6 +50,7 @@ endif
 
 # Name
 SRC_NAME		=	main.c				\
+					utils.c				\
 					error.c				\
 
 INCLUDE_NAME	=	woody_woodpacker.h	\
