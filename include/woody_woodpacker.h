@@ -13,24 +13,25 @@
 #ifndef WOODY_WOODPACKER_H
 #define WOODY_WOODPACKER_H
 
-#include <stdio.h>       // FFLUSH FPUTS PERROR
-#include <stdlib.h>      // MALOC/FREE
-#include <fcntl.h>       // OPEN
+#include <stdio.h>		 // FFLUSH FPUTS PERROR
+#include <stdlib.h>		 // MALOC/FREE
+#include <fcntl.h>		 // OPEN
 #include <sys/syscall.h> // SYSCALL
-#include <string.h>      // STRERROR
-#include <sys/mman.h>    // MMAP MUNMAP
-#include <unistd.h>      // CLOSE EXIT LSEEK WRITE
+#include <string.h>		 // STRERROR
+#include <sys/mman.h>	 // MMAP MUNMAP
+#include <unistd.h>		 // CLOSE EXIT LSEEK WRITE
 #include <errno.h>
 
 typedef struct s_woody
 {
-    int fd;
-    int file_data_len;
-    int cipher_len;
+	int fd;
+	int file_data_len;
+	int cipher_len;
 
-    const char *file_name;
-    char *file_data;
-    char *cipher;
+	const char *file_name;
+	char *file_data;
+	char *cipher;
+	char *architecture;
 } t_woody;
 
 /*
@@ -44,6 +45,7 @@ typedef struct s_woody
 #define ERROR_MALLOC 5
 #define ERROR_INPUT_ARGUMENTS_NUMBERS 6
 #define ERROR_LSEEK 7
+#define ERROR_NOT_ELF64 8
 
 /*
 ** COLOR
