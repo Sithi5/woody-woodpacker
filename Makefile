@@ -50,6 +50,7 @@ endif
 
 # Name
 SRC_NAME		=	main.c				\
+					output_woody_file.c	\
 					crypto.c			\
 					utils.c				\
 					error.c				\

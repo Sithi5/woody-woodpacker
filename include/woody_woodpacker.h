@@ -6,7 +6,7 @@
 /*   By: mabouce <ma.sithis@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/26 12:22:18 by mabouce           #+#    #+#             */
-/*   Updated: 2021/07/27 15:16:35 by mabouce          ###   ########.fr       */
+/*   Updated: 2021/07/27 15:29:54 by mabouce          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,5 +66,6 @@ typedef struct s_woody
 void error(int err, t_woody *woody);
 void free_woody(t_woody *woody);
 void cipher_woody_file_data(t_woody *woody);
+void write_woody_file(t_woody *woody);
 
 #endif

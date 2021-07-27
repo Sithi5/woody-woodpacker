@@ -1,31 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   crypto.c                                           :+:      :+:    :+:   */
+/*   output_woody_file.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mabouce <ma.sithis@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/27 15:29:31 by mabouce           #+#    #+#             */
-/*   Updated: 2021/07/27 15:29:31 by mabouce          ###   ########.fr       */
+/*   Created: 2021/07/27 15:29:23 by mabouce           #+#    #+#             */
+/*   Updated: 2021/07/27 15:29:23 by mabouce          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "woody_woodpacker.h"
 
-/* Simple XOR encryption/decryption algorithm. */
-static char *XORCipher(char *data, char *key, int data_len, int key_len)
+void write_woody_file(t_woody *woody)
 {
-    char *output = (char *)malloc(sizeof(char) * data_len);
-
-    for (int i = 0; i < data_len; ++i)
+    int fd;
+    if ((fd = open("woody", O_WRONLY | O_CREAT, S_IRWXU)) == -1)
     {
-        output[i] = data[i] ^ key[i % key_len];
+        error(ERROR_OPEN, woody);
     }
-
-    return output;
-}
-
-void cipher_woody_file_data(t_woody *woody)
-{
-    woody->cipher = XORCipher(woody->file_data, "MyXorKey", woody->file_data_len, 5);
+    if ((write(fd, woody->file_data, woody->file_data_len)) == -1)
+    {
+        error(ERROR_WRITE, woody);
+    }
+    if ((close(fd)) == -1)
+    {
+        error(ERROR_CLOSE, woody);
+    }
 }
