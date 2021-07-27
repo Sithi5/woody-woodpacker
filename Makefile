@@ -6,7 +6,7 @@ NAME				=	woody_woodpacker
 # Compilation mode
 WALL				=	yes
 WEXTRA				=	yes
-WERROR				=	yes
+WERROR				=	no
 FSANITIZE			=	no
 DEBUG				=	no
 O2					=	no
@@ -50,6 +50,7 @@ endif
 
 # Name
 SRC_NAME		=	main.c				\
+					error.c				\
 
 INCLUDE_NAME	=	woody_woodpacker.h	\
 
