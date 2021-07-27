@@ -29,6 +29,10 @@ static void error_msg(int err)
                                          : 0;
     err == ERROR_LSEEK ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_LSEEK\n", err)
                        : 0;
+    if (errno != 0)
+    {
+        fprintf(stderr, RED "errno " DEF ": %d -> %s\n", errno, strerror(errno));
+    }
 }
 
 void error(int err, t_woody *woody)

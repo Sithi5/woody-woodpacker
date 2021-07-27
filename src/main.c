@@ -6,7 +6,7 @@
 /*   By: mabouce <ma.sithis@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/26 12:12:08 by mabouce           #+#    #+#             */
-/*   Updated: 2021/07/27 15:30:23 by mabouce          ###   ########.fr       */
+/*   Updated: 2021/07/27 15:47:06 by mabouce          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int main(int ac, char **av)
         error(ERROR_INPUT_ARGUMENTS_NUMBERS, woody);
     }
 
-    if ((woody->fd = open(av[1], O_RDONLY)) == -1)
+    if ((woody->fd = open(av[1], O_WRONLY)) == -1)
     {
         error(ERROR_OPEN, woody);
     }
