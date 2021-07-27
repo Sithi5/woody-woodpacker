@@ -34,6 +34,11 @@ void get_file_data(t_woody *woody)
 			error(ERROR_READ, woody);
 		}
 		woody->file_data[woody->file_data_len] = '\0';
+		/* Copy binary address map*/
+		if (!(woody->mmap_ptr = mmap(0, woody->file_data_len, PROT_READ, MAP_PRIVATE, woody->fd, 0)))
+		{
+			error(ERROR_MMAP, woody);
+		}
 	}
 	else
 	{
