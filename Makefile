@@ -49,10 +49,11 @@ ifeq ($(GEN), "Generation in mode")
 endif
 
 # Name
-SRC_NAME		=	main.c				\
-					crypto.c			\
-					utils.c				\
-					error.c				\
+SRC_NAME		=	main.c						\
+					crypto.c					\
+					utils.c						\
+					error.c						\
+					check_binary_architecture.c	\
 
 INCLUDE_NAME	=	woody_woodpacker.h	\
 
