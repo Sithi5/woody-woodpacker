@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mabouce <ma.sithis@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/27 15:36:46 by mabouce           #+#    #+#             */
-/*   Updated: 2021/07/27 15:36:46 by mabouce          ###   ########.fr       */
+/*   Created: 2021/07/27 15:29:29 by mabouce           #+#    #+#             */
+/*   Updated: 2021/07/27 15:29:29 by mabouce          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,10 @@ static void error_msg(int err)
                                          : 0;
     err == ERROR_LSEEK ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_LSEEK\n", err)
                        : 0;
+    if (errno != 0)
+    {
+        fprintf(stderr, RED "errno " DEF ": %d -> %s\n", errno, strerror(errno));
+    }
 }
 
 void error(int err, t_woody *woody)
