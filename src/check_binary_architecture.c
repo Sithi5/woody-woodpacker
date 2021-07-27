@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_binary_architecture.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maginist <maginist@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mabouce <ma.sithis@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/27 15:29:10 by maginist          #+#    #+#             */
-/*   Updated: 2021/07/27 15:29:10 by maginist         ###   ########.fr       */
+/*   Updated: 2021/07/27 18:40:56 by mabouce          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

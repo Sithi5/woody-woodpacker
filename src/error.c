@@ -29,7 +29,7 @@ static void error_msg(int err)
                                          : 0;
     err == ERROR_LSEEK ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_LSEEK\n", err)
                        : 0;
-    err == ERROR_NOT_ELF64 ? (stderr, RED "error" DEF ": %d -> ERROR_NOT_ELF64\n", err)
+    err == ERROR_NOT_ELF64 ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_NOT_ELF64\n", err)
                            : 0;
     err == ERROR_MMAP ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_MMAP\n", err)
                       : 0;

@@ -6,36 +6,36 @@
 /*   By: mabouce <ma.sithis@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/26 12:22:18 by mabouce           #+#    #+#             */
-/*   Updated: 2021/07/27 15:36:28 by mabouce          ###   ########.fr       */
+/*   Updated: 2021/07/27 18:43:00 by mabouce          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef WOODY_WOODPACKER_H
 #define WOODY_WOODPACKER_H
 
-#include <stdio.h>		 // FFLUSH FPUTS PERROR
-#include <stdlib.h>		 // MALOC/FREE
-#include <fcntl.h>		 // OPEN
+#include <stdio.h>       // FFLUSH FPUTS PERROR
+#include <stdlib.h>      // MALOC/FREE
+#include <fcntl.h>       // OPEN
 #include <sys/syscall.h> // SYSCALL
-#include <string.h>		 // STRERROR
-#include <sys/mman.h>	 // MMAP MUNMAP
-#include <unistd.h>		 // CLOSE EXIT LSEEK WRITE
-#include <elf.h>		 // ELF STRUCTURE
+#include <string.h>      // STRERROR
+#include <sys/mman.h>    // MMAP MUNMAP
+#include <unistd.h>      // CLOSE EXIT LSEEK WRITE
+#include <elf.h>         // ELF STRUCTURE
 #include <errno.h>
 
 typedef struct s_woody
 {
-	int fd;
-	int file_data_len;
-	int cipher_len;
+    int fd;
+    int file_data_len;
+    int cipher_len;
 
-	const char *file_name;
-	char *file_data;
-	char *cipher;
-	char *architecture;
-	char *addr_entrypoint;
+    const char *file_name;
+    char *file_data;
+    char *cipher;
+    char *architecture;
+    char *addr_entrypoint;
 
-	void *mmap_ptr;
+    void *mmap_ptr;
 } t_woody;
 
 /*
@@ -74,5 +74,6 @@ typedef struct s_woody
 void error(int err, t_woody *woody);
 void free_woody(t_woody *woody);
 void cipher_woody_file_data(t_woody *woody);
+void check_binary_architecture(t_woody *woody);
 
 #endif
