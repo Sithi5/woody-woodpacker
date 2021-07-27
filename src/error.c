@@ -22,7 +22,6 @@ static void error_msg(int err)
 void error(int err, t_woody *woody)
 {
     error_msg(err);
-    woody->file_name ? free(woody->file_name) : 0;
     woody->file_data ? free(woody->file_data) : 0;
     exit(err);
 }

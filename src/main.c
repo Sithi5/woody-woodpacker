@@ -6,7 +6,7 @@
 /*   By: mabouce <ma.sithis@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/26 12:12:08 by mabouce           #+#    #+#             */
-/*   Updated: 2021/07/27 09:35:57 by mabouce          ###   ########.fr       */
+/*   Updated: 2021/07/27 09:51:52 by mabouce          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,11 @@ void get_file_data(t_woody *woody)
         }
 
         /* Read the entire file */
-        read(woody->fd, woody->file_data, buff_size);
-        woody->file_data[buff_size] = "\0";
+        if (read(woody->fd, woody->file_data, buff_size) == -1)
+        {
+            error(ERROR_READ, woody);
+        }
+        woody->file_data[buff_size] = '\0';
     }
     else
     {
