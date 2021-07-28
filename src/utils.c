@@ -18,7 +18,6 @@ void free_woody(t_woody *woody)
     if (woody)
     {
         woody->mmap_ptr ? munmap(woody->mmap_ptr, woody->file_data_len) : 0;
-        woody->file_data ? free(woody->file_data) : 0;
         woody->cipher ? free(woody->cipher) : 0;
         free(woody);
     }
