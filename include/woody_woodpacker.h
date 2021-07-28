@@ -50,7 +50,6 @@ typedef struct s_woody
 #define ERROR_LSEEK 7
 #define ERROR_NOT_ELF64 8
 #define ERROR_MMAP 9
-#define ERROR_MUNMAP 10
 
 /*
 ** COLOR

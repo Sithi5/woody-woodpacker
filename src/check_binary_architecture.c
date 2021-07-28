@@ -22,10 +22,6 @@ void check_binary_architecture(t_woody *woody)
           header->e_ident[3] == ELFMAG3 &&          /*Identify executable and ELF*/
           header->e_ident[EI_CLASS] == ELFCLASS64)) /*architecture 64 bits*/
     {
-        if (munmap(woody->mmap_ptr, woody->file_data_len) == -1)
-        {
-            error(ERROR_MUNMAP, woody);
-        }
         error(ERROR_NOT_ELF64, woody);
     }
     woody->addr_entrypoint = (void *)header->e_entry;
