@@ -31,7 +31,6 @@ typedef struct s_woody
     unsigned long int *addr_entrypoint;
 
     const char *file_name;
-    char *file_data;
     char *cipher;
     char *architecture;
 

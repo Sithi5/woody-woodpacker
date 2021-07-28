@@ -16,24 +16,11 @@ void get_file_data(t_woody *woody)
 {
     if ((woody->file_data_len = lseek(woody->fd, 0, SEEK_END)) != -1)
     {
-        /* Allocate our buffer to that size. */
-        if (!(woody->file_data = malloc(sizeof(char) * (woody->file_data_len + 1))))
-        {
-            error(ERROR_MALLOC, woody);
-        }
-
         /* Go back to the start of the file. */
         if (lseek(woody->fd, 0, SEEK_SET) != 0)
         {
             error(ERROR_LSEEK, woody);
         }
-
-        /* Read the entire file */
-        if (read(woody->fd, woody->file_data, woody->file_data_len) == -1)
-        {
-            error(ERROR_READ, woody);
-        }
-        woody->file_data[woody->file_data_len] = '\0';
         /* Copy binary address map*/
         if (!(woody->mmap_ptr = mmap(0, woody->file_data_len, PROT_READ, MAP_PRIVATE, woody->fd, 0)))
         {
@@ -52,10 +39,6 @@ void write_woody_file(t_woody *woody)
     if ((fd = open("woody", O_WRONLY | O_CREAT, S_IRWXU)) == -1)
     {
         error(ERROR_OPEN, woody);
-    }
-    if ((write(fd, woody->file_data, woody->file_data_len)) == -1)
-    {
-        error(ERROR_WRITE, woody);
     }
     if ((close(fd)) == -1)
     {
