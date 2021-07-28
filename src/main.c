@@ -16,6 +16,10 @@ void get_file_data(t_woody *woody)
 {
     if ((woody->file_data_len = lseek(woody->fd, 0, SEEK_END)) != -1)
     {
+        /*
+        ** TODO remove next line
+        */
+        woody->new_file_data_len = woody->file_data_len;
         /* Go back to the start of the file. */
         if (lseek(woody->fd, 0, SEEK_SET) != 0)
         {
@@ -36,13 +40,18 @@ void get_file_data(t_woody *woody)
 void write_woody_file(t_woody *woody)
 {
     int fd;
-    if ((fd = open("woody", O_WRONLY | O_CREAT, S_IRWXU)) == -1)
+
+    if ((fd = open(OUTPUT_FILE_NAME, O_WRONLY | O_CREAT, S_IRWXU)) < 0)
     {
         error(ERROR_OPEN, woody);
     }
-    if ((close(fd)) == -1)
+    if ((write(fd, woody->mmap_ptr, woody->new_file_data_len)) < 0)
     {
-        error(ERROR_CLOSE, woody);
+        if ((close(fd)) < 0)
+        {
+            error(ERROR_CLOSE, woody);
+        }
+        error(ERROR_WRITE, woody);
     }
 }
 
@@ -61,7 +70,6 @@ int main(int ac, char **av)
     {
         error(ERROR_OPEN, woody);
     }
-    woody->file_name = av[1];
     get_file_data(woody);
     if ((close(woody->fd)) == -1)
     {

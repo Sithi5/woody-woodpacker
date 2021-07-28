@@ -28,5 +28,5 @@ static char *XORCipher(char *data, char *key, int data_len, int key_len)
 void cipher_woody_file_data(t_woody *woody)
 {
     // woody->cipher = XORCipher(woody->file_data, "MyXorKey", woody->file_data_len, 5);
-    printf("Encryption Key : MyXorKey\n");
+    // printf("Encryption Key : MyXorKey\n");
 }

@@ -27,15 +27,17 @@ typedef struct s_woody
 {
     int fd;
     int file_data_len;
+    int new_file_data_len;
     int cipher_len;
     unsigned long int *addr_entrypoint;
 
-    const char *file_name;
     char *cipher;
     char *architecture;
 
     void *mmap_ptr;
 } t_woody;
+
+#define OUTPUT_FILE_NAME "woody"
 
 /*
 ** ERROR
