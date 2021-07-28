@@ -49,7 +49,6 @@ void get_file_data(t_woody *woody)
 void write_woody_file(t_woody *woody)
 {
     int fd;
-    printf("....WOODY.....\n");
     if ((fd = open("woody", O_WRONLY | O_CREAT, S_IRWXU)) == -1)
     {
         error(ERROR_OPEN, woody);
