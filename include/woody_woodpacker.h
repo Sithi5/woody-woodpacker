@@ -26,13 +26,10 @@
 typedef struct s_woody
 {
     int fd;
-    int file_data_len;
-    int new_file_data_len;
-    int cipher_len;
-    unsigned long int *addr_entrypoint;
-
-    char *cipher;
-    char *architecture;
+    int old_binary_data_len;
+    int new_binary_data_len;
+    unsigned long int *new_binary_entry_point;
+    unsigned long int *old_binary_entry_point;
 
     void *mmap_ptr;
 } t_woody;

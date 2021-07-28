@@ -14,19 +14,19 @@
 
 void get_file_data(t_woody *woody)
 {
-    if ((woody->file_data_len = lseek(woody->fd, 0, SEEK_END)) != -1)
+    if ((woody->old_binary_data_len = lseek(woody->fd, 0, SEEK_END)) != -1)
     {
         /*
         ** TODO remove next line
         */
-        woody->new_file_data_len = woody->file_data_len;
+        woody->new_binary_data_len = woody->old_binary_data_len;
         /* Go back to the start of the file. */
         if (lseek(woody->fd, 0, SEEK_SET) != 0)
         {
             error(ERROR_LSEEK, woody);
         }
         /* Copy binary address map*/
-        if (!(woody->mmap_ptr = mmap(0, woody->file_data_len, PROT_READ, MAP_PRIVATE, woody->fd, 0)))
+        if (!(woody->mmap_ptr = mmap(0, woody->old_binary_data_len, PROT_READ, MAP_PRIVATE, woody->fd, 0)))
         {
             error(ERROR_MMAP, woody);
         }
@@ -45,7 +45,7 @@ void write_woody_file(t_woody *woody)
     {
         error(ERROR_OPEN, woody);
     }
-    if ((write(fd, woody->mmap_ptr, woody->new_file_data_len)) < 0)
+    if ((write(fd, woody->mmap_ptr, woody->new_binary_data_len)) < 0)
     {
         if ((close(fd)) < 0)
         {

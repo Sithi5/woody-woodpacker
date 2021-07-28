@@ -24,5 +24,5 @@ void check_binary_architecture(t_woody *woody)
     {
         error(ERROR_NOT_ELF64, woody);
     }
-    woody->addr_entrypoint = (void *)header->e_entry;
+    woody->old_binary_entry_point = (void *)header->e_entry;
 }
