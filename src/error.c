@@ -46,7 +46,7 @@ void error(int err, t_woody *woody)
     error_msg(err);
     if (woody->mmap_ptr)
     {
-        if (munmap(woody->mmap_ptr, woody->file_data_len) < 0)
+        if (munmap(woody->mmap_ptr, woody->file_data_len) == -1)
             error(ERROR_MUNMAP, woody);
     }
     free_woody(woody);

@@ -17,7 +17,7 @@ void check_binary_architecture(t_woody *woody)
     Elf64_Ehdr *header;
 
     header = (Elf64_Ehdr *)woody->mmap_ptr;
-    if (!(header->e_type == ET_EXEC && header->e_ident[1] == ELFMAG1 &&
+    if (!((header->e_type == ET_EXEC || header->e_type == ET_DYN) && header->e_ident[1] == ELFMAG1 &&
           header->e_ident[2] == ELFMAG2 &&
           header->e_ident[3] == ELFMAG3 &&          /*Identify executable and ELF*/
           header->e_ident[EI_CLASS] == ELFCLASS64)) /*architecture 64 bits*/
