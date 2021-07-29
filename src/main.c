@@ -75,7 +75,6 @@ int main(int ac, char **av)
 
     get_file_data(av[1], woody);
     check_elf_header(woody);
-    cipher_woody_file_data(woody);
     write_woody_file(woody);
     free_woody(woody);
     return 0;
