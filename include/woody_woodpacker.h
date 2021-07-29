@@ -13,6 +13,10 @@
 #ifndef WOODY_WOODPACKER_H
 #define WOODY_WOODPACKER_H
 
+/*
+** includes
+*/
+
 #include <stdio.h>       // FFLUSH FPUTS PERROR
 #include <stdlib.h>      // MALOC/FREE
 #include <fcntl.h>       // OPEN
@@ -23,6 +27,16 @@
 #include <elf.h>         // ELF STRUCTURE
 #include <errno.h>
 #include <stdbool.h>
+
+/*
+** Defines
+*/
+
+#define OUTPUT_FILE_NAME "woody"
+
+/*
+** struct
+*/
 
 typedef struct s_woody
 {
@@ -42,10 +56,18 @@ typedef struct s_woody
     void *mmap_ptr;
 } t_woody;
 
-#define OUTPUT_FILE_NAME "woody"
+/*
+** Functions definitions
+*/
+
+void error(int err, t_woody *woody);
+void free_woody(t_woody *woody);
+void cipher_woody_file_data(t_woody *woody);
+void check_binary_architecture(t_woody *woody);
+void infection(t_woody *woody);
 
 /*
-** ERROR
+** ERROR CODE
 */
 
 #define ERROR_OPEN 1
@@ -77,11 +99,5 @@ typedef struct s_woody
 #define B_MAG "\033[1;35m"
 #define CYA "\033[0;36m"
 #define B_CYA "\033[1;36m"
-
-void error(int err, t_woody *woody);
-void free_woody(t_woody *woody);
-void cipher_woody_file_data(t_woody *woody);
-void check_binary_architecture(t_woody *woody);
-Elf64_Off get_padding_size(t_woody *woody, Elf64_Ehdr *header);
 
 #endif
