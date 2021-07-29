@@ -78,6 +78,7 @@ void elf64_pt_note_to_pt_load_infection(t_woody *woody);
 #define ERROR_MMAP 9
 #define ERROR_NOT_EXECUTABLE_BINARY 10
 #define ERROR_ELF_NOT_LITTLE_ENDIAN 11
+#define ERROR_FILE_SIZE_TOO_SMALL 12
 
 /*
 ** COLOR

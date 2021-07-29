@@ -12,7 +12,7 @@
 
 #include "woody_woodpacker.h"
 
-void get_file_data(char *file_name, t_woody *woody)
+void get_binary_data(char *file_name, t_woody *woody)
 {
     if ((woody->fd = open(file_name, O_RDONLY)) == -1)
     {
@@ -20,6 +20,10 @@ void get_file_data(char *file_name, t_woody *woody)
     }
     if ((woody->old_binary_data_len = lseek(woody->fd, 0, SEEK_END)) != -1)
     {
+        if (woody->old_binary_data_len < sizeof(Elf64_Ehdr))
+        {
+            close(woody->fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_FILE_SIZE_TOO_SMALL, woody);
+        }
         /*
         ** TODO remove next line
         */
@@ -75,7 +79,7 @@ int main(int ac, char **av)
         error(ERROR_INPUT_ARGUMENTS_NUMBERS, woody);
     }
 
-    get_file_data(av[1], woody);
+    get_binary_data(av[1], woody);
     check_elf_header(woody);
     elf64_pt_note_to_pt_load_infection(woody);
     write_woody_file(woody);
