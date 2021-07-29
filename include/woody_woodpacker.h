@@ -6,12 +6,16 @@
 /*   By: mabouce <ma.sithis@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/26 12:22:18 by mabouce           #+#    #+#             */
-/*   Updated: 2021/07/27 15:36:28 by mabouce          ###   ########.fr       */
+/*   Updated: 2021/07/27 18:43:00 by mabouce          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef WOODY_WOODPACKER_H
 #define WOODY_WOODPACKER_H
+
+/*
+** includes
+*/
 
 #include <stdio.h>       // FFLUSH FPUTS PERROR
 #include <stdlib.h>      // MALOC/FREE
@@ -20,21 +24,49 @@
 #include <string.h>      // STRERROR
 #include <sys/mman.h>    // MMAP MUNMAP
 #include <unistd.h>      // CLOSE EXIT LSEEK WRITE
+#include <elf.h>         // ELF STRUCTURE
 #include <errno.h>
+#include <stdbool.h>
+
+/*
+** Defines
+*/
+
+#define OUTPUT_FILE_NAME "woody"
+
+/*
+** struct
+*/
 
 typedef struct s_woody
 {
     int fd;
-    int file_data_len;
-    int cipher_len;
+    int old_binary_data_len;
+    int new_binary_data_len;
+    int woody_size;
+    unsigned long int *new_binary_entry_point;
+    unsigned long int *old_binary_entry_point;
+    bool is_exec;
+    bool is_dyn;
 
-    const char *file_name;
-    char *file_data;
-    char *cipher;
+    Elf64_Addr woody_load_addr;
+    Elf64_Off woody_offset;
+    Elf64_Off segment_end_offset;
+
+    void *mmap_ptr;
 } t_woody;
 
 /*
-** ERROR
+** Functions definitions
+*/
+
+void error(int err, t_woody *woody);
+void free_woody(t_woody *woody);
+void check_elf_header(t_woody *woody);
+void infection(t_woody *woody);
+
+/*
+** ERROR CODE
 */
 
 #define ERROR_OPEN 1
@@ -44,6 +76,10 @@ typedef struct s_woody
 #define ERROR_MALLOC 5
 #define ERROR_INPUT_ARGUMENTS_NUMBERS 6
 #define ERROR_LSEEK 7
+#define ERROR_NOT_ELF64 8
+#define ERROR_MMAP 9
+#define ERROR_NOT_EXECUTABLE_BINARY 10
+#define ERROR_ELF_NOT_LITTLE_ENDIAN 11
 
 /*
 ** COLOR
@@ -62,9 +98,5 @@ typedef struct s_woody
 #define B_MAG "\033[1;35m"
 #define CYA "\033[0;36m"
 #define B_CYA "\033[1;36m"
-
-void error(int err, t_woody *woody);
-void free_woody(t_woody *woody);
-void cipher_woody_file_data(t_woody *woody);
 
 #endif

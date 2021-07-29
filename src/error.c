@@ -29,6 +29,14 @@ static void error_msg(int err)
                                          : 0;
     err == ERROR_LSEEK ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_LSEEK\n", err)
                        : 0;
+    err == ERROR_NOT_ELF64 ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_NOT_ELF64\n", err)
+                           : 0;
+    err == ERROR_MMAP ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_MMAP\n", err)
+                      : 0;
+    err == ERROR_NOT_EXECUTABLE_BINARY ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_NOT_EXECUTABLE_BINARY\n", err)
+                                       : 0;
+    err == ERROR_ELF_NOT_LITTLE_ENDIAN ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_ELF_NOT_LITTLE_ENDIAN\n", err)
+                                       : 0;
     if (errno != 0)
     {
         fprintf(stderr, RED "errno " DEF ": %d -> %s\n", errno, strerror(errno));
