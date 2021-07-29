@@ -50,6 +50,8 @@ typedef struct s_woody
     bool is_dyn;
 
     Elf64_Ehdr *elf_header;
+    Elf64_Phdr *program_header_table;
+    Elf64_Shdr *section_header_table;
 
     void *mmap_ptr;
 } t_woody;
