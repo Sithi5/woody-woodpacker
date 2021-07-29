@@ -14,27 +14,24 @@
 
 void get_binary_data(char *file_name, t_woody *woody)
 {
+
     if ((woody->fd = open(file_name, O_RDONLY)) == -1)
     {
         error(ERROR_OPEN, woody);
     }
-    if ((woody->old_binary_data_len = lseek(woody->fd, 0, SEEK_END)) != -1)
+    if ((woody->binary_data_len = lseek(woody->fd, 0, SEEK_END)) != -1)
     {
-        if (woody->old_binary_data_len < sizeof(Elf64_Ehdr))
+        if (woody->binary_data_len < sizeof(Elf64_Ehdr))
         {
             close(woody->fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_FILE_SIZE_TOO_SMALL, woody);
         }
-        /*
-        ** TODO remove next line
-        */
-        woody->new_binary_data_len = woody->old_binary_data_len;
         /* Go back to the start of the file. */
         if (lseek(woody->fd, 0, SEEK_SET) != 0)
         {
             close(woody->fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_LSEEK, woody);
         }
         /* Copy binary address map*/
-        if (!(woody->mmap_ptr = mmap(0, woody->old_binary_data_len, PROT_READ, MAP_PRIVATE, woody->fd, 0)))
+        if (!(woody->mmap_ptr = mmap(0, woody->binary_data_len, PROT_READ | PROT_WRITE, MAP_PRIVATE, woody->fd, 0)))
         {
             close(woody->fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_MMAP, woody);
         }
@@ -44,7 +41,6 @@ void get_binary_data(char *file_name, t_woody *woody)
         close(woody->fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_LSEEK, woody);
     }
     close(woody->fd) == -1 ? error(ERROR_CLOSE, woody) : 0;
-    // Set some elf_value and flags
 }
 
 void set_elf_ptr(t_woody *woody)
@@ -64,7 +60,7 @@ void write_woody_file(t_woody *woody)
     {
         error(ERROR_OPEN, woody);
     }
-    if ((write(fd, woody->mmap_ptr, woody->new_binary_data_len)) < 0)
+    if ((write(fd, woody->mmap_ptr, woody->binary_data_len)) < 0)
     {
         if ((close(fd)) < 0)
         {

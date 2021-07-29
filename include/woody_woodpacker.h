@@ -41,11 +41,10 @@
 typedef struct s_woody
 {
     int fd;
-    int old_binary_data_len;
-    int new_binary_data_len;
-    int woody_size;
-    unsigned long int *new_binary_entry_point;
-    unsigned long int *old_binary_entry_point;
+    int infection_size;
+    int binary_data_len;
+    unsigned long int new_entry_point;
+    unsigned long int old_entry_point;
     bool is_exec;
     bool is_dyn;
 
