@@ -47,7 +47,7 @@ void get_binary_data(char *file_name, t_woody *woody)
     // Set some elf_value and flags
 }
 
-void set_elf_object(t_woody *woody)
+void set_elf_ptr(t_woody *woody)
 {
     woody->elf_header = (Elf64_Ehdr *)woody->mmap_ptr;
     woody->program_header_table = (Elf64_Phdr *)((woody->mmap_ptr + woody->elf_header->e_phoff));
@@ -86,7 +86,7 @@ int main(int ac, char **av)
     }
 
     get_binary_data(av[1], woody);
-    set_elf_object(woody);
+    set_elf_ptr(woody);
     check_elf_header(woody);
     elf64_pt_note_to_pt_load_infection(woody);
     write_woody_file(woody);
