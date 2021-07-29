@@ -75,6 +75,7 @@ int main(int ac, char **av)
 
     get_file_data(av[1], woody);
     check_elf_header(woody);
+    elf64_pt_note_to_pt_load_infection(woody);
     write_woody_file(woody);
     free_woody(woody);
     return 0;

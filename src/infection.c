@@ -12,6 +12,6 @@
 
 #include "woody_woodpacker.h"
 
-void infection(t_woody *woody)
+void elf64_pt_note_to_pt_load_infection(t_woody *woody)
 {
 }
