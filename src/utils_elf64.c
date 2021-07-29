@@ -15,12 +15,6 @@
 void check_elf_header(t_woody *woody)
 {
 
-    printf("la\n");
-    if (!woody->elf_header || woody->elf_header->e_ident)
-    {
-        error(ERROR_NOT_ELF64, woody);
-    }
-
     /*
     The first check we make to the Ehdr is whether it is an Elf64 file.
     This means that the first four bytes (e_ident[EI_MAG0..EI_MAG3])
@@ -31,7 +25,6 @@ void check_elf_header(t_woody *woody)
     for e_ident[EI_ABIVERSION] we want 0 (zero).
     The seven bytes at e_ident[EI_PAD] should be zero.
     */
-    printf("la2\n");
     if (!(woody->elf_header->e_ident[1] == ELFMAG1 &&
           woody->elf_header->e_ident[2] == ELFMAG2 &&
           woody->elf_header->e_ident[3] == ELFMAG3 &&
@@ -43,7 +36,6 @@ void check_elf_header(t_woody *woody)
     {
         error(ERROR_NOT_ELF64, woody);
     }
-    printf("la3\n");
     /*e_ident[EI_DATA] to equal ELFDATA2LSB (little-endian data structures).*/
     if (!(woody->elf_header->e_ident[EI_DATA] == ELFDATA2LSB))
     {
