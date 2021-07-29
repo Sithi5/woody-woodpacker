@@ -52,6 +52,7 @@ endif
 SRC_NAME		=	main.c						\
 					crypto.c					\
 					utils.c						\
+					utils_elf64.c				\
 					error.c						\
 					check_binary_architecture.c	\
 

@@ -22,14 +22,22 @@
 #include <unistd.h>      // CLOSE EXIT LSEEK WRITE
 #include <elf.h>         // ELF STRUCTURE
 #include <errno.h>
+#include <stdbool.h>
 
 typedef struct s_woody
 {
     int fd;
     int old_binary_data_len;
     int new_binary_data_len;
+    int woody_size;
     unsigned long int *new_binary_entry_point;
     unsigned long int *old_binary_entry_point;
+    bool is_exec;
+    bool is_dyn;
+
+    Elf64_Addr woody_load_addr;
+    Elf64_Off woody_offset;
+    Elf64_Off segment_end_offset;
 
     void *mmap_ptr;
 } t_woody;
@@ -49,6 +57,8 @@ typedef struct s_woody
 #define ERROR_LSEEK 7
 #define ERROR_NOT_ELF64 8
 #define ERROR_MMAP 9
+#define ERROR_NOT_EXECUTABLE_BINARY 10
+#define ERROR_ELF_NOT_LITTLE_ENDIAN 11
 
 /*
 ** COLOR
@@ -72,5 +82,6 @@ void error(int err, t_woody *woody);
 void free_woody(t_woody *woody);
 void cipher_woody_file_data(t_woody *woody);
 void check_binary_architecture(t_woody *woody);
+Elf64_Off get_padding_size(t_woody *woody, Elf64_Ehdr *header);
 
 #endif

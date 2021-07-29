@@ -12,8 +12,12 @@
 
 #include "woody_woodpacker.h"
 
-void get_file_data(t_woody *woody)
+void get_file_data(char *file_name, t_woody *woody)
 {
+    if ((woody->fd = open(file_name, O_RDONLY)) == -1)
+    {
+        error(ERROR_OPEN, woody);
+    }
     if ((woody->old_binary_data_len = lseek(woody->fd, 0, SEEK_END)) != -1)
     {
         /*
@@ -23,18 +27,19 @@ void get_file_data(t_woody *woody)
         /* Go back to the start of the file. */
         if (lseek(woody->fd, 0, SEEK_SET) != 0)
         {
-            error(ERROR_LSEEK, woody);
+            close(woody->fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_LSEEK, woody);
         }
         /* Copy binary address map*/
         if (!(woody->mmap_ptr = mmap(0, woody->old_binary_data_len, PROT_READ, MAP_PRIVATE, woody->fd, 0)))
         {
-            error(ERROR_MMAP, woody);
+            close(woody->fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_MMAP, woody);
         }
     }
     else
     {
-        error(ERROR_LSEEK, woody);
+        close(woody->fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_LSEEK, woody);
     }
+    close(woody->fd) == -1 ? error(ERROR_CLOSE, woody) : 0;
 }
 
 void write_woody_file(t_woody *woody)
@@ -65,16 +70,11 @@ int main(int ac, char **av)
     {
         error(ERROR_INPUT_ARGUMENTS_NUMBERS, woody);
     }
+    woody->is_exec = true;
+    woody->is_dyn = true;
 
-    if ((woody->fd = open(av[1], O_RDONLY)) == -1)
-    {
-        error(ERROR_OPEN, woody);
-    }
-    get_file_data(woody);
-    if ((close(woody->fd)) == -1)
-    {
-        error(ERROR_CLOSE, woody);
-    }
+    get_file_data(av[1], woody);
+
     check_binary_architecture(woody);
     cipher_woody_file_data(woody);
     write_woody_file(woody);
