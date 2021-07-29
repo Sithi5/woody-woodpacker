@@ -74,7 +74,7 @@ int main(int ac, char **av)
     woody->is_dyn = true;
 
     get_file_data(av[1], woody);
-    check_binary_architecture(woody);
+    check_elf_header(woody);
     cipher_woody_file_data(woody);
     write_woody_file(woody);
     free_woody(woody);

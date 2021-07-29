@@ -12,7 +12,7 @@
 
 #include "woody_woodpacker.h"
 
-void check_binary_architecture(t_woody *woody)
+void check_elf_header(t_woody *woody)
 {
     Elf64_Ehdr *header;
 

@@ -63,7 +63,7 @@ typedef struct s_woody
 void error(int err, t_woody *woody);
 void free_woody(t_woody *woody);
 void cipher_woody_file_data(t_woody *woody);
-void check_binary_architecture(t_woody *woody);
+void check_elf_header(t_woody *woody);
 void infection(t_woody *woody);
 
 /*
