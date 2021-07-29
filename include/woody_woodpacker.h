@@ -49,9 +49,7 @@ typedef struct s_woody
     bool is_exec;
     bool is_dyn;
 
-    Elf64_Addr woody_load_addr;
-    Elf64_Off woody_offset;
-    Elf64_Off segment_end_offset;
+    Elf64_Ehdr *elf_header;
 
     void *mmap_ptr;
 } t_woody;

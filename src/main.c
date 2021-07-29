@@ -40,6 +40,10 @@ void get_file_data(char *file_name, t_woody *woody)
         close(woody->fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_LSEEK, woody);
     }
     close(woody->fd) == -1 ? error(ERROR_CLOSE, woody) : 0;
+    // Set some elf_value and flags
+    woody->elf_header = (Elf64_Ehdr *)woody->mmap_ptr;
+    woody->is_exec = true;
+    woody->is_dyn = true;
 }
 
 void write_woody_file(t_woody *woody)
@@ -70,8 +74,6 @@ int main(int ac, char **av)
     {
         error(ERROR_INPUT_ARGUMENTS_NUMBERS, woody);
     }
-    woody->is_exec = true;
-    woody->is_dyn = true;
 
     get_file_data(av[1], woody);
     check_elf_header(woody);
