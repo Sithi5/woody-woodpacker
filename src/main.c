@@ -86,7 +86,7 @@ int main(int ac, char **av)
     get_binary_data(av[1], woody);
     set_elf_ptr(woody);
     check_ehdr(woody);
-    elf64_pt_note_to_pt_load_infection(woody);
+    silvio_text_infection(woody);
     write_woody_file(woody);
     free_woody(woody);
     return 0;

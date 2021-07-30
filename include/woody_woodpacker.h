@@ -41,18 +41,20 @@
 typedef struct s_woody
 {
     int fd;
-    int infection_size;
+    int payload_size;
     long unsigned int binary_data_len;
-    unsigned long int new_entry_point;
-    unsigned long int old_entry_point;
-    bool is_exec;
-    bool is_dyn;
+
+    void *mmap_ptr;
 
     Elf64_Ehdr *ehdr;
     Elf64_Phdr *phdr;
     Elf64_Shdr *shdr;
+    Elf64_Addr new_entry_point;
+    Elf64_Addr old_entry_point;
 
-    void *mmap_ptr;
+    bool is_exec;
+    bool is_dyn;
+
 } t_woody;
 
 /*
@@ -63,7 +65,7 @@ void error(int err, t_woody *woody);
 void free_woody(t_woody *woody);
 void check_ehdr(t_woody *woody);
 void elf64_pt_note_to_pt_load_infection(t_woody *woody);
-
+void silvio_text_infection(t_woody *woody);
 /*
 ** ERROR CODE
 */
