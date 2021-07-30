@@ -48,9 +48,9 @@ typedef struct s_woody
     bool is_exec;
     bool is_dyn;
 
-    Elf64_Ehdr *elf_header;
-    Elf64_Phdr *program_header_table;
-    Elf64_Shdr *section_header_table;
+    Elf64_Ehdr *ehdr;
+    Elf64_Phdr *phdr;
+    Elf64_Shdr *shdr;
 
     void *mmap_ptr;
 } t_woody;
@@ -61,7 +61,7 @@ typedef struct s_woody
 
 void error(int err, t_woody *woody);
 void free_woody(t_woody *woody);
-void check_elf_header(t_woody *woody);
+void check_ehdr(t_woody *woody);
 void elf64_pt_note_to_pt_load_infection(t_woody *woody);
 
 /*

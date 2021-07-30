@@ -45,9 +45,10 @@ void get_binary_data(char *file_name, t_woody *woody)
 
 void set_elf_ptr(t_woody *woody)
 {
-    woody->elf_header = (Elf64_Ehdr *)woody->mmap_ptr;
-    woody->program_header_table = (Elf64_Phdr *)((woody->mmap_ptr + woody->elf_header->e_phoff));
-    woody->section_header_table = (Elf64_Shdr *)((woody->mmap_ptr + woody->elf_header->e_shoff));
+    woody->ehdr = (Elf64_Ehdr *)woody->mmap_ptr;
+    woody->old_entry_point = woody->ehdr->e_entry;
+    woody->phdr = (Elf64_Phdr *)((woody->mmap_ptr + woody->ehdr->e_phoff));
+    woody->shdr = (Elf64_Shdr *)((woody->mmap_ptr + woody->ehdr->e_shoff));
     woody->is_exec = true;
     woody->is_dyn = true;
 }
@@ -83,7 +84,7 @@ int main(int ac, char **av)
 
     get_binary_data(av[1], woody);
     set_elf_ptr(woody);
-    check_elf_header(woody);
+    check_ehdr(woody);
     elf64_pt_note_to_pt_load_infection(woody);
     write_woody_file(woody);
     free_woody(woody);
