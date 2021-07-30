@@ -2,6 +2,10 @@
 woody_woodpacker
 woody
 
+# zettlr
+.ztr*
+
+
 # Clion
 .idea
 
