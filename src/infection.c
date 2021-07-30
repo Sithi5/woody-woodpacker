@@ -15,39 +15,6 @@
 // TODO: Not sure of this value, should create a function to get page size.
 #define PAGE_SZ64 0x2000
 
-void set_payload_size(t_woody *woody)
-{
-    // Do this function or set payload size elsewhere.
-    woody->payload_size = 10;
-}
-
-void elf64_pt_note_to_pt_load_infection(t_woody *woody)
-{
-    printf("start of infection function\n");
-    int index = 0;
-    set_payload_size(woody);
-    woody->old_entry_point = woody->ehdr->e_entry;
-    // Loop in any program sections to find a PT_NOTE section.
-    while (index < woody->ehdr->e_phnum)
-    {
-        printf("vaddr = %ld\n", woody->phdr[index].p_vaddr);
-        if (woody->phdr[index].p_type == PT_NOTE)
-        {
-            woody->phdr[index].p_type = 0;
-            woody->phdr[index].p_flags = PF_R | PF_X;
-            woody->phdr[index].p_vaddr = 0xc000000 + (uint64_t)woody->binary_data_len;
-            woody->phdr[index].p_filesz = woody->payload_size;
-            woody->phdr[index].p_memsz = woody->payload_size;
-            woody->phdr[index].p_offset += (uint64_t)woody->binary_data_len;
-            printf("previous entry = %ld\n", woody->ehdr->e_entry);
-            woody->ehdr->e_entry = woody->phdr[index].p_vaddr;
-            printf("new entry = %ld\n", woody->ehdr->e_entry);
-        }
-        index++;
-    }
-    printf("end of infection function\n");
-}
-
 void silvio_text_infection(t_woody *woody)
 {
     Elf64_Addr payload_vaddr, text_end;
