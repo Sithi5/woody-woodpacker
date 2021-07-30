@@ -47,13 +47,12 @@ void load_payload(t_woody *woody, char *payload_name)
 
 void silvio_text_infection(t_woody *woody)
 {
-    // TODO PROTECT
+    // Create the output file
     if (!(woody->infected_file = malloc(woody->binary_data_size + PAGE_SZ64)))
     {
         error(ERROR_MALLOC, woody);
     }
     woody->infected_file_size = woody->binary_data_size + PAGE_SZ64;
-    // endofTODO
 
     Elf64_Addr payload_vaddr, text_end_offset;
     char jump_entry[] = "\x48\xb8\x41\x41\x41\x41\x41\x41\x41\x41" //mov rax,0x4141414141414141
