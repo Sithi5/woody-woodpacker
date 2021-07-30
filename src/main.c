@@ -64,7 +64,7 @@ void write_woody_file(t_woody *woody)
     {
         error(ERROR_OPEN, woody);
     }
-    if ((write(fd, woody->mmap_ptr, woody->binary_data_size)) < 0)
+    if ((write(fd, woody->infected_file, woody->infected_file_size)) < 0)
     {
         close(fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_WRITE, woody);
     }

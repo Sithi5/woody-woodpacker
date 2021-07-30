@@ -60,6 +60,8 @@ typedef struct s_woody
     bool is_exec;
     bool is_dyn;
 
+    void *infected_file;
+    int infected_file_size;
 } t_woody;
 
 /*

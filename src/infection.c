@@ -47,10 +47,18 @@ void load_payload(t_woody *woody, char *payload_name)
 
 void silvio_text_infection(t_woody *woody)
 {
+    // TODO PROTECT
+    if (!(woody->infected_file = malloc(woody->binary_data_size + PAGE_SZ64)))
+    {
+        error(ERROR_MALLOC, woody);
+    }
+    woody->infected_file_size = woody->binary_data_size + PAGE_SZ64;
+    // endofTODO
+
     Elf64_Addr payload_vaddr, text_end_offset;
-    char jmp_entry[] = "\x48\xb8\x41\x41\x41\x41\x41\x41\x41\x41" //mov rax,0x4141414141414141
-                       "\xff\xe0";                                // jmp rax
-    int jmp_len = 12;
+    char jump_entry[] = "\x48\xb8\x41\x41\x41\x41\x41\x41\x41\x41" //mov rax,0x4141414141414141
+                        "\xff\xe0";                                // jmp rax
+    int jump_size = 12;
 
     // Increase section header offset by PAGE_SIZE
     woody->ehdr->e_shoff += PAGE_SZ64;
@@ -89,14 +97,15 @@ void silvio_text_infection(t_woody *woody)
     {
         error(ERROR_NOT_DEFINED, woody);
     }
-    printf("text_end_offset %ld\n", text_end_offset);
-    printf("Copying file now\n");
 
-    memcpy(&jmp_entry[2], (char *)&woody->old_entry_point, 8);
-    memcpy(woody->mmap_ptr + text_end_offset, woody->payload_data, woody->payload_size - jmp_len);
-    printf("Copying file part 2\n");
-    // Copy the jump at the end of the payload.
-    memcpy(woody->mmap_ptr + text_end_offset + woody->payload_size - jmp_len, jmp_entry, jmp_len);
-    printf("Copying file part 3\n");
-    memcpy(woody->mmap_ptr + text_end_offset + PAGE_SZ64, woody->mmap_ptr + text_end_offset, woody->binary_data_size - text_end_offset);
+    // Patch the jump with the old_entry_point vaddr
+    memcpy(&jump_entry[2], (char *)&woody->old_entry_point, 8);
+
+    memcpy(woody->infected_file, woody->mmap_ptr, (size_t)text_end_offset);
+
+    memcpy(woody->infected_file + text_end_offset, woody->payload_data, woody->payload_size - jump_size);
+
+    memcpy(woody->infected_file + text_end_offset + woody->payload_size - jump_size, jump_entry, jump_size);
+
+    memcpy(woody->infected_file + text_end_offset + PAGE_SZ64, woody->mmap_ptr + text_end_offset, woody->binary_data_size - text_end_offset);
 }
