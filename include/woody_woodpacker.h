@@ -33,7 +33,7 @@
 */
 
 #define OUTPUT_FILE_NAME "woody"
-#define PAYLOAD_NAME "./payload/woody_payload_test"
+#define PAYLOAD_NAME "woody_payload_test.asm"
 
 /*
 ** struct
