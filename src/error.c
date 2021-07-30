@@ -37,8 +37,6 @@ static void error_msg(int err)
                                        : 0;
     err == ERROR_ELF_NOT_LITTLE_ENDIAN ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_ELF_NOT_LITTLE_ENDIAN\n", err)
                                        : 0;
-    err == ERROR_FILE_SIZE_TOO_SMALL ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_FILE_SIZE_TOO_SMALL\n", err)
-                                     : 0;
     if (errno != 0)
     {
         fprintf(stderr, RED "errno " DEF ": %d -> %s\n", errno, strerror(errno));
