@@ -42,7 +42,7 @@ typedef struct s_woody
 {
     int fd;
     int infection_size;
-    int binary_data_len;
+    long unsigned int binary_data_len;
     unsigned long int new_entry_point;
     unsigned long int old_entry_point;
     bool is_exec;

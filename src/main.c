@@ -14,17 +14,14 @@
 
 void get_binary_data(char *file_name, t_woody *woody)
 {
-
+    double binary_data_len;
     if ((woody->fd = open(file_name, O_RDONLY)) == -1)
     {
         error(ERROR_OPEN, woody);
     }
-    if ((woody->binary_data_len = lseek(woody->fd, 0, SEEK_END)) != -1)
+    if ((binary_data_len = lseek(woody->fd, 0, SEEK_END)) != -1)
     {
-        if (woody->binary_data_len < sizeof(Elf64_Ehdr))
-        {
-            close(woody->fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_FILE_SIZE_TOO_SMALL, woody);
-        }
+        woody->binary_data_len = (long unsigned int)binary_data_len;
         /* Go back to the start of the file. */
         if (lseek(woody->fd, 0, SEEK_SET) != 0)
         {
@@ -45,6 +42,10 @@ void get_binary_data(char *file_name, t_woody *woody)
 
 void set_elf_ptr(t_woody *woody)
 {
+    if (woody->binary_data_len < sizeof(Elf64_Ehdr))
+    {
+        error(ERROR_NOT_ELF64, woody);
+    }
     woody->ehdr = (Elf64_Ehdr *)woody->mmap_ptr;
     woody->old_entry_point = woody->ehdr->e_entry;
     woody->phdr = (Elf64_Phdr *)((woody->mmap_ptr + woody->ehdr->e_phoff));

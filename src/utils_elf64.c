@@ -14,6 +14,7 @@
 
 void check_ehdr(t_woody *woody)
 {
+
     /*
     The first check we make to the Ehdr is whether it is an Elf64 file.
     This means that the first four bytes (e_ident[EI_MAG0..EI_MAG3])
