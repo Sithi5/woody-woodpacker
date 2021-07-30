@@ -15,6 +15,39 @@
 // TODO: Not sure of this value, should create a function to get page size.
 #define PAGE_SZ64 0x2000
 
+void load_payload(t_woody *woody, char *payload_name)
+{
+    double payload_size;
+    int fd;
+
+    if ((fd = open(payload_name, O_RDONLY)) == -1)
+    {
+        error(ERROR_OPEN, woody);
+    }
+    if ((payload_size = lseek(fd, 0, SEEK_END)) != -1)
+    {
+        woody->payload_size = (long unsigned int)payload_size;
+        /* Go back to the start of the file. */
+        if (lseek(fd, 0, SEEK_SET) != 0)
+        {
+            close(fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_LSEEK, woody);
+        }
+        if (!(woody->payload_data = malloc(payload_size)))
+        {
+            close(fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_MALLOC, woody);
+        }
+        if (read(fd, woody->payload_data, woody->payload_size) == -1)
+        {
+            close(fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_READ, woody);
+        }
+    }
+    else
+    {
+        close(fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_LSEEK, woody);
+    }
+    close(fd) == -1 ? error(ERROR_CLOSE, woody) : 0;
+}
+
 void silvio_text_infection(t_woody *woody)
 {
     Elf64_Addr payload_vaddr, text_end;
@@ -58,5 +91,5 @@ void silvio_text_infection(t_woody *woody)
 
     // Copy the jump at the end of the payload.
     memcpy(woody->ehdr + text_end + woody->payload_size - jmp_len, jmp_entry, jmp_len);
-    memcpy(woody->ehdr + text_end + PAGE_SZ64, woody->mmap_ptr + text_end, woody->binary_data_len - text_end);
+    memcpy(woody->ehdr + text_end + PAGE_SZ64, woody->mmap_ptr + text_end, woody->binary_data_size - text_end);
 }

@@ -33,6 +33,7 @@
 */
 
 #define OUTPUT_FILE_NAME "woody"
+#define PAYLOAD_NAME "./payload/woody_payload_test"
 
 /*
 ** struct
@@ -40,11 +41,11 @@
 
 typedef struct s_woody
 {
-    int fd;
-    int payload_size;
-    long unsigned int binary_data_len;
+    long unsigned int payload_size;
+    long unsigned int binary_data_size;
 
     void *mmap_ptr;
+    void *payload_data;
 
     Elf64_Ehdr *ehdr;
     Elf64_Phdr *phdr;

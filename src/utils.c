@@ -17,7 +17,8 @@ void free_woody(t_woody *woody)
 {
     if (woody)
     {
-        woody->mmap_ptr ? munmap(woody->mmap_ptr, woody->binary_data_len) : 0;
+        woody->mmap_ptr ? munmap(woody->mmap_ptr, woody->binary_data_size) : 0;
+        woody->payload_data ? free(woody->payload_data) : 0;
         free(woody);
     }
 }

@@ -14,35 +14,37 @@
 
 void get_binary_data(char *file_name, t_woody *woody)
 {
-    double binary_data_len;
-    if ((woody->fd = open(file_name, O_RDONLY)) == -1)
+    double binary_data_size;
+    int fd;
+
+    if ((fd = open(file_name, O_RDONLY)) == -1)
     {
         error(ERROR_OPEN, woody);
     }
-    if ((binary_data_len = lseek(woody->fd, 0, SEEK_END)) != -1)
+    if ((binary_data_size = lseek(fd, 0, SEEK_END)) != -1)
     {
-        woody->binary_data_len = (long unsigned int)binary_data_len;
+        woody->binary_data_size = (long unsigned int)binary_data_size;
         /* Go back to the start of the file. */
-        if (lseek(woody->fd, 0, SEEK_SET) != 0)
+        if (lseek(fd, 0, SEEK_SET) != 0)
         {
-            close(woody->fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_LSEEK, woody);
+            close(fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_LSEEK, woody);
         }
         /* Copy binary address map*/
-        if (!(woody->mmap_ptr = mmap(0, woody->binary_data_len, PROT_READ | PROT_WRITE, MAP_PRIVATE, woody->fd, 0)))
+        if (!(woody->mmap_ptr = mmap(0, woody->binary_data_size, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0)))
         {
-            close(woody->fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_MMAP, woody);
+            close(fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_MMAP, woody);
         }
     }
     else
     {
-        close(woody->fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_LSEEK, woody);
+        close(fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_LSEEK, woody);
     }
-    close(woody->fd) == -1 ? error(ERROR_CLOSE, woody) : 0;
+    close(fd) == -1 ? error(ERROR_CLOSE, woody) : 0;
 }
 
 void set_elf_ptr(t_woody *woody)
 {
-    if (woody->binary_data_len < sizeof(Elf64_Ehdr))
+    if (woody->binary_data_size < sizeof(Elf64_Ehdr))
     {
         error(ERROR_NOT_ELF64, woody);
     }
@@ -62,7 +64,7 @@ void write_woody_file(t_woody *woody)
     {
         error(ERROR_OPEN, woody);
     }
-    if ((write(fd, woody->mmap_ptr, woody->binary_data_len)) < 0)
+    if ((write(fd, woody->mmap_ptr, woody->binary_data_size)) < 0)
     {
         if ((close(fd)) < 0)
         {
