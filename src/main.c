@@ -66,11 +66,7 @@ void write_woody_file(t_woody *woody)
     }
     if ((write(fd, woody->mmap_ptr, woody->binary_data_size)) < 0)
     {
-        if ((close(fd)) < 0)
-        {
-            error(ERROR_CLOSE, woody);
-        }
-        error(ERROR_WRITE, woody);
+        close(fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_WRITE, woody);
     }
 }
 

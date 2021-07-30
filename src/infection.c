@@ -12,9 +12,6 @@
 
 #include "woody_woodpacker.h"
 
-// TODO: Not sure of this value, should create a function to get page size.
-#define PAGE_SZ64 0x2000
-
 void load_payload(t_woody *woody, char *payload_name)
 {
     double payload_size;
@@ -50,7 +47,7 @@ void load_payload(t_woody *woody, char *payload_name)
 
 void silvio_text_infection(t_woody *woody)
 {
-    Elf64_Addr payload_vaddr, text_end;
+    Elf64_Addr payload_vaddr, text_end_offset;
     char jmp_entry[] = "\x48\xb8\x41\x41\x41\x41\x41\x41\x41\x41" //mov rax,0x4141414141414141
                        "\xff\xe0";                                // jmp rax
     int jmp_len = 12;
@@ -62,8 +59,8 @@ void silvio_text_infection(t_woody *woody)
     {
         if (woody->phdr[i].p_type == PT_LOAD && woody->phdr[i].p_flags == (PF_R | PF_X))
         {
-            //text found here;
-            text_end = woody->phdr[i].p_offset + woody->phdr[i].p_filesz;
+            //text found here, get the offset of the end of the section;
+            text_end_offset = woody->phdr[i].p_offset + woody->phdr[i].p_filesz;
 
             payload_vaddr = woody->phdr[i].p_vaddr + woody->phdr[i].p_filesz;
             woody->ehdr->e_entry = payload_vaddr;
@@ -77,19 +74,29 @@ void silvio_text_infection(t_woody *woody)
         }
     }
 
+    // Adding offset of one page in all section located after text section end.
     for (int i = 0; i < woody->ehdr->e_shnum; i++)
     {
-        if (woody->shdr[i].sh_offset > text_end)
+        if (woody->shdr[i].sh_offset > text_end_offset)
             woody->shdr[i].sh_offset += PAGE_SZ64;
-
         else if (woody->shdr[i].sh_addr + woody->shdr[i].sh_size == payload_vaddr)
             woody->shdr[i].sh_size += woody->payload_size;
     }
 
-    void *payload;
-    memcpy(woody->ehdr + text_end, payload, woody->payload_size - jmp_len);
+    // load the payload to insert after text.
+    load_payload(woody, PAYLOAD_NAME);
+    if (woody->payload_size > PAGE_SZ64)
+    {
+        error(ERROR_NOT_DEFINED, woody);
+    }
+    printf("text_end_offset %ld\n", text_end_offset);
+    printf("Copying file now\n");
 
+    memcpy(&jmp_entry[2], (char *)&woody->old_entry_point, 8);
+    memcpy(woody->mmap_ptr + text_end_offset, woody->payload_data, woody->payload_size - jmp_len);
+    printf("Copying file part 2\n");
     // Copy the jump at the end of the payload.
-    memcpy(woody->ehdr + text_end + woody->payload_size - jmp_len, jmp_entry, jmp_len);
-    memcpy(woody->ehdr + text_end + PAGE_SZ64, woody->mmap_ptr + text_end, woody->binary_data_size - text_end);
+    memcpy(woody->mmap_ptr + text_end_offset + woody->payload_size - jmp_len, jmp_entry, jmp_len);
+    printf("Copying file part 3\n");
+    memcpy(woody->mmap_ptr + text_end_offset + PAGE_SZ64, woody->mmap_ptr + text_end_offset, woody->binary_data_size - text_end_offset);
 }

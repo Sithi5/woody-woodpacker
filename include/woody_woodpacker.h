@@ -32,6 +32,9 @@
 ** Defines
 */
 
+#define PAGE_SZ64 0x2000
+#define PAGE_SZ32 0x1000
+
 #define OUTPUT_FILE_NAME "woody"
 #define PAYLOAD_NAME "woody_payload_test.asm"
 
@@ -41,11 +44,12 @@
 
 typedef struct s_woody
 {
-    long unsigned int payload_size;
     long unsigned int binary_data_size;
 
-    void *mmap_ptr;
+    long unsigned int payload_size;
     void *payload_data;
+
+    void *mmap_ptr;
 
     Elf64_Ehdr *ehdr;
     Elf64_Phdr *phdr;
@@ -82,6 +86,7 @@ void silvio_text_infection(t_woody *woody);
 #define ERROR_MMAP 9
 #define ERROR_NOT_EXECUTABLE_BINARY 10
 #define ERROR_ELF_NOT_LITTLE_ENDIAN 11
+#define ERROR_NOT_DEFINED 12
 
 /*
 ** COLOR
