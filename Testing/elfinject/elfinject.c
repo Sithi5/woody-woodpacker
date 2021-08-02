@@ -513,9 +513,11 @@ inject_code(int fd, inject_data_t *inject)
     fprintf(stderr, "Unknown ELF class\n");
     goto fail;
   case ELFCLASS32:
+    printf("32");
     elf.bits = 32;
     break;
   default:
+    printf("64");
     elf.bits = 64;
     break;
   }
