@@ -14,11 +14,16 @@
 
 void load_payload(t_woody *woody, char *payload_name)
 {
+    (void)payload_name;
     char *code = "\xeb\x17\x31\xc0\xb0\x04\x31\xdb\xb3\x01\x59\x31\xd2\xb2\x0d\xcd\x80\x31\xc0\xb0\x01\x31\xdb\xcd\x80\xe8\xe4\xff\xff\xff\x48\x65\x6c\x6c\x6f\x20\x57\x6f\x72\x6c\x64\x21\x0a";
-    woody->payload_data = code;
+    
     woody->payload_size = strlen(code);
-    printf("size payload = %s\n", code);
-    printf("size payload = %d\n", woody->payload_size);
+    if (!(woody->payload_data = (char *)malloc(sizeof(char) * woody->payload_size)))
+        error(ERROR_MALLOC, woody);
+    memcpy(woody->payload_data,code,woody->payload_size);
+    printf("size payload = %ld\n", woody->payload_size);
+    printf("payload: \n");
+    printf("%s\n", (char*)woody->payload_data);
     // double payload_size;
     // int fd;
 
@@ -96,6 +101,7 @@ void silvio_text_infection(t_woody *woody)
     }
 
     // load the payload to insert after text.
+    
     load_payload(woody, PAYLOAD_NAME);
     if (woody->payload_size > PAGE_SZ64)
     {

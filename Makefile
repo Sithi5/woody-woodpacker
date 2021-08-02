@@ -122,7 +122,7 @@ clean:
 	@rm -rf $(OBJ_PATH) 2> /dev/null || true
 
 fclean: clean
-	@rm -f $(NAME)
+	@rm -f $(NAME) woody
 	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(NAME)
 
 re: fclean all
