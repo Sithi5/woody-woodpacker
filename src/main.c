@@ -64,14 +64,10 @@ void write_woody_file(t_woody *woody)
     {
         error(ERROR_OPEN, woody);
     }
-    if ((write(fd, woody->mmap_ptr , woody->binary_data_size)) < 0)
+    if ((write(fd, woody->infected_file, woody->infected_file_size)) < 0)
     {
         close(fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_WRITE, woody);
     }
-    //if ((write(fd, woody->infected_file, woody->infected_file_size)) < 0)
-    //{
-    //    close(fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_WRITE, woody);
-    //}
 }
 
 int main(int ac, char **av)
@@ -88,7 +84,7 @@ int main(int ac, char **av)
     get_binary_data(av[1], woody);
     set_elf_ptr(woody);
     check_ehdr(woody);
-    //silvio_text_infection(woody);
+    silvio_text_infection(woody);
     write_woody_file(woody);
     free_woody(woody);
     return 0;
