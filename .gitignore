@@ -11,6 +11,7 @@ a.out
 .idea
 
 # vscode
+packages.microsoft*
 .vscode
 
 # Prerequisites
