@@ -15,44 +15,13 @@
 void load_payload(t_woody *woody, char *payload_name)
 {
     (void)payload_name;
-    char *code = "\xeb\x17\x31\xc0\xb0\x04\x31\xdb\xb3\x01\x59\x31\xd2\xb2\x0d\xcd\x80\x31\xc0\xb0\x01\x31\xdb\xcd\x80\xe8\xe4\xff\xff\xff\x48\x65\x6c\x6c\x6f\x20\x57\x6f\x72\x6c\x64\x21\x0a";
-    
-    woody->payload_size = strlen(code);
+    char *code = "\x50\x51\x52\x56\x57\x41\x53\x48\x31\xd2\xb8\x01\x00\x00\x00\xbf\x01\x00\x00\x00\xba\x0d\x00\x00\x00\x48\x8d\x35\x0f\x00\x00\x00\x0f\x05\x41\x5b\x5f\x5e\x5a\x59\x58\x68\x40\x10\x40\x00\xc3\x2e\x2e\x2e\x57\x4f\x4f\x44\x59\x2e\x2e\x2e\x0a\x00\x0d\x00\x00";
+
+    woody->payload_size = 72;
+
     if (!(woody->payload_data = (char *)malloc(sizeof(char) * woody->payload_size)))
         error(ERROR_MALLOC, woody);
-    memcpy(woody->payload_data,code,woody->payload_size);
-    printf("size payload = %ld\n", woody->payload_size);
-    printf("payload: \n");
-    printf("%s\n", (char*)woody->payload_data);
-    // double payload_size;
-    // int fd;
-
-    // if ((fd = open(payload_name, O_RDONLY)) == -1)
-    // {
-    //     error(ERROR_OPEN, woody);
-    // }
-    // if ((payload_size = lseek(fd, 0, SEEK_END)) != -1)
-    // {
-    //     woody->payload_size = (long unsigned int)payload_size;
-    //     /* Go back to the start of the file. */
-    //     if (lseek(fd, 0, SEEK_SET) != 0)
-    //     {
-    //         close(fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_LSEEK, woody);
-    //     }
-    //     if (!(woody->payload_data = malloc(payload_size)))
-    //     {
-    //         close(fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_MALLOC, woody);
-    //     }
-    //     if (read(fd, woody->payload_data, woody->payload_size) == -1)
-    //     {
-    //         close(fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_READ, woody);
-    //     }
-    // }
-    // else
-    // {
-    //     close(fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_LSEEK, woody);
-    // }
-    // close(fd) == -1 ? error(ERROR_CLOSE, woody) : 0;
+    memcpy(woody->payload_data, code, woody->payload_size);
 }
 
 void silvio_text_infection(t_woody *woody)
@@ -101,7 +70,7 @@ void silvio_text_infection(t_woody *woody)
     }
 
     // load the payload to insert after text.
-    
+
     load_payload(woody, PAYLOAD_NAME);
     if (woody->payload_size > PAGE_SZ64)
     {
