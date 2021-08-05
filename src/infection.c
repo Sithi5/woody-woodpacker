@@ -16,7 +16,6 @@ void load_payload(t_woody *woody, char *payload_name)
 {
     (void)payload_name;
     char *code = "\x50\x51\x52\x56\x57\x41\x53\x48\x31\xd2\xb8\x01\x00\x00\x00\xbf\x01\x00\x00\x00\xba\x0d\x00\x00\x00\x48\x8d\x35\x0f\x00\x00\x00\x0f\x05\x41\x5b\x5f\x5e\x5a\x59\x58\x68\x40\x10\x40\x00\xc3\x2e\x2e\x2e\x57\x4f\x4f\x44\x59\x2e\x2e\x2e\x0a\x00\x0d\x00\x00";
-    
     woody->payload_size = 72;
     if (!(woody->payload_data = (char *)malloc(sizeof(char) * woody->payload_size)))
         error(ERROR_MALLOC, woody);
@@ -80,7 +79,9 @@ void silvio_text_infection(t_woody *woody)
             text_end_offset = woody->phdr[i].p_offset + woody->phdr[i].p_filesz;
 
             payload_vaddr = woody->phdr[i].p_vaddr + woody->phdr[i].p_filesz;
+            printf("entry: %p\n", woody->old_entry_point);
             woody->ehdr->e_entry = payload_vaddr;
+            printf("new entry: %p\n", woody->ehdr->e_entry);
             woody->phdr[i].p_filesz += woody->payload_size;
             woody->phdr[i].p_memsz += woody->payload_size;
 
