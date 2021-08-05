@@ -36,7 +36,7 @@
 #define PAGE_SZ32 0x1000
 
 #define OUTPUT_FILE_NAME "woody"
-#define PAYLOAD_NAME "woody_payload_test.o"
+#define PAYLOAD_NAME "payload"
 
 /*
 ** struct

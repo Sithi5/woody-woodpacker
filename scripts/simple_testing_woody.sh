@@ -1,14 +1,21 @@
 #!/bin/sh
 make
+echo "\nCompiling payload...\n"
+
+sh ./scripts/compile_payload_script.sh
+
 gcc -no-pie ./tests/test1.c -o test1_no_pie
-gcc ./tests/test1.c -o test1
+
 echo "\nCreating and Executing woody with no_pie binary...\n"
-./woody_woodpacker tests/test1_no_pie
+./woody_woodpacker test1_no_pie
 ./woody
+
 rm woody
+gcc ./tests/test1.c -o test1
 echo "\nCreating and Executing woody with normal binary...\n"
-./woody_woodpacker tests/test1
+./woody_woodpacker test1
 ./woody
+
 rm test1
 rm test1_no_pie
 rm woody

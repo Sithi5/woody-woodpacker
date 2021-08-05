@@ -14,16 +14,35 @@
 
 void load_payload(t_woody *woody, char *payload_name)
 {
-    (void)payload_name;
-    // char *code = "\x2e\x2e\x2e\x57\x4f\x4f\x44\x59\x2e\x2e\x2e\x0a\x00\x0d\x00\x00\x50\x51\x52\x56\x57\x41\x53\x48\x31\xd2\xb8\x01\x00\x00\x00\xbf\x01\x00\x00\x00\xba\x0d\x00\x00\x00\x48\x8d\x35\xcf\xff\xff\xff\x0f\x05";
-    // woody->payload_size = 50;
-    char *code = "";
-    woody->payload_size = 0;
+    double payload_size;
+    int fd;
 
-    if (!(woody->payload_data = (char *)malloc(sizeof(char) * woody->payload_size)))
-        error(ERROR_MALLOC, woody);
-    memcpy(woody->payload_data, code, woody->payload_size);
-    printf("debug\n");
+    if ((fd = open(payload_name, O_RDONLY)) == -1)
+    {
+        error(ERROR_OPEN, woody);
+    }
+    if ((payload_size = lseek(fd, 0, SEEK_END)) != -1)
+    {
+        woody->payload_size = (long unsigned int)payload_size;
+        /* Go back to the start of the file. */
+        if (lseek(fd, 0, SEEK_SET) != 0)
+        {
+            close(fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_LSEEK, woody);
+        }
+        if (!(woody->payload_data = malloc(payload_size)))
+        {
+            close(fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_MALLOC, woody);
+        }
+        if (read(fd, woody->payload_data, woody->payload_size) == -1)
+        {
+            close(fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_READ, woody);
+        }
+    }
+    else
+    {
+        close(fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_LSEEK, woody);
+    }
+    close(fd) == -1 ? error(ERROR_CLOSE, woody) : 0;
 }
 
 void silvio_text_infection(t_woody *woody)
@@ -35,13 +54,13 @@ void silvio_text_infection(t_woody *woody)
     }
     woody->infected_file_size = woody->binary_data_size + PAGE_SZ64;
 
+    load_payload(woody, PAYLOAD_NAME);
+    if (woody->payload_size > PAGE_SZ64)
+    {
+        error(ERROR_NOT_DEFINED, woody);
+    }
+
     Elf64_Addr payload_vaddr, text_end_offset;
-    char jump_entry[] = "\x68\x50\x10\x40\x00\xc3"; // push ret
-    // char jump_entry[] = "\x48\xb8\x41\x41\x41\x41\x41\x41\x41\x41" //mov rax,0x4141414141414141
-    //                     "\xff\xe0";                                // jmp rax
-    int jump_size = 6;
-    woody->payload_size = 0;
-    woody->payload_size += jump_size;
 
     // Increase section header offset by PAGE_SIZE
     woody->ehdr->e_shoff += PAGE_SZ64;
@@ -76,25 +95,7 @@ void silvio_text_infection(t_woody *woody)
             woody->shdr[i].sh_size += woody->payload_size;
     }
 
-    // load the payload to insert after text.
-
-    load_payload(woody, PAYLOAD_NAME);
-    if (woody->payload_size > PAGE_SZ64)
-    {
-        error(ERROR_NOT_DEFINED, woody);
-    }
-
-    // Patch the jump with the old_entry_point vaddr
-    // memcpy(&jump_entry[1], (char *)&woody->old_entry_point, 4);
-    printf("debug2\n");
-
     memcpy(woody->infected_file, woody->mmap_ptr, (size_t)text_end_offset);
-    printf("debug3\n");
-
-    // memcpy(woody->infected_file + text_end_offset, woody->payload_data, woody->payload_size - jump_size);
-    printf("debug4\n");
-
-    memcpy(woody->infected_file + text_end_offset + woody->payload_size - jump_size, jump_entry, jump_size);
-
+    memcpy(woody->infected_file + text_end_offset, woody->payload_data, woody->payload_size);
     memcpy(woody->infected_file + text_end_offset + PAGE_SZ64, woody->mmap_ptr + text_end_offset, woody->binary_data_size - text_end_offset);
 }
