@@ -36,13 +36,16 @@ void silvio_text_infection(t_woody *woody)
     woody->infected_file_size = woody->binary_data_size + PAGE_SZ64;
 
     Elf64_Addr payload_vaddr, text_end_offset;
-    char jump_entry[] = "\x48\xb8\x41\x41\x41\x41\x41\x41\x41\x41" //mov rax,0x4141414141414141
-                        "\xff\xe0";                                // jmp rax
-    int jump_size = 12;
+    char jump_entry[] = "\x68\x50\x10\x40\x00\xc3"; // push ret
+    // char jump_entry[] = "\x48\xb8\x41\x41\x41\x41\x41\x41\x41\x41" //mov rax,0x4141414141414141
+    //                     "\xff\xe0";                                // jmp rax
+    int jump_size = 6;
+    woody->payload_size = 0;
     woody->payload_size += jump_size;
 
     // Increase section header offset by PAGE_SIZE
     woody->ehdr->e_shoff += PAGE_SZ64;
+    printf("old entry: %p\n", woody->ehdr->e_entry);
 
     for (int i = 0; i < woody->ehdr->e_phnum; i++)
     {
@@ -53,6 +56,7 @@ void silvio_text_infection(t_woody *woody)
 
             payload_vaddr = woody->phdr[i].p_vaddr + woody->phdr[i].p_filesz;
             woody->ehdr->e_entry = payload_vaddr;
+            printf("new entry: %p\n", woody->ehdr->e_entry);
             woody->phdr[i].p_filesz += woody->payload_size;
             woody->phdr[i].p_memsz += woody->payload_size;
 
@@ -81,7 +85,7 @@ void silvio_text_infection(t_woody *woody)
     }
 
     // Patch the jump with the old_entry_point vaddr
-    memcpy(&jump_entry[2], (char *)&woody->old_entry_point, 8);
+    // memcpy(&jump_entry[1], (char *)&woody->old_entry_point, 4);
     printf("debug2\n");
 
     memcpy(woody->infected_file, woody->mmap_ptr, (size_t)text_end_offset);
