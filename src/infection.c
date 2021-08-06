@@ -56,6 +56,8 @@ void silvio_text_infection(t_woody *woody)
 
     load_payload(woody, PAYLOAD_NAME);
 
+    //
+
     printf("payload_size: %ld\n", woody->payload_size);
     for (int i = 0; i < woody->payload_size; i++)
     {
@@ -74,6 +76,8 @@ void silvio_text_infection(t_woody *woody)
     }
     printf("\n\n");
 
+    //
+
     if (woody->payload_size > PAGE_SZ64)
     {
         error(ERROR_NOT_DEFINED, woody);
@@ -90,7 +94,6 @@ void silvio_text_infection(t_woody *woody)
         {
             //text found here, get the offset of the end of the section;
             text_end_offset = woody->phdr[i].p_offset + woody->phdr[i].p_filesz;
-
             payload_vaddr = woody->phdr[i].p_vaddr + woody->phdr[i].p_filesz;
             woody->ehdr->e_entry = payload_vaddr;
             woody->new_entry_point = payload_vaddr;
