@@ -73,6 +73,8 @@ void free_woody(t_woody *woody);
 void check_ehdr(t_woody *woody);
 void elf64_pt_note_to_pt_load_infection(t_woody *woody);
 void silvio_text_infection(t_woody *woody);
+void print_memory(void *memory_ptr, int memory_size);
+
 /*
 ** ERROR CODE
 */
