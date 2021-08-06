@@ -29,7 +29,6 @@ _end_payload:
     pop rax
 
     push 0x401050           ; jump to original entry point
-
     ret
 
 _payload:
