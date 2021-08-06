@@ -56,23 +56,23 @@ void silvio_text_infection(t_woody *woody)
 
     load_payload(woody, PAYLOAD_NAME);
 
-    // printf("payload_size: %ld\n", woody->payload_size);
-    // for (int i = 0; i < woody->payload_size; i++)
-    // {
-    //     printf("%x ", ((char *)(woody->payload_data))[i]);
-    // }
-    // printf("\n\nEntry OLD in VX: ");
-    // for (int i = 0; i < 4; i++)
-    // {
-    //     printf("%x ", ((char *)(woody->payload_data))[66 + i]);
-    // }
-    // printf("\n");
-    // printf("\nEntry NEW in VX: ");
-    // for (int i = 0; i < 4; i++)
-    // {
-    //     printf("%x ", ((char *)(woody->payload_data))[60 + i]);
-    // }
-    // printf("\n\n");
+    printf("payload_size: %ld\n", woody->payload_size);
+    for (int i = 0; i < woody->payload_size; i++)
+    {
+        printf("%x ", ((char *)(woody->payload_data))[i]);
+    }
+    printf("\n\nEntry OLD in VX: ");
+    for (int i = 0; i < 4; i++)
+    {
+        printf("%x ", ((char *)(woody->payload_data))[66 + i]);
+    }
+    printf("\n");
+    printf("\nEntry NEW in VX: ");
+    for (int i = 0; i < 4; i++)
+    {
+        printf("%x ", ((char *)(woody->payload_data))[60 + i]);
+    }
+    printf("\n\n");
 
     if (woody->payload_size > PAGE_SZ64)
     {
