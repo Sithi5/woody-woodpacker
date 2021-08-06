@@ -11,16 +11,15 @@ SECTION .text
         global _start_payload
 
 _start_payload:
-
     push rax                 ; save all clobbered registers
     push rcx                 ; (rcx and r11 destroyed by kernel)
     push rdx
     push rsi
     push rdi
     push r11
+    jmp .payload
 
-    call .print_woody
-
+.end_payload
     pop r11
     pop rdi
     pop rsi
@@ -30,6 +29,11 @@ _start_payload:
 
     push 0x401050           ; jump to original entry point
     ret
+
+.payload:
+    call .print_woody
+    jmp .end_payload
+
 
 .print_woody:
     mov rax,1                ; sys_write
