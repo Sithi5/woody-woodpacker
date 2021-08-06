@@ -55,6 +55,7 @@ void silvio_text_infection(t_woody *woody)
     woody->infected_file_size = woody->binary_data_size + PAGE_SZ64;
 
     load_payload(woody, PAYLOAD_NAME);
+    printf("payload_size: %ld\n",woody->payload_size);
     if (woody->payload_size > PAGE_SZ64)
     {
         error(ERROR_NOT_DEFINED, woody);
