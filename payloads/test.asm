@@ -27,8 +27,11 @@ _start_payload:
 
     call .print_woody
 
+    call .debug
+
     ; mov rax, 0x401050
     ; mov [old_entry_point_var], rax
+
     call .debug
 
     pop r11
@@ -43,16 +46,16 @@ _start_payload:
 
 .print_woody:
     mov rax,1                ; sys_write
-    mov rdi,1                ; stdout
-    mov rdx,woody_msg_len;[rel $+len-$]    ; len
-    lea rsi,[rel $+woody_msg-$]  ; hello
+    mov rbx,1                ; stdout
+    mov rcx,woody_msg  ; woody_msg
+    mov rdx,woody_msg_len; len
     syscall
     ret
 
 .debug:
     mov rax,1                ; sys_write
-    mov rdi,1                ; stdout
-    mov rdx,debug_msg_len;    ; len
-    lea rsi,[rel $+debug_msg-$]  ; debug msg
+    mov rbx,1                ; stdout
+    mov rcx,debug_msg  ; woody_msg
+    mov rdx,debug_msg_len; len
     syscall
     ret
