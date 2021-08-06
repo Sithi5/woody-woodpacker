@@ -1,9 +1,16 @@
 BITS 64
 
-SECTION .text
-global start
+SECTION .data
+        woody_msg: db "...WOODY...",10
+        woody_msg_len  : equ $-woody_msg
 
-start:
+SECTION .bss
+        old_entry_point_var: resb 16
+
+SECTION .text
+        global _start
+
+_start:
     push rax                 ; save all clobbered registers
     push rcx                 ; (rcx and r11 destroyed by kernel)
     push rdx
@@ -14,9 +21,12 @@ start:
     xor rdx,rdx
     mov rax,1                ; sys_write
     mov rdi,1                ; stdout
-    mov rdx,13;[rel $+len-$]    ; len
-    lea rsi,[rel $+hello-$]  ; hello
+    mov rdx,woody_msg_len;[rel $+len-$]    ; len
+    lea rsi,[rel $+woody_msg-$]  ; hello
     syscall
+
+    mov rax, 0x401050
+    mov [old_entry_point_var], eax
 
     pop r11
     pop rdi
@@ -25,8 +35,6 @@ start:
     pop rcx
     pop rax
 
-    push 0x401050           ; jump to original entry point
-    ret
 
-hello: db "...WOODY...",10,0
-len  : dd 13
+    push old_entry_point_var           ; jump to original entry point
+    ret
