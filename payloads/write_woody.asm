@@ -29,4 +29,4 @@ start:
   ret
 
 hello: db "...WOODY...",10,0
-len  : dd 13
+len  : equ $-hello
