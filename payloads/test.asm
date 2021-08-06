@@ -19,7 +19,8 @@ _start_payload:
     push r11
     jmp _payload
 
-_end_payload
+_end_payload:
+
     pop r11
     pop rdi
     pop rsi
@@ -28,6 +29,7 @@ _end_payload
     pop rax
 
     push 0x401050           ; jump to original entry point
+
     ret
 
 _payload:
