@@ -4,11 +4,16 @@ SECTION .data
         woody_msg: db "...WOODY...",10
         woody_msg_len  : equ $-woody_msg
 
+        debug_msg: db "debug",10
+        debug_msg_len  : equ $-woody_msg
+
 SECTION .bss
         old_entry_point_var: resb 16
 
 SECTION .text
         global _start
+
+
 
 _start:
     push rax                 ; save all clobbered registers
@@ -18,6 +23,8 @@ _start:
     push rdi
     push r11
 
+
+
     xor rdx,rdx
     mov rax,1                ; sys_write
     mov rdi,1                ; stdout
@@ -25,8 +32,8 @@ _start:
     lea rsi,[rel $+woody_msg-$]  ; hello
     syscall
 
-    mov rax, 0x401050
-    mov [old_entry_point_var], eax
+    ; mov rax, 0x401050
+    ; mov [old_entry_point_var], rax
 
     pop r11
     pop rdi
@@ -36,5 +43,19 @@ _start:
     pop rax
 
 
-    push old_entry_point_var           ; jump to original entry point
+    push 0x401050           ; jump to original entry point
     ret
+
+_print_woody:
+    mov rax,1                ; sys_write
+    mov rdi,1                ; stdout
+    mov rdx,woody_msg_len;[rel $+len-$]    ; len
+    lea rsi,[rel $+woody_msg-$]  ; hello
+    syscall
+
+_debug:
+    mov rax,1                ; sys_write
+    mov rdi,1                ; stdout
+    mov rdx,debug_msg_len;    ; len
+    lea rsi,[rel $+debug_msg-$]  ; debug msg
+    syscall
