@@ -1,11 +1,17 @@
 # binary name
 woody_woodpacker
 woody
+payload
+a.out
+
+# zettlr
+.ztr*
 
 # Clion
 .idea
 
 # vscode
+packages.microsoft*
 .vscode
 
 # Prerequisites

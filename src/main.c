@@ -12,34 +12,48 @@
 
 #include "woody_woodpacker.h"
 
-void get_file_data(char *file_name, t_woody *woody)
+void get_binary_data(char *file_name, t_woody *woody)
 {
-    if ((woody->fd = open(file_name, O_RDONLY)) == -1)
+    double binary_data_size;
+    int fd;
+
+    if ((fd = open(file_name, O_RDONLY)) == -1)
     {
         error(ERROR_OPEN, woody);
     }
-    if ((woody->old_binary_data_len = lseek(woody->fd, 0, SEEK_END)) != -1)
+    if ((binary_data_size = lseek(fd, 0, SEEK_END)) != -1)
     {
-        /*
-        ** TODO remove next line
-        */
-        woody->new_binary_data_len = woody->old_binary_data_len;
+        woody->binary_data_size = (long unsigned int)binary_data_size;
         /* Go back to the start of the file. */
-        if (lseek(woody->fd, 0, SEEK_SET) != 0)
+        if (lseek(fd, 0, SEEK_SET) != 0)
         {
-            close(woody->fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_LSEEK, woody);
+            close(fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_LSEEK, woody);
         }
         /* Copy binary address map*/
-        if (!(woody->mmap_ptr = mmap(0, woody->old_binary_data_len, PROT_READ, MAP_PRIVATE, woody->fd, 0)))
+        if (!(woody->mmap_ptr = mmap(0, woody->binary_data_size, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0)))
         {
-            close(woody->fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_MMAP, woody);
+            close(fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_MMAP, woody);
         }
     }
     else
     {
-        close(woody->fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_LSEEK, woody);
+        close(fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_LSEEK, woody);
     }
-    close(woody->fd) == -1 ? error(ERROR_CLOSE, woody) : 0;
+    close(fd) == -1 ? error(ERROR_CLOSE, woody) : 0;
+}
+
+void set_elf_ptr(t_woody *woody)
+{
+    if (woody->binary_data_size < sizeof(Elf64_Ehdr))
+    {
+        error(ERROR_NOT_ELF64, woody);
+    }
+    woody->ehdr = (Elf64_Ehdr *)woody->mmap_ptr;
+    woody->old_entry_point = woody->ehdr->e_entry;
+    woody->phdr = (Elf64_Phdr *)((woody->mmap_ptr + woody->ehdr->e_phoff));
+    woody->shdr = (Elf64_Shdr *)((woody->mmap_ptr + woody->ehdr->e_shoff));
+    woody->is_exec = true;
+    woody->is_dyn = true;
 }
 
 void write_woody_file(t_woody *woody)
@@ -50,13 +64,9 @@ void write_woody_file(t_woody *woody)
     {
         error(ERROR_OPEN, woody);
     }
-    if ((write(fd, woody->mmap_ptr, woody->new_binary_data_len)) < 0)
+    if ((write(fd, woody->infected_file, woody->infected_file_size)) < 0)
     {
-        if ((close(fd)) < 0)
-        {
-            error(ERROR_CLOSE, woody);
-        }
-        error(ERROR_WRITE, woody);
+        close(fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_WRITE, woody);
     }
 }
 
@@ -70,11 +80,11 @@ int main(int ac, char **av)
     {
         error(ERROR_INPUT_ARGUMENTS_NUMBERS, woody);
     }
-    woody->is_exec = true;
-    woody->is_dyn = true;
 
-    get_file_data(av[1], woody);
-    check_elf_header(woody);
+    get_binary_data(av[1], woody);
+    set_elf_ptr(woody);
+    check_ehdr(woody);
+    silvio_text_infection(woody);
     write_woody_file(woody);
     free_woody(woody);
     return 0;
