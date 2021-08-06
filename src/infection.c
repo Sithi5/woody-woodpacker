@@ -72,6 +72,7 @@ void silvio_text_infection(t_woody *woody)
         {
             //text found here, get the offset of the end of the section;
             text_end_offset = woody->phdr[i].p_offset + woody->phdr[i].p_filesz;
+            woody->text_section_size = woody->phdr[i].p_filesz;
 
             payload_vaddr = woody->phdr[i].p_vaddr + woody->phdr[i].p_filesz;
             woody->ehdr->e_entry = payload_vaddr;

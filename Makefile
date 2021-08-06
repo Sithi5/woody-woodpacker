@@ -54,6 +54,7 @@ SRC_NAME		=	main.c						\
 					utils_elf64.c				\
 					error.c						\
 					infection.c					\
+					rc4_cipher.c				\
 
 INCLUDE_NAME	=	woody_woodpacker.h	\
 

@@ -25,7 +25,7 @@ start:
   pop rcx
   pop rax
 
-  push 0x401050           ; jump to original entry point
+  push 0x1060           ; jump to original entry point
   ret
 
 hello: db "...WOODY...",10,0

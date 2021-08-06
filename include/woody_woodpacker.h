@@ -27,6 +27,7 @@
 #include <elf.h>         // ELF STRUCTURE
 #include <errno.h>
 #include <stdbool.h>
+#include <time.h>
 
 /*
 ** Defines
@@ -61,7 +62,12 @@ typedef struct s_woody
     bool is_dyn;
 
     void *infected_file;
+    char *encryption_result;
     int infected_file_size;
+    int text_section_size;
+
+    char *encryption_key;
+    char *encryption_data;
 } t_woody;
 
 /*
@@ -73,6 +79,7 @@ void free_woody(t_woody *woody);
 void check_ehdr(t_woody *woody);
 void elf64_pt_note_to_pt_load_infection(t_woody *woody);
 void silvio_text_infection(t_woody *woody);
+void rc4_cipher(t_woody *woody);
 /*
 ** ERROR CODE
 */

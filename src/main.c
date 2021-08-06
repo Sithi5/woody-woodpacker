@@ -84,7 +84,8 @@ int main(int ac, char **av)
     get_binary_data(av[1], woody);
     set_elf_ptr(woody);
     check_ehdr(woody);
-    silvio_text_infection(woody);
+    //silvio_text_infection(woody);
+    rc4_cipher(woody);
     write_woody_file(woody);
     free_woody(woody);
     return 0;
