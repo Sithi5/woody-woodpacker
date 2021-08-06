@@ -20,3 +20,4 @@ rm test1
 rm test1_no_pie
 rm woody
 rm woody_woodpacker
+rm payload
