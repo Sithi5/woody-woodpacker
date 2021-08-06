@@ -75,7 +75,6 @@ void silvio_text_infection(t_woody *woody)
 
             payload_vaddr = woody->phdr[i].p_vaddr + woody->phdr[i].p_filesz;
             woody->ehdr->e_entry = payload_vaddr;
-            printf("new entry: %p\n", woody->ehdr->e_entry);
             woody->phdr[i].p_filesz += woody->payload_size;
             woody->phdr[i].p_memsz += woody->payload_size;
 
@@ -85,6 +84,8 @@ void silvio_text_infection(t_woody *woody)
             break;
         }
     }
+    printf("new entry: %p\n", woody->ehdr->e_entry);
+    printf("diff: %p\n", (woody->ehdr->e_entry - woody->old_entry_point));
 
     // Adding offset of one page in all section located after text section end.
     for (int i = 0; i < woody->ehdr->e_shnum; i++)

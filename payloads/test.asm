@@ -1,13 +1,9 @@
 BITS 64
 
-SECTION .data
-        woody_msg: db "...WOODY...",10,0
-        woody_msg_len  : equ $-woody_msg
-
 SECTION .text
-        global _start
+global start
 
-_start:
+start:
     push rax                 ; save all clobbered registers
     push rcx                 ; (rcx and r11 destroyed by kernel)
     push rdx
@@ -18,8 +14,8 @@ _start:
     xor rdx,rdx
     mov rax,1                ; sys_write
     mov rdi,1                ; stdout
-    mov rdx,woody_msg_len;[rel $+len-$]    ; len
-    lea rsi,[rel $+woody_msg-$]  ; hello
+    mov rdx,13;[rel $+len-$]    ; len
+    lea rsi,[rel $+hello-$]  ; hello
     syscall
 
     pop r11
@@ -31,3 +27,6 @@ _start:
 
     push 0x401050           ; jump to original entry point
     ret
+
+hello: db "...WOODY...",10,0
+len  : dd 13
