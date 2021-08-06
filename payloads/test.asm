@@ -17,9 +17,9 @@ _start_payload:
     push rsi
     push rdi
     push r11
-    jmp .payload
+    jmp _payload
 
-.end_payload
+_end_payload
     pop r11
     pop rdi
     pop rsi
@@ -30,10 +30,9 @@ _start_payload:
     push 0x401050           ; jump to original entry point
     ret
 
-.payload:
+_payload:
     call .print_woody
-    jmp .end_payload
-
+    jmp _end_payload
 
 .print_woody:
     mov rax,1                ; sys_write
