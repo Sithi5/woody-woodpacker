@@ -25,15 +25,11 @@ _start:
 
 
 
-    xor rdx,rdx
-    mov rax,1                ; sys_write
-    mov rdi,1                ; stdout
-    mov rdx,woody_msg_len;[rel $+len-$]    ; len
-    lea rsi,[rel $+woody_msg-$]  ; hello
-    syscall
+    call _print_woody
 
     ; mov rax, 0x401050
     ; mov [old_entry_point_var], rax
+    call _debug
 
     pop r11
     pop rdi
@@ -52,6 +48,7 @@ _print_woody:
     mov rdx,woody_msg_len;[rel $+len-$]    ; len
     lea rsi,[rel $+woody_msg-$]  ; hello
     syscall
+    ret
 
 _debug:
     mov rax,1                ; sys_write
@@ -59,3 +56,4 @@ _debug:
     mov rdx,debug_msg_len;    ; len
     lea rsi,[rel $+debug_msg-$]  ; debug msg
     syscall
+    ret
