@@ -19,19 +19,6 @@ _start_payload:
     push r11
     jmp _payload
 
-_end_payload:
-
-    pop r11
-    pop rdi
-    pop rsi
-    pop rdx
-    pop rcx
-    pop rax
-
-
-    push 0x401050           ; jump to original entry point
-    ret
-
 _payload:
     call .print_woody
     jmp _end_payload
@@ -44,7 +31,35 @@ _payload:
     syscall
     ret
 
-_debug:
+
+
+_end_payload:
+
+    pop r11
+    pop rdi
+    pop rsi
+    pop rdx
+    pop rcx
+    pop rax
+
+
+    call .ret2oep           ; jump to original entry point(oep)
+    push rax
+    ret
+
+.ret2oep:
+    call .get_rip
+    sub rax, 0x39 ;virus size + 5
+    sub rax, 0x11bd
+    add rax, 0x1050
+    mov rsp, r14
+    ret
+
+.get_rip:
+    mov rax, qword [rsp]
+    ret
+
+_debug_write:
     mov rax,1                ; sys_write
     mov rdi,1                ; stdout
     mov rdx,debug_msg_len;    ; len
