@@ -11,11 +11,13 @@ SECTION .bss
         old_entry_point_var: resb 16
 
 SECTION .text
-        global _start
+        global _start_payload
 
 
 
-_start:
+_start_payload:
+
+
     push rax                 ; save all clobbered registers
     push rcx                 ; (rcx and r11 destroyed by kernel)
     push rdx
@@ -23,13 +25,11 @@ _start:
     push rdi
     push r11
 
-
-
-    call _print_woody
+    call .print_woody
 
     ; mov rax, 0x401050
     ; mov [old_entry_point_var], rax
-    call _debug
+    call .debug
 
     pop r11
     pop rdi
@@ -38,11 +38,10 @@ _start:
     pop rcx
     pop rax
 
-
     push 0x401050           ; jump to original entry point
     ret
 
-_print_woody:
+.print_woody:
     mov rax,1                ; sys_write
     mov rdi,1                ; stdout
     mov rdx,woody_msg_len;[rel $+len-$]    ; len
@@ -50,7 +49,7 @@ _print_woody:
     syscall
     ret
 
-_debug:
+.debug:
     mov rax,1                ; sys_write
     mov rdi,1                ; stdout
     mov rdx,debug_msg_len;    ; len
