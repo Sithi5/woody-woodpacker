@@ -7,16 +7,10 @@ SECTION .data
         debug_msg: db "debug",10
         debug_msg_len  : equ $-woody_msg
 
-SECTION .bss
-        old_entry_point_var: resb 16
-
 SECTION .text
         global _start_payload
 
-
-
 _start_payload:
-
 
     push rax                 ; save all clobbered registers
     push rcx                 ; (rcx and r11 destroyed by kernel)
@@ -26,13 +20,6 @@ _start_payload:
     push r11
 
     call .print_woody
-
-    call .debug
-
-    ; mov rax, 0x401050
-    ; mov [old_entry_point_var], rax
-
-    call .debug
 
     pop r11
     pop rdi
@@ -46,16 +33,16 @@ _start_payload:
 
 .print_woody:
     mov rax,1                ; sys_write
-    mov rbx,1                ; stdout
-    mov rcx,woody_msg  ; woody_msg
-    mov rdx,woody_msg_len; len
+    mov rdi,1                ; stdout
+    mov rdx,woody_msg_len;len
+    lea rsi,[rel $+woody_msg-$]  ; woody
     syscall
     ret
 
 .debug:
     mov rax,1                ; sys_write
-    mov rbx,1                ; stdout
-    mov rcx,debug_msg  ; woody_msg
-    mov rdx,debug_msg_len; len
+    mov rdi,1                ; stdout
+    mov rdx,debug_msg_len;    ; len
+    lea rsi,[rel $+debug_msg-$]  ; debug msg
     syscall
     ret
