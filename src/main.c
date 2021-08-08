@@ -52,8 +52,6 @@ void set_elf_ptr(t_woody *woody)
     woody->old_entry_point = woody->ehdr->e_entry;
     woody->phdr = (Elf64_Phdr *)((woody->mmap_ptr + woody->ehdr->e_phoff));
     woody->shdr = (Elf64_Shdr *)((woody->mmap_ptr + woody->ehdr->e_shoff));
-    woody->is_exec = true;
-    woody->is_dyn = true;
 }
 
 void write_woody_file(t_woody *woody)

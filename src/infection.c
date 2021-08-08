@@ -45,6 +45,30 @@ void load_payload(t_woody *woody, char *payload_name)
     close(fd) == -1 ? error(ERROR_CLOSE, woody) : 0;
 }
 
+// Find the ret2oep offset in the payload. set offset to -1 if not found.
+void find_ret2oep_offset(t_woody *woody)
+{
+    for (long unsigned int i = 0; i < woody->payload_size; i++)
+    {
+        if (0x77 == ((char *)woody->payload_data)[i])
+        {
+            if (woody->payload_size - i > 13)
+            {
+                // Actually checking we are in ret2oep
+                if (((char *)woody->payload_data)[i + 1] == 0x48 && ((char *)woody->payload_data)[i + 2] == 0x2d &&
+                    ((char *)woody->payload_data)[i + 3] == 0x77 && ((char *)woody->payload_data)[i + 4] == 0x77 &&
+                    ((char *)woody->payload_data)[i + 5] == 0x77 && ((char *)woody->payload_data)[i + 6] == 0x77)
+                {
+                    woody->ret2oep_offset = i;
+                    printf("find ret2oep at offset : %i\n", woody->ret2oep_offset);
+                    return;
+                }
+            }
+        }
+    }
+    woody->ret2oep_offset = -1;
+}
+
 void silvio_text_infection(t_woody *woody)
 {
     // Create the output file
@@ -55,6 +79,11 @@ void silvio_text_infection(t_woody *woody)
     woody->infected_file_size = woody->binary_data_size + PAGE_SZ64;
 
     load_payload(woody, PAYLOAD_NAME);
+
+    if (woody->payload_size > PAGE_SZ64)
+    {
+        error(ERROR_NOT_DEFINED, woody);
+    }
 
     //
 
@@ -77,11 +106,6 @@ void silvio_text_infection(t_woody *woody)
     printf("\n\n");
 
     //
-
-    if (woody->payload_size > PAGE_SZ64)
-    {
-        error(ERROR_NOT_DEFINED, woody);
-    }
 
     Elf64_Addr payload_vaddr, text_end_offset;
 
@@ -116,9 +140,15 @@ void silvio_text_infection(t_woody *woody)
             woody->shdr[i].sh_size += woody->payload_size;
     }
 
+    printf("old entry_point : %p\n", (void *)woody->old_entry_point);
+    printf("woody->new_entry_pointt : %p\n", (void *)woody->new_entry_point);
+
+    find_ret2oep_offset(woody);
+
     // rewrite old and new entry_point in payload ret2oep.
-    memcpy(woody->payload_data + 60, (void *)&(woody->new_entry_point), 4);
-    memcpy(woody->payload_data + 66, (void *)&(woody->old_entry_point), 4);
+    memcpy(woody->payload_data + woody->ret2oep_offset, (void *)&(woody->ret2oep_offset), 2);
+    memcpy(woody->payload_data + woody->ret2oep_offset + 3, (void *)&(woody->new_entry_point), 4);
+    memcpy(woody->payload_data + woody->ret2oep_offset + 9, (void *)&(woody->old_entry_point), 4);
 
     memcpy(woody->infected_file, woody->mmap_ptr, (size_t)text_end_offset);
     memcpy(woody->infected_file + text_end_offset, woody->payload_data, woody->payload_size);

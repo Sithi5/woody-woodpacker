@@ -56,9 +56,7 @@ typedef struct s_woody
     Elf64_Shdr *shdr;
     Elf64_Addr new_entry_point;
     Elf64_Addr old_entry_point;
-
-    bool is_exec;
-    bool is_dyn;
+    int ret2oep_offset;
 
     void *infected_file;
     int infected_file_size;
