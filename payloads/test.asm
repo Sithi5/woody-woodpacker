@@ -8,7 +8,6 @@ SECTION .data
         debug_msg_len  : equ $-woody_msg
 
 SECTION .text
-        global _start
 
 _start_payload:
     push rax                 ; save all clobbered registers
@@ -31,8 +30,6 @@ _end_payload:
     pop rdx
     pop rcx
     pop rax
-
-    call _debug_write
 
     call _ret2oep           ; jump to original entry point(oep)
     push rax
@@ -60,7 +57,7 @@ _get_rip:
 
 _ret2oep:
     call _get_rip
-    sub rax, 0x77 ;virus size + 5
+    sub rax, 0x77777777 ;virus size without ret2oep
     sub rax, 0x77777777
     add rax, 0x77777777
     ret

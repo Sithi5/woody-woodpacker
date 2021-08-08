@@ -84,6 +84,6 @@ int main(int ac, char **av)
     check_ehdr(woody);
     silvio_text_infection(woody);
     write_woody_file(woody);
-    free_woody(woody);
+    // free_woody(woody);
     return 0;
 }

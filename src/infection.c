@@ -50,16 +50,22 @@ void find_ret2oep_offset(t_woody *woody)
 {
     for (long unsigned int i = 0; i < woody->payload_size; i++)
     {
-        if (0x77 == ((char *)woody->payload_data)[i])
+        if (((char *)woody->payload_data)[i] == 0x77)
         {
-            if (woody->payload_size - i > 13)
+            if (woody->payload_size - i > 17)
             {
                 // Actually checking we are in ret2oep
-                if (((char *)woody->payload_data)[i + 1] == 0x48 && ((char *)woody->payload_data)[i + 2] == 0x2d &&
-                    ((char *)woody->payload_data)[i + 3] == 0x77 && ((char *)woody->payload_data)[i + 4] == 0x77 &&
-                    ((char *)woody->payload_data)[i + 5] == 0x77 && ((char *)woody->payload_data)[i + 6] == 0x77)
+                if (((char *)woody->payload_data)[i + 1] == 0x77 && ((char *)woody->payload_data)[i + 2] == 0x77 &&
+                    ((char *)woody->payload_data)[i + 3] == 0x77 &&
+                    ((char *)woody->payload_data)[i + 4] == 0x48 && ((char *)woody->payload_data)[i + 5] == 0x2d &&
+                    ((char *)woody->payload_data)[i + 6] == 0x77 && ((char *)woody->payload_data)[i + 7] == 0x77 &&
+                    ((char *)woody->payload_data)[i + 8] == 0x77 && ((char *)woody->payload_data)[i + 9] == 0x77 &&
+                    ((char *)woody->payload_data)[i + 10] == 0x48 && ((char *)woody->payload_data)[i + 11] == 0x05 &&
+                    ((char *)woody->payload_data)[i + 12] == 0x77 && ((char *)woody->payload_data)[i + 13] == 0x77 &&
+                    ((char *)woody->payload_data)[i + 14] == 0x77 && ((char *)woody->payload_data)[i + 15] == 0x77)
                 {
-                    woody->ret2oep_offset = i;
+                    // Removing 3 to go to actual start of ret2oep.
+                    woody->ret2oep_offset = i - 3;
                     printf("find ret2oep at offset : %i\n", woody->ret2oep_offset);
                     return;
                 }
@@ -84,28 +90,6 @@ void silvio_text_infection(t_woody *woody)
     {
         error(ERROR_NOT_DEFINED, woody);
     }
-
-    //
-
-    printf("payload_size: %ld\n", woody->payload_size);
-    for (int i = 0; i < woody->payload_size; i++)
-    {
-        printf("%x ", ((char *)(woody->payload_data))[i]);
-    }
-    printf("\n\nEntry OLD in VX: ");
-    for (int i = 0; i < 4; i++)
-    {
-        printf("%x ", ((char *)(woody->payload_data))[66 + i]);
-    }
-    printf("\n");
-    printf("\nEntry NEW in VX: ");
-    for (int i = 0; i < 4; i++)
-    {
-        printf("%x ", ((char *)(woody->payload_data))[60 + i]);
-    }
-    printf("\n\n");
-
-    //
 
     Elf64_Addr payload_vaddr, text_end_offset;
 
@@ -140,15 +124,74 @@ void silvio_text_infection(t_woody *woody)
             woody->shdr[i].sh_size += woody->payload_size;
     }
 
+    find_ret2oep_offset(woody);
+
+    //
+
     printf("old entry_point : %p\n", (void *)woody->old_entry_point);
     printf("woody->new_entry_pointt : %p\n", (void *)woody->new_entry_point);
 
-    find_ret2oep_offset(woody);
+    for (long unsigned int i = 0; i < woody->payload_size; i++)
+    {
+        printf("%x ", ((char *)(woody->payload_data))[i]);
+    }
 
-    // rewrite old and new entry_point in payload ret2oep.
-    memcpy(woody->payload_data + woody->ret2oep_offset, (void *)&(woody->ret2oep_offset), 2);
-    memcpy(woody->payload_data + woody->ret2oep_offset + 3, (void *)&(woody->new_entry_point), 4);
-    memcpy(woody->payload_data + woody->ret2oep_offset + 9, (void *)&(woody->old_entry_point), 4);
+    printf("\n\nEntry virus size: ");
+    for (long unsigned int i = 0; i < 4; i++)
+    {
+        printf("%x ", ((char *)(woody->payload_data))[woody->ret2oep_offset + 3 + i]);
+    }
+
+    printf("\n\nEntry NEW in VX: ");
+    for (long unsigned int i = 0; i < 4; i++)
+    {
+        printf("%x ", ((char *)(woody->payload_data))[woody->ret2oep_offset + 9 + i]);
+    }
+    printf("\n");
+    printf("\nEntry OLD in VX: ");
+    for (long unsigned int i = 0; i < 4; i++)
+    {
+        printf("%x ", ((char *)(woody->payload_data))[woody->ret2oep_offset + 15 + i]);
+    }
+    printf("\n\n");
+
+    //
+
+    int payload_size_minus_ret2oep = woody->ret2oep_offset;
+    int zero = 0;
+    printf("payload_size_minus_ret2oep = %d\n", payload_size_minus_ret2oep);
+    // // rewrite old and new entry_point in payload ret2oep.
+    memcpy(woody->payload_data + woody->ret2oep_offset + 3, (void *)(&(payload_size_minus_ret2oep)), 4);
+
+    memcpy(woody->payload_data + woody->ret2oep_offset + 9, (void *)&(woody->new_entry_point), 4);
+    memcpy(woody->payload_data + woody->ret2oep_offset + 15, (void *)&(woody->old_entry_point), 4);
+
+    //
+
+    for (long unsigned int i = 0; i < woody->payload_size; i++)
+    {
+        printf("%x ", ((char *)(woody->payload_data))[i]);
+    }
+    printf("\n\nEntry virus size: ");
+    for (long unsigned int i = 0; i < 4; i++)
+    {
+        printf("%x ", ((char *)(woody->payload_data))[woody->ret2oep_offset + 3 + i]);
+    }
+    printf("\n\nEntry NEW in VX: ");
+    for (long unsigned int i = 0; i < 4; i++)
+    {
+        printf("%x ", ((char *)(woody->payload_data))[woody->ret2oep_offset + 9 + i]);
+    }
+
+    printf("\n");
+    printf("\nEntry OLD in VX: ");
+    for (long unsigned int i = 0; i < 4; i++)
+    {
+        printf("%x ", ((char *)(woody->payload_data))[woody->ret2oep_offset + 15 + i]);
+    }
+    printf("\n\n");
+
+    //
 
     memcpy(woody->infected_file, woody->mmap_ptr, (size_t)text_end_offset);
     memcpy(woody->infected_file + text_end_offset, woody->payload_data, woody->payload_size);

