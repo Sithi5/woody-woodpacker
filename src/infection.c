@@ -66,7 +66,6 @@ bool find_ret2oep_offset(t_woody *woody)
                 {
                     // Removing 3 to go to actual start of ret2oep.
                     woody->ret2oep_offset = i - 2;
-                    printf("find ret2oep at offset : %i\n", woody->ret2oep_offset);
                     return true;
                 }
             }
