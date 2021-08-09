@@ -42,18 +42,6 @@ void get_binary_data(char *file_name, t_woody *woody)
     close(fd) == -1 ? error(ERROR_CLOSE, woody) : 0;
 }
 
-void set_elf_ptr(t_woody *woody)
-{
-    if (woody->binary_data_size < sizeof(Elf64_Ehdr))
-    {
-        error(ERROR_NOT_ELF64, woody);
-    }
-    woody->ehdr = (Elf64_Ehdr *)woody->mmap_ptr;
-    woody->old_entry_point = woody->ehdr->e_entry;
-    woody->phdr = (Elf64_Phdr *)((woody->mmap_ptr + woody->ehdr->e_phoff));
-    woody->shdr = (Elf64_Shdr *)((woody->mmap_ptr + woody->ehdr->e_shoff));
-}
-
 void write_woody_file(t_woody *woody)
 {
     int fd;
@@ -74,16 +62,16 @@ int main(int ac, char **av)
 
     if (!(woody = (t_woody *)malloc(sizeof(t_woody))))
         error(ERROR_MALLOC, woody);
+    set_woody_ptrs_to_null(woody);
     if (ac != 2)
     {
         error(ERROR_INPUT_ARGUMENTS_NUMBERS, woody);
     }
-
     get_binary_data(av[1], woody);
-    set_elf_ptr(woody);
-    check_ehdr(woody);
-    silvio_text_infection(woody);
+    check_elf_header_and_set_type(woody);
+    woody->ei_class == ELFCLASS64 ? infect_elf_64(woody) : infect_elf_32(woody);
+
     write_woody_file(woody);
-    // free_woody(woody);
+    free_woody(woody);
     return 0;
 }

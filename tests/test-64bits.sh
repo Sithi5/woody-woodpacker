@@ -30,5 +30,6 @@ echo "\n${_GREEN}Creating and Executing woody with /bin/echo binary...${_END}\n"
 ./woody_woodpacker /bin/echo
 ./woody "This is echo binaryyy"
 
+rm woody
 rm test1
 rm test1_no_pie

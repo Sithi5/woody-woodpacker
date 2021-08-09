@@ -29,6 +29,10 @@ static void error_msg(int err)
                                          : 0;
     err == ERROR_LSEEK ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_LSEEK\n", err)
                        : 0;
+    err == ERROR_NOT_ELF ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_NOT_ELF\n", err)
+                         : 0;
+    err == ERROR_NOT_ELF32 ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_NOT_ELF32\n", err)
+                           : 0;
     err == ERROR_NOT_ELF64 ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_NOT_ELF64\n", err)
                            : 0;
     err == ERROR_MMAP ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_MMAP\n", err)
@@ -41,6 +45,8 @@ static void error_msg(int err)
                                    : 0;
     err == ERROR_FILE_IS_ALREADY_INFECTED ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_FILE_IS_ALREADY_INFECTED\n", err)
                                           : 0;
+    err == ERROR_PAYLOAD_TOO_BIG ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_PAYLOAD_TOO_BIG\n", err)
+                                 : 0;
     if (errno != 0)
     {
         fprintf(stderr, RED "errno " DEF ": %d -> %s\n", errno, strerror(errno));

@@ -2,7 +2,11 @@ SHELL				=	/bin/sh
 
 # Executable name
 NAME				=	woody_woodpacker
-PAYLOAD_NAME		=	payload
+
+SRC_PAYLOADS_PATH	=	./payloads/
+
+PAYLOAD_64_NAME		=	$(SRC_PAYLOADS_PATH)payload_64
+PAYLOAD_32_NAME		=	$(SRC_PAYLOADS_PATH)payload_32
 
 # Compilation mode
 WALL				=	yes
@@ -51,20 +55,25 @@ endif
 
 # Name
 SRC_NAME			=	main.c						\
-						utils.c						\
-						utils_elf64.c				\
 						error.c						\
-						infection.c					\
+						infect_elf_32.c				\
+						infect_elf_64.c				\
+						utils.c						\
+						utils_elf.c					\
+						utils_payload.c				\
+						silvio_text_infection_32.c	\
+						silvio_text_infection_64.c	\
 
-SRC_PAYLOAD_NAME	=	test.asm					\
+SRC_PAYLOAD_64_NAME	=	test64.asm					\
+
+SRC_PAYLOAD_32_NAME	=	test32.asm					\
 
 INCLUDE_NAME		=	woody_woodpacker.h	\
 
+TESTS_FILES	= ./tests/test*.sh
 
 # Path
 SRC_PATH			=	./src/
-
-SRC_PAYLOAD_PATH	=	./payloads/
 
 OBJ_PATH 			=	./obj/
 
@@ -105,7 +114,7 @@ _IPURPLE	=	\033[45m
 _ICYAN		=	\033[46m
 _IGREY		=	\033[47m
 
-all: $(NAME) $(PAYLOAD_NAME)
+all: $(NAME) $(PAYLOAD_64_NAME) $(PAYLOAD_32_NAME)
 
 $(NAME): $(OBJ)
 	@echo "\n$(NAME) : $(GEN)"
@@ -121,19 +130,25 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.c $(INCLUDE)
 	@echo "$(_END)$(_GREEN)[OK]\t$(_UNDER)$(_YELLOW)\t"	\
 		"COMPILE :$(_END)$(_BOLD)$(_WHITE)\t$<"
 
-$(PAYLOAD_NAME):
+$(PAYLOAD_64_NAME):
 	@echo "\n$(_WHITE)====================================================$(_END)"
-	@echo "$(_YELLOW)		COMPILING $(PAYLOAD_NAME)$(_END)"
+	@echo "$(_YELLOW)		COMPILING $(PAYLOAD_64_NAME)$(_END)"
 	@echo "$(_WHITE)====================================================$(_END)"
-	@nasm -f bin -o $(PAYLOAD_NAME) $(SRC_PAYLOAD_PATH)/$(SRC_PAYLOAD_NAME)
+	@nasm -f bin -o $(PAYLOAD_64_NAME) $(SRC_PAYLOADS_PATH)$(SRC_PAYLOAD_64_NAME)
+	@echo "\n$(_WHITE)$(_BOLD)$@\t$(_END)$(_GREEN)[OK]\n$(_END)"
+
+$(PAYLOAD_32_NAME):
+	@echo "\n$(_WHITE)====================================================$(_END)"
+	@echo "$(_YELLOW)		COMPILING $(PAYLOAD_32_NAME)$(_END)"
+	@echo "$(_WHITE)====================================================$(_END)"
+	@nasm -f bin  -o $(PAYLOAD_32_NAME) $(SRC_PAYLOADS_PATH)$(SRC_PAYLOAD_32_NAME)
 	@echo "\n$(_WHITE)$(_BOLD)$@\t$(_END)$(_GREEN)[OK]\n$(_END)"
 
 tests: all
 	@echo "\n$(_WHITE)====================================================$(_END)"
-	@echo "$(_YELLOW)		LAUNCHING TESTS $(PAYLOAD_NAME)$(_END)"
+	@echo "$(_YELLOW)		LAUNCHING TESTS$(_END)"
 	@echo "$(_WHITE)====================================================$(_END)"
-	@sh ./tests/tests.sh
-	@sh ./tests/test_multiples_infections.sh
+	@for f in $(TESTS_FILES);  do sh $${f}; done;
 
 clean:
 	@rm -rf $(OBJ_PATH) 2> /dev/null || true
@@ -143,9 +158,20 @@ clean:
 fclean: clean
 	@rm -f $(NAME) woody
 	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(NAME)
-	@rm -f $(PAYLOAD_NAME)
-	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(PAYLOAD_NAME)
+	@rm -f $(PAYLOAD_32_NAME)
+	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(PAYLOAD_32_NAME)
+	@rm -f $(PAYLOAD_64_NAME)
+	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(PAYLOAD_64_NAME)
 
 re: fclean all
+
+help:
+	@echo "$(_YELLOW)Makefile for generating binary infectors.$(_END)"
+	@echo "$(_YELLOW)Usage:                                                                    $(_END)"
+	@echo "$(_YELLOW)   make                                runs rules specified under all     $(_END)"
+	@echo "$(_YELLOW)   make all                            generates all of the file formats  $(_END)"
+	@echo "$(_YELLOW)   make clean                          remove the generated files         $(_END)"
+	@echo "$(_YELLOW)   make tests                          launch tests scripts               $(_END)"
+	@echo "$(_YELLOW)   make help                           prints this message                $(_END)"
 
 .PHONY: all clean fclean re check
