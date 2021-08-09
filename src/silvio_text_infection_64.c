@@ -50,7 +50,7 @@ void silvio_text_infection_elf64(t_woody *woody)
     }
     woody->infected_file_size = woody->binary_data_size + PAGE_SZ64;
 
-    load_payload(woody, PAYLOAD_NAME);
+    load_payload(woody, PAYLOAD_64_NAME);
 
     if (woody->payload_size > PAGE_SZ64)
     {
