@@ -45,6 +45,8 @@ static void error_msg(int err)
                                    : 0;
     err == ERROR_FILE_IS_ALREADY_INFECTED ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_FILE_IS_ALREADY_INFECTED\n", err)
                                           : 0;
+    err == ERROR_PAYLOAD_TOO_BIG ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_PAYLOAD_TOO_BIG\n", err)
+                                 : 0;
     if (errno != 0)
     {
         fprintf(stderr, RED "errno " DEF ": %d -> %s\n", errno, strerror(errno));
