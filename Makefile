@@ -52,8 +52,10 @@ endif
 # Name
 SRC_NAME			=	main.c						\
 						utils.c						\
-						utils_elf64.c				\
 						error.c						\
+						infect_elf_32.c				\
+						infect_elf_64.c				\
+						utils_elf.c					\
 						infection.c					\
 
 SRC_PAYLOAD_NAME	=	test.asm					\

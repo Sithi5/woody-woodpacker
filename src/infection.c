@@ -142,30 +142,3 @@ void silvio_text_infection(t_woody *woody)
     memcpy(woody->infected_file + text_end_offset, woody->payload_data, woody->payload_size);
     memcpy(woody->infected_file + text_end_offset + PAGE_SZ64, woody->mmap_ptr + text_end_offset, woody->binary_data_size - text_end_offset);
 }
-
-// //
-
-// for (uint32_t i = 0; i < woody->payload_size; i++)
-// {
-//     printf("%x ", ((char *)(woody->payload_data))[i]);
-// }
-// printf("\n\nEntry virus size: ");
-// for (uint32_t i = 0; i < 4; i++)
-// {
-//     printf("%x ", ((char *)(woody->payload_data))[woody->ret2oep_offset + 3 + i]);
-// }
-// printf("\n\nEntry NEW in VX: ");
-// for (uint32_t i = 0; i < 4; i++)
-// {
-//     printf("%x ", ((char *)(woody->payload_data))[woody->ret2oep_offset + 9 + i]);
-// }
-
-// printf("\n");
-// printf("\nEntry OLD in VX: ");
-// for (uint32_t i = 0; i < 4; i++)
-// {
-//     printf("%x ", ((char *)(woody->payload_data))[woody->ret2oep_offset + 15 + i]);
-// }
-// printf("\n\n");
-
-// //

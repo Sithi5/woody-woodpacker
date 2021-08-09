@@ -44,6 +44,25 @@
 ** struct
 */
 
+typedef struct s_elf64_ptrs
+{
+    Elf64_Ehdr *ehdr;
+    Elf64_Phdr *phdr;
+    Elf64_Shdr *shdr;
+    Elf64_Addr new_entry_point;
+    Elf64_Addr old_entry_point;
+} t_elf64_ptrs;
+
+typedef struct s_elf32_ptrs
+{
+    Elf32_Ehdr *ehdr;
+    Elf32_Phdr *phdr;
+    Elf32_Shdr *shdr;
+    Elf32_Addr new_entry_point;
+    Elf32_Addr old_entry_point;
+
+} t_elf32_ptrs;
+
 typedef struct s_woody
 {
     uint32_t binary_data_size;
@@ -53,11 +72,10 @@ typedef struct s_woody
 
     void *mmap_ptr;
 
-    Elf64_Ehdr *ehdr;
-    Elf64_Phdr *phdr;
-    Elf64_Shdr *shdr;
-    Elf64_Addr new_entry_point;
-    Elf64_Addr old_entry_point;
+    char ei_class;
+    t_elf32_ptrs elf32_ptrs;
+    t_elf64_ptrs elf64_ptrs;
+
     int ret2oep_offset;
 
     void *infected_file;
@@ -70,10 +88,14 @@ typedef struct s_woody
 
 void error(int err, t_woody *woody);
 void free_woody(t_woody *woody);
-void check_ehdr(t_woody *woody);
+void check_ehdr_elf64(t_woody *woody);
 void elf64_pt_note_to_pt_load_infection(t_woody *woody);
 void silvio_text_infection(t_woody *woody);
 void print_memory(void *memory_ptr, int memory_size);
+void check_elf_type(t_woody *woody);
+void infect_elf_64(t_woody *woody);
+void infect_elf_32(t_woody *woody);
+void set_elf64_ptr(t_woody *woody);
 
 /*
 ** ERROR CODE
@@ -86,13 +108,15 @@ void print_memory(void *memory_ptr, int memory_size);
 #define ERROR_MALLOC 5
 #define ERROR_INPUT_ARGUMENTS_NUMBERS 6
 #define ERROR_LSEEK 7
-#define ERROR_NOT_ELF64 8
-#define ERROR_MMAP 9
-#define ERROR_NOT_EXECUTABLE_BINARY 10
-#define ERROR_ELF_NOT_LITTLE_ENDIAN 11
-#define ERROR_NOT_DEFINED 12
-#define ERROR_RET2OEP_NOT_FOUND 13
-#define ERROR_FILE_IS_ALREADY_INFECTED 14
+#define ERROR_NOT_ELF 8
+#define ERROR_NOT_ELF32 9
+#define ERROR_NOT_ELF64 10
+#define ERROR_MMAP 11
+#define ERROR_NOT_EXECUTABLE_BINARY 12
+#define ERROR_ELF_NOT_LITTLE_ENDIAN 13
+#define ERROR_NOT_DEFINED 14
+#define ERROR_RET2OEP_NOT_FOUND 15
+#define ERROR_FILE_IS_ALREADY_INFECTED 16
 
 /*
 ** COLOR
