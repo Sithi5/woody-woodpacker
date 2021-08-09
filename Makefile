@@ -2,8 +2,11 @@ SHELL				=	/bin/sh
 
 # Executable name
 NAME				=	woody_woodpacker
-PAYLOAD_64_NAME		=	payload_64
-PAYLOAD_32_NAME		=	payload_32
+
+SRC_PAYLOADS_PATH	=	./payloads/
+
+PAYLOAD_64_NAME		=	$(SRC_PAYLOADS_PATH)payload_64
+PAYLOAD_32_NAME		=	$(SRC_PAYLOADS_PATH)payload_32
 
 # Compilation mode
 WALL				=	yes
@@ -71,8 +74,6 @@ TESTS_FILES	= ./tests/test*.sh
 
 # Path
 SRC_PATH			=	./src/
-
-SRC_PAYLOADS_PATH	=	./payloads/
 
 OBJ_PATH 			=	./obj/
 

@@ -36,8 +36,8 @@
 #define PAGE_SZ32 0x1000
 
 #define OUTPUT_FILE_NAME "woody"
-#define PAYLOAD_64_NAME "payload_64"
-#define PAYLOAD_32_NAME "payload_32"
+#define PAYLOAD_64_NAME "./payloads/payload_64"
+#define PAYLOAD_32_NAME "./payloads/payload_32"
 
 #define size_t uint32_t
 
