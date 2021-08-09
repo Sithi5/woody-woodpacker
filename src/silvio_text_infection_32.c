@@ -92,32 +92,6 @@ void silvio_text_infection_elf32(t_woody *woody)
     }
 
     size_t ret2oep_offset = find_ret2oep_offset_elf32(woody);
-    printf("\n\nret2oep_offset = %i\n", ret2oep_offset);
-
-    //
-
-    for (uint32_t i = 0; i < woody->payload_size; i++)
-    {
-        printf("%x ", ((char *)(woody->payload_data))[i]);
-    }
-    printf("\n\nEntry virus size: ");
-    for (uint32_t i = 0; i < 4; i++)
-    {
-        printf("%x ", ((char *)(woody->payload_data))[ret2oep_offset + 3 + i]);
-    }
-    printf("\n\nEntry NEW in VX: ");
-    for (uint32_t i = 0; i < 4; i++)
-    {
-        printf("%x ", ((char *)(woody->payload_data))[ret2oep_offset + 9 + i]);
-    }
-
-    printf("\n");
-    printf("\nEntry OLD in VX: ");
-    for (uint32_t i = 0; i < 4; i++)
-    {
-        printf("%x ", ((char *)(woody->payload_data))[ret2oep_offset + 15 + i]);
-    }
-    printf("\n\n");
 
     //
     // Rewrite info in payload ret2oep.

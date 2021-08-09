@@ -9,6 +9,8 @@ SECTION .data
 
 SECTION .text
 
+%define syscall int 0x80
+
 _start_payload:
     push eax                 ; save all clobbered registers
     push ecx                 ; (rcx and r11 destroyed by kernel)
