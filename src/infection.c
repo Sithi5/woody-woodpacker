@@ -157,16 +157,9 @@ void silvio_text_infection(t_woody *woody)
 
     //
 
-    uint32_t payload_size_minus_ret2oep = woody->ret2oep_offset;
-    printf("payload_size = %u\n", woody->payload_size);
-    printf("payload_size_minus_ret2oep = %u\n", payload_size_minus_ret2oep);
-    printf("ret2oep size = %u\n", woody->payload_size - payload_size_minus_ret2oep);
-    printf("woody->new_entry_point = %lu\n", woody->new_entry_point);
-    printf("woody->old_entry_point = %lu\n", woody->old_entry_point);
-    printf("calc = %lu\n", woody->new_entry_point - woody->old_entry_point - payload_size_minus_ret2oep);
     // Rewrite info in payload ret2oep.
     // Rewrite payload size without ret2oep. + 2 to skip two first instructions and go to address.
-    memcpy(woody->payload_data + woody->ret2oep_offset + 2, (void *)(&(payload_size_minus_ret2oep)), 4);
+    memcpy(woody->payload_data + woody->ret2oep_offset + 2, (void *)(&(woody->ret2oep_offset)), 4);
     // Rewrite new entry_point in payload ret2oep.
     memcpy(woody->payload_data + woody->ret2oep_offset + 8, (void *)&(woody->new_entry_point), 4);
     // Rewrite old entry_point in payload ret2oep.
