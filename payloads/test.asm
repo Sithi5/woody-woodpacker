@@ -23,7 +23,6 @@ _infection:
     jmp _end_payload
 
 _end_payload:
-
     pop r11
     pop rdi
     pop rsi
