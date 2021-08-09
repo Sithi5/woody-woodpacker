@@ -156,7 +156,6 @@ void silvio_text_infection(t_woody *woody)
     printf("\n\n");
 
     //
-
     // Rewrite info in payload ret2oep.
     // Rewrite payload size without ret2oep. + 2 to skip two first instructions and go to address.
     memcpy(woody->payload_data + woody->ret2oep_offset + 2, (void *)(&(woody->ret2oep_offset)), 4);

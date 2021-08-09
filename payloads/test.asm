@@ -20,27 +20,6 @@ _start_payload:
 
 _infection:
     call _print_woody
-    call _print_woody
-    call _print_woody
-    call _print_woody
-    call _print_woody
-    call _print_woody
-    call _print_woody
-    call _print_woody
-    call _print_woody
-    call _print_woody
-    call _print_woody
-    call _print_woody
-    call _print_woody
-    call _print_woody
-    call _print_woody
-    call _print_woody
-    call _print_woody
-    call _print_woody
-    call _print_woody
-    call _print_woody
-    call _print_woody
-    call _print_woody
     jmp _end_payload
 
 _end_payload:
