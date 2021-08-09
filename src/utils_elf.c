@@ -12,7 +12,7 @@
 
 #include "woody_woodpacker.h"
 
-void check_elf_type(t_woody *woody)
+void check_elf_header_and_set_type(t_woody *woody)
 {
     if (woody->binary_data_size < sizeof(Elf32_Ehdr))
     {
@@ -37,6 +37,7 @@ void check_elf_type(t_woody *woody)
     {
         error(ERROR_NOT_ELF, woody);
     }
+    // Setting type here, elf64 or elf32.
     if (ehdr->e_ident[EI_CLASS] == ELFCLASS64)
     {
         woody->ei_class = ELFCLASS64;
@@ -50,8 +51,18 @@ void check_elf_type(t_woody *woody)
         error(ERROR_NOT_ELF, woody);
     }
     // Check if file have already been infected
-    if (woody->ehdr->e_ident[EI_PAD + 3] == 7)
+    if (ehdr->e_ident[EI_PAD + 3] == 7)
     {
         error(ERROR_FILE_IS_ALREADY_INFECTED, woody);
+    }
+    /*e_ident[EI_DATA] to equal ELFDATA2LSB (little-endian data structures).*/
+    if (!(ehdr->e_ident[EI_DATA] == ELFDATA2LSB))
+    {
+        error(ERROR_ELF_NOT_LITTLE_ENDIAN, woody);
+    }
+    /*Next check if the EIF type is an executable or a shared library e_type == ET_EXEC or ET_DYN.*/
+    if (ehdr->e_type != ET_EXEC && ehdr->e_type != ET_DYN)
+    {
+        error(ERROR_NOT_EXECUTABLE_BINARY, woody);
     }
 }

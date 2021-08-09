@@ -73,8 +73,8 @@ typedef struct s_woody
     void *mmap_ptr;
 
     char ei_class;
-    t_elf32_ptrs elf32_ptrs;
-    t_elf64_ptrs elf64_ptrs;
+    t_elf32_ptrs *elf32_ptrs;
+    t_elf64_ptrs *elf64_ptrs;
 
     int ret2oep_offset;
 
@@ -90,12 +90,14 @@ void error(int err, t_woody *woody);
 void free_woody(t_woody *woody);
 void check_ehdr_elf64(t_woody *woody);
 void elf64_pt_note_to_pt_load_infection(t_woody *woody);
-void silvio_text_infection(t_woody *woody);
 void print_memory(void *memory_ptr, int memory_size);
-void check_elf_type(t_woody *woody);
+void check_elf_header_and_set_type(t_woody *woody);
 void infect_elf_64(t_woody *woody);
 void infect_elf_32(t_woody *woody);
+void silvio_text_infection_elf64(t_woody *woody);
+void silvio_text_infection_elf32(t_woody *woody);
 void set_elf64_ptr(t_woody *woody);
+void load_payload(t_woody *woody, char *payload_name);
 
 /*
 ** ERROR CODE

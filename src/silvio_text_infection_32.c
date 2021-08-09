@@ -12,39 +12,6 @@
 
 #include "woody_woodpacker.h"
 
-void load_payload(t_woody *woody, char *payload_name)
-{
-    double payload_size;
-    int fd;
-
-    if ((fd = open(payload_name, O_RDONLY)) == -1)
-    {
-        error(ERROR_OPEN, woody);
-    }
-    if ((payload_size = lseek(fd, 0, SEEK_END)) != -1)
-    {
-        woody->payload_size = (uint32_t)payload_size;
-        /* Go back to the start of the file. */
-        if (lseek(fd, 0, SEEK_SET) != 0)
-        {
-            close(fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_LSEEK, woody);
-        }
-        if (!(woody->payload_data = malloc(payload_size)))
-        {
-            close(fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_MALLOC, woody);
-        }
-        if (read(fd, woody->payload_data, woody->payload_size) == -1)
-        {
-            close(fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_READ, woody);
-        }
-    }
-    else
-    {
-        close(fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_LSEEK, woody);
-    }
-    close(fd) == -1 ? error(ERROR_CLOSE, woody) : 0;
-}
-
 // Find the ret2oep offset in the payload. return true if ret2oep have been found.
 bool find_ret2oep_offset(t_woody *woody)
 {
@@ -74,7 +41,7 @@ bool find_ret2oep_offset(t_woody *woody)
     return false;
 }
 
-void silvio_text_infection(t_woody *woody)
+void silvio_text_infection_elf32(t_woody *woody)
 {
     // Create the output file
     if (!(woody->infected_file = malloc(woody->binary_data_size + PAGE_SZ64)))
@@ -93,36 +60,36 @@ void silvio_text_infection(t_woody *woody)
     Elf64_Addr payload_vaddr, text_end_offset;
 
     // Increase section header offset by PAGE_SIZE
-    woody->ehdr->e_shoff += PAGE_SZ64;
+    woody->elf32_ptrs->ehdr->e_shoff += PAGE_SZ64;
     // Set a flag in the EI_PAD header padding that indicate the file have been infected.
-    woody->ehdr->e_ident[EI_PAD + 3] = 7;
+    woody->elf32_ptrs->ehdr->e_ident[EI_PAD + 3] = 7;
 
-    for (int i = 0; i < woody->ehdr->e_phnum; i++)
+    for (int i = 0; i < woody->elf32_ptrs->ehdr->e_phnum; i++)
     {
-        if (woody->phdr[i].p_type == PT_LOAD && woody->phdr[i].p_flags == (PF_R | PF_X))
+        if (woody->elf32_ptrs->phdr[i].p_type == PT_LOAD && woody->elf32_ptrs->phdr[i].p_flags == (PF_R | PF_X))
         {
             //text found here, get the offset of the end of the section;
-            text_end_offset = woody->phdr[i].p_offset + woody->phdr[i].p_filesz;
-            payload_vaddr = woody->phdr[i].p_vaddr + woody->phdr[i].p_filesz;
-            woody->ehdr->e_entry = payload_vaddr;
-            woody->new_entry_point = payload_vaddr;
-            woody->phdr[i].p_filesz += woody->payload_size;
-            woody->phdr[i].p_memsz += woody->payload_size;
+            text_end_offset = woody->elf32_ptrs->phdr[i].p_offset + woody->elf32_ptrs->phdr[i].p_filesz;
+            payload_vaddr = woody->elf32_ptrs->phdr[i].p_vaddr + woody->elf32_ptrs->phdr[i].p_filesz;
+            woody->elf32_ptrs->ehdr->e_entry = payload_vaddr;
+            woody->elf32_ptrs->new_entry_point = payload_vaddr;
+            woody->elf32_ptrs->phdr[i].p_filesz += woody->payload_size;
+            woody->elf32_ptrs->phdr[i].p_memsz += woody->payload_size;
 
-            for (int j = i + 1; j < woody->ehdr->e_phnum; j++)
-                woody->phdr[j].p_offset += PAGE_SZ64;
+            for (int j = i + 1; j < woody->elf32_ptrs->ehdr->e_phnum; j++)
+                woody->elf32_ptrs->phdr[j].p_offset += PAGE_SZ64;
 
             break;
         }
     }
 
     // Adding offset of one page in all section located after text section end.
-    for (int i = 0; i < woody->ehdr->e_shnum; i++)
+    for (int i = 0; i < woody->elf32_ptrs->ehdr->e_shnum; i++)
     {
-        if (woody->shdr[i].sh_offset > text_end_offset)
-            woody->shdr[i].sh_offset += PAGE_SZ64;
-        else if (woody->shdr[i].sh_addr + woody->shdr[i].sh_size == payload_vaddr)
-            woody->shdr[i].sh_size += woody->payload_size;
+        if (woody->elf32_ptrs->shdr[i].sh_offset > text_end_offset)
+            woody->elf32_ptrs->shdr[i].sh_offset += PAGE_SZ64;
+        else if (woody->elf32_ptrs->shdr[i].sh_addr + woody->elf32_ptrs->shdr[i].sh_size == payload_vaddr)
+            woody->elf32_ptrs->shdr[i].sh_size += woody->payload_size;
     }
 
     if (!find_ret2oep_offset(woody))
@@ -134,9 +101,9 @@ void silvio_text_infection(t_woody *woody)
     // Rewrite payload size without ret2oep. + 2 to skip two first instructions and go to address.
     memcpy(woody->payload_data + woody->ret2oep_offset + 2, (void *)(&(woody->ret2oep_offset)), 4);
     // Rewrite new entry_point in payload ret2oep.
-    memcpy(woody->payload_data + woody->ret2oep_offset + 8, (void *)&(woody->new_entry_point), 4);
+    memcpy(woody->payload_data + woody->ret2oep_offset + 8, (void *)&(woody->elf32_ptrs->new_entry_point), 4);
     // Rewrite old entry_point in payload ret2oep.
-    memcpy(woody->payload_data + woody->ret2oep_offset + 14, (void *)&(woody->old_entry_point), 4);
+    memcpy(woody->payload_data + woody->ret2oep_offset + 14, (void *)&(woody->elf32_ptrs->old_entry_point), 4);
 
     memcpy(woody->infected_file, woody->mmap_ptr, (size_t)text_end_offset);
     memcpy(woody->infected_file + text_end_offset, woody->payload_data, woody->payload_size);

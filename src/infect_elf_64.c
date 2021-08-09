@@ -20,28 +20,10 @@ void set_elf64_ptrs(t_woody *woody)
     woody->elf64_ptrs->shdr = (Elf64_Shdr *)((woody->mmap_ptr + woody->elf64_ptrs->ehdr->e_shoff));
 }
 
-void check_ehdr_elf64(t_woody *woody)
-{
-          woody->ehdr->e_ident[EI_PAD] == 0))
-          {
-              error(ERROR_NOT_ELF64, woody);
-          }
-
-          /*e_ident[EI_DATA] to equal ELFDATA2LSB (little-endian data structures).*/
-          if (!(woody->ehdr->e_ident[EI_DATA] == ELFDATA2LSB))
-          {
-              error(ERROR_ELF_NOT_LITTLE_ENDIAN, woody);
-          }
-          /*Next check if the EIF type is an executable or a shared library e_type == ET_EXEC or ET_DYN.*/
-          if (woody->ehdr->e_type != ET_EXEC && woody->ehdr->e_type != ET_DYN)
-          {
-              error(ERROR_NOT_EXECUTABLE_BINARY, woody);
-          }
-}
-
 void infect_elf_64(t_woody *woody)
 {
     if (!(woody->elf64_ptrs = (t_elf64_ptrs *)malloc(sizeof(t_elf64_ptrs))))
         error(ERROR_MALLOC, woody);
     set_elf64_ptrs(woody);
+    silvio_text_infection_elf64(woody);
 }

@@ -68,12 +68,10 @@ int main(int ac, char **av)
     }
 
     get_binary_data(av[1], woody);
-    check_elf_type(woody);
+    check_elf_header_and_set_type(woody);
     woody->ei_class == ELFCLASS64 ? infect_elf_64(woody) : infect_elf_32(woody);
 
-    // check_ehdr(woody);
-    silvio_text_infection(woody);
     write_woody_file(woody);
-    // free_woody(woody);
+    free_woody(woody);
     return 0;
 }

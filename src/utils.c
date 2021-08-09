@@ -20,6 +20,8 @@ void free_woody(t_woody *woody)
         woody->mmap_ptr ? munmap(woody->mmap_ptr, woody->binary_data_size) : 0;
         woody->payload_data ? free(woody->payload_data) : 0;
         woody->infected_file ? free(woody->infected_file) : 0;
+        woody->elf32_ptrs ? free(woody->elf32_ptrs) : 0;
+        woody->elf64_ptrs ? free(woody->elf64_ptrs) : 0;
         free(woody);
     }
 }

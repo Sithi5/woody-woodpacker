@@ -51,12 +51,14 @@ endif
 
 # Name
 SRC_NAME			=	main.c						\
-						utils.c						\
 						error.c						\
 						infect_elf_32.c				\
 						infect_elf_64.c				\
+						utils.c						\
 						utils_elf.c					\
-						infection.c					\
+						utils_payload.c				\
+						silvio_text_infection_32.c	\
+						silvio_text_infection_64.c	\
 
 SRC_PAYLOAD_NAME	=	test.asm					\
 
@@ -136,7 +138,7 @@ tests: all
 	@echo "\n$(_WHITE)====================================================$(_END)"
 	@echo "$(_YELLOW)		LAUNCHING TESTS $(PAYLOAD_NAME)$(_END)"
 	@echo "$(_WHITE)====================================================$(_END)"
-	for f in $(TESTS_FILES);  do sh $${f}; done;
+	@for f in $(TESTS_FILES);  do sh $${f}; done;
 
 clean:
 	@rm -rf $(OBJ_PATH) 2> /dev/null || true
