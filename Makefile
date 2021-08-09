@@ -60,6 +60,7 @@ SRC_PAYLOAD_NAME	=	test.asm					\
 
 INCLUDE_NAME		=	woody_woodpacker.h	\
 
+TESTS_FILES	= ./tests/test*.sh
 
 # Path
 SRC_PATH			=	./src/
@@ -128,12 +129,12 @@ $(PAYLOAD_NAME):
 	@nasm -f bin -o $(PAYLOAD_NAME) $(SRC_PAYLOAD_PATH)/$(SRC_PAYLOAD_NAME)
 	@echo "\n$(_WHITE)$(_BOLD)$@\t$(_END)$(_GREEN)[OK]\n$(_END)"
 
+
 tests: all
 	@echo "\n$(_WHITE)====================================================$(_END)"
 	@echo "$(_YELLOW)		LAUNCHING TESTS $(PAYLOAD_NAME)$(_END)"
 	@echo "$(_WHITE)====================================================$(_END)"
-	@sh ./tests/tests.sh
-	@sh ./tests/test_multiples_infections.sh
+	for f in $(TESTS_FILES);  do sh $${f}; done;
 
 clean:
 	@rm -rf $(OBJ_PATH) 2> /dev/null || true
@@ -147,5 +148,14 @@ fclean: clean
 	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(PAYLOAD_NAME)
 
 re: fclean all
+
+help:
+	@echo "$(_YELLOW)Makefile for generating binary infectors.$(_END)"
+	@echo "$(_YELLOW)Usage:                                                                    $(_END)"
+	@echo "$(_YELLOW)   make                                runs rules specified under all     $(_END)"
+	@echo "$(_YELLOW)   make all                            generates all of the file formats  $(_END)"
+	@echo "$(_YELLOW)   make clean                          remove the generated files         $(_END)"
+	@echo "$(_YELLOW)   make tests                          launch tests scripts               $(_END)"
+	@echo "$(_YELLOW)   make help                           prints this message                $(_END)"
 
 .PHONY: all clean fclean re check

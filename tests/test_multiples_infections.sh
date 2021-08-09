@@ -15,3 +15,4 @@ echo "\n${_GREEN}Try infecting a second time...${_END}\n"
 ./woody_woodpacker woody
 
 rm test1
+rm woody
