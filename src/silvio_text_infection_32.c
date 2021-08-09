@@ -97,6 +97,7 @@ void silvio_text_infection_elf32(t_woody *woody)
     }
 
     size_t ret2oep_offset = find_ret2oep_offset_elf32(woody);
+    printf("ret2oep_offset = %i\n", ret2oep_offset);
 
     //
 
