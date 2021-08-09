@@ -30,8 +30,8 @@ size_t find_ret2oep_offset_elf32(t_woody *woody)
                     ((char *)woody->payload_data)[i + 10] == 0x77 && ((char *)woody->payload_data)[i + 11] == 0x77 &&
                     ((char *)woody->payload_data)[i + 12] == 0x77 && ((char *)woody->payload_data)[i + 13] == 0x77)
                 {
-                    // Removing 2 to go to actual start of ret2oep.
-                    return i - 2;
+                    // Removing 1 to go to actual start of ret2oep (go back to instructions sub).
+                    return i - 1;
                 }
             }
         }
@@ -125,12 +125,12 @@ void silvio_text_infection_elf32(t_woody *woody)
 
     //
     // Rewrite info in payload ret2oep.
-    // Rewrite payload size without ret2oep. + 2 to skip two first instructions and go to address.
-    memcpy(woody->payload_data + ret2oep_offset + 2, (void *)(&(ret2oep_offset)), 4);
+    // Rewrite payload size without ret2oep. + 1 to skip first instructions and go to address.
+    memcpy(woody->payload_data + ret2oep_offset + 1, (void *)(&(ret2oep_offset)), 4);
     // Rewrite new entry_point in payload ret2oep.
-    memcpy(woody->payload_data + ret2oep_offset + 8, (void *)&(woody->elf32_ptrs->new_entry_point), 4);
+    memcpy(woody->payload_data + ret2oep_offset + 6, (void *)&(woody->elf32_ptrs->new_entry_point), 4);
     // Rewrite old entry_point in payload ret2oep.
-    memcpy(woody->payload_data + ret2oep_offset + 14, (void *)&(woody->elf32_ptrs->old_entry_point), 4);
+    memcpy(woody->payload_data + ret2oep_offset + 11, (void *)&(woody->elf32_ptrs->old_entry_point), 4);
 
     memcpy(woody->infected_file, woody->mmap_ptr, (size_t)text_end_offset);
     memcpy(woody->infected_file + text_end_offset, woody->payload_data, woody->payload_size);

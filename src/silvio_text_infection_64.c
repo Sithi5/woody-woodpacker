@@ -31,7 +31,7 @@ size_t find_ret2oep_offset_elf64(t_woody *woody)
                     ((char *)woody->payload_data)[i + 12] == 0x77 && ((char *)woody->payload_data)[i + 13] == 0x77 &&
                     ((char *)woody->payload_data)[i + 14] == 0x77 && ((char *)woody->payload_data)[i + 15] == 0x77)
                 {
-                    // Removing 2 to go to actual start of ret2oep.
+                    // Removing 2 to go to actual start of ret2oep (go back to instructions sub).
                     return i - 2;
                 }
             }
