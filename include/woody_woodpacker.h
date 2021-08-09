@@ -61,7 +61,7 @@ typedef struct s_woody
     int ret2oep_offset;
 
     void *infected_file;
-    int infected_file_size;
+    uint32_t infected_file_size;
 } t_woody;
 
 /*
