@@ -2,9 +2,11 @@
 Projet qui a pour principe de modifier les headers d'un fichier de type ELF64. Le but ici est de pouvoir ajouter un morceau de code et obfusquer une partie d'un fichier non strippé.
 
 # Usefull commands
-* `readelf -h` : display elf-header information for binaries files
-* `readelf --symbol` : display symbol information for binaries files
-* `readelf -l`
+```bash
+readelf -h # Display elf-header information for binaries files
+readelf --symbol # Display symbol information for binaries files
+readelf -l # Display program-header info
+```
 
 # Resources
 * [elf.h](https://code.woboq.org/linux/include/elf.h.html)
@@ -13,5 +15,13 @@ Projet qui a pour principe de modifier les headers d'un fichier de type ELF64. L
 * [Linux x64 Infection for Lamers (by a Lamer)](https://vx-underground.org/archive/VxHeaven/lib/vjp01.html)
 * [Return To Original Entry Point Despite PIE](https://tmpout.sh/1/11.html)
 
+# Build and run
+```bash
+make all
+./woody-woopacker (binary_file)
+```
+
 # Testing
-`sh scripts/simple_testing_woody.sh`
+```bash
+make check
+```
