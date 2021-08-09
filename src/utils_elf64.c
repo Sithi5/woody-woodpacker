@@ -36,6 +36,12 @@ void check_ehdr(t_woody *woody)
     {
         error(ERROR_NOT_ELF64, woody);
     }
+    // Check if file have already been infected
+    if (woody->ehdr->e_ident[EI_PAD + 3] == 7)
+    {
+        error(ERROR_FILE_IS_ALREADY_INFECTED, woody);
+    }
+
     /*e_ident[EI_DATA] to equal ELFDATA2LSB (little-endian data structures).*/
     if (!(woody->ehdr->e_ident[EI_DATA] == ELFDATA2LSB))
     {

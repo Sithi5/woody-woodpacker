@@ -90,8 +90,9 @@ void print_memory(void *memory_ptr, int memory_size);
 #define ERROR_MMAP 9
 #define ERROR_NOT_EXECUTABLE_BINARY 10
 #define ERROR_ELF_NOT_LITTLE_ENDIAN 11
-#define ERROR_RET2OEP_NOT_FOUND 13
 #define ERROR_NOT_DEFINED 12
+#define ERROR_RET2OEP_NOT_FOUND 13
+#define ERROR_FILE_IS_ALREADY_INFECTED 14
 
 /*
 ** COLOR
