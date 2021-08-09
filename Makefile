@@ -2,6 +2,7 @@ SHELL				=	/bin/sh
 
 # Executable name
 NAME				=	woody_woodpacker
+PAYLOAD_NAME		=	payload
 
 # Compilation mode
 WALL				=	yes
@@ -49,28 +50,32 @@ ifeq ($(GEN), "Generation in mode")
 endif
 
 # Name
-SRC_NAME		=	main.c						\
-					utils.c						\
-					utils_elf64.c				\
-					error.c						\
-					infection.c					\
+SRC_NAME			=	main.c						\
+						utils.c						\
+						utils_elf64.c				\
+						error.c						\
+						infection.c					\
 
-INCLUDE_NAME	=	woody_woodpacker.h	\
+SRC_PAYLOAD_NAME	=	test.asm					\
+
+INCLUDE_NAME		=	woody_woodpacker.h	\
 
 
 # Path
-SRC_PATH		=	./src/
+SRC_PATH			=	./src/
 
-OBJ_PATH 		=	./obj/
+SRC_PAYLOAD_PATH	=	./payloads/
 
-INCLUDE_PATH	=	./include/
+OBJ_PATH 			=	./obj/
+
+INCLUDE_PATH		=	./include/
 
 # Name + Path
-SRC				=	$(addprefix $(SRC_PATH), $(SRC_NAME))
+SRC					=	$(addprefix $(SRC_PATH), $(SRC_NAME))
 
-OBJ				=	$(patsubst $(SRC_PATH)%.c, $(OBJ_PATH)%.o,	$(SRC))
+OBJ					=	$(patsubst $(SRC_PATH)%.c, $(OBJ_PATH)%.o,	$(SRC))
 
-INCLUDE			=	$(addprefix $(INCLUDE_PATH), $(INCLUDE_NAME))
+INCLUDE				=	$(addprefix $(INCLUDE_PATH), $(INCLUDE_NAME))
 
 # Text format
 _DEF		=	\033[0m
@@ -100,7 +105,7 @@ _IPURPLE	=	\033[45m
 _ICYAN		=	\033[46m
 _IGREY		=	\033[47m
 
-all: $(NAME)
+all: $(NAME) $(PAYLOAD_NAME)
 
 $(NAME): $(OBJ)
 	@echo "\n$(NAME) : $(GEN)"
@@ -116,23 +121,16 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.c $(INCLUDE)
 	@echo "$(_END)$(_GREEN)[OK]\t$(_UNDER)$(_YELLOW)\t"	\
 		"COMPILE :$(_END)$(_BOLD)$(_WHITE)\t$<"
 
-clean:
-	@rm -rf $(OBJ_PATH) 2> /dev/null || true
-	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(OBJ_PATH)"$(_END)"
-	@rm -rf $(OBJ_PATH) 2> /dev/null || true
-
-fclean: clean
-	@rm -f $(NAME) woody
-	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(NAME)
-
-re: fclean all
-
+$(PAYLOAD_NAME):
+	@echo "\n$(_WHITE)====================================================$(_END)"
+	@echo "$(_YELLOW)		COMPILING $(PAYLOAD_NAME)$(_END)"
+	@echo "$(_WHITE)====================================================$(_END)"
+	@nasm -f bin -o $(PAYLOAD_NAME) $(SRC_PAYLOAD_PATH)/$(SRC_PAYLOAD_NAME)
+	@echo "\n$(_WHITE)$(_BOLD)$@\t$(_END)$(_GREEN)[OK]\n$(_END)"
 
 check: all
-	@echo "\n$(_YELLOW)Compiling payload...\n"
-	@sh ./scripts/compile_payload_script.sh
 	@gcc -no-pie ./tests/test1.c -o test1_no_pie
-	@echo "\nCreating and Executing woody with no_pie binary...$(_END)\n"
+	@echo "\n$(_YELLOW)Creating and Executing woody with no_pie binary...$(_END)\n"
 	@./woody_woodpacker test1_no_pie
 	@./woody
 	@rm woody
@@ -145,5 +143,18 @@ check: all
 	@rm woody
 	@rm woody_woodpacker
 	@rm payload
+
+clean:
+	@rm -rf $(OBJ_PATH) 2> /dev/null || true
+	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(OBJ_PATH)"$(_END)"
+	@rm -rf $(OBJ_PATH) 2> /dev/null || true
+
+fclean: clean
+	@rm -f $(NAME) woody
+	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(NAME)
+	@rm -f $(PAYLOAD_NAME)
+	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(PAYLOAD_NAME)
+
+re: fclean all
 
 .PHONY: all clean fclean re check
