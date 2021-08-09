@@ -128,21 +128,12 @@ $(PAYLOAD_NAME):
 	@nasm -f bin -o $(PAYLOAD_NAME) $(SRC_PAYLOAD_PATH)/$(SRC_PAYLOAD_NAME)
 	@echo "\n$(_WHITE)$(_BOLD)$@\t$(_END)$(_GREEN)[OK]\n$(_END)"
 
-check: all
-	@gcc -no-pie ./tests/test1.c -o test1_no_pie
-	@echo "\n$(_YELLOW)Creating and Executing woody with no_pie binary...$(_END)\n"
-	@./woody_woodpacker test1_no_pie
-	@./woody
-	@rm woody
-	@gcc ./tests/test1.c -o test1
-	@echo "\n$(_YELLOW)Creating and Executing woody with normal binary...$(_END)\n"
-	@./woody_woodpacker test1
-	@./woody
-	@rm test1
-	@rm test1_no_pie
-	@rm woody
-	@rm woody_woodpacker
-	@rm payload
+tests: all
+	@echo "\n$(_WHITE)====================================================$(_END)"
+	@echo "$(_YELLOW)		LAUNCHING TESTS $(PAYLOAD_NAME)$(_END)"
+	@echo "$(_WHITE)====================================================$(_END)"
+	@sh ./tests/tests.sh
+	@sh ./tests/test_multiples_infections.sh
 
 clean:
 	@rm -rf $(OBJ_PATH) 2> /dev/null || true

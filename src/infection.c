@@ -94,6 +94,8 @@ void silvio_text_infection(t_woody *woody)
 
     // Increase section header offset by PAGE_SIZE
     woody->ehdr->e_shoff += PAGE_SZ64;
+    // Set a flag in the EI_PAD header padding that indicate the file have been infected.
+    woody->ehdr->e_ident[EI_PAD + 3] = 7;
 
     for (int i = 0; i < woody->ehdr->e_phnum; i++)
     {
