@@ -58,11 +58,6 @@ void silvio_text_infection_elf32(t_woody *woody)
 
     Elf64_Addr payload_vaddr, text_end_offset;
 
-    for (uint32_t i = 0; i < woody->payload_size; i++)
-    {
-        printf("%x ", ((char *)(woody->payload_data))[i]);
-    }
-
     // Increase section header offset by PAGE_SIZE
     woody->elf32_ptrs->ehdr->e_shoff += PAGE_SZ32;
     // Set a flag in the EI_PAD header padding that indicate the file have been infected.
