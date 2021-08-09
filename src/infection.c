@@ -45,8 +45,8 @@ void load_payload(t_woody *woody, char *payload_name)
     close(fd) == -1 ? error(ERROR_CLOSE, woody) : 0;
 }
 
-// Find the ret2oep offset in the payload. set offset to -1 if not found.
-void find_ret2oep_offset(t_woody *woody)
+// Find the ret2oep offset in the payload. return true if ret2oep have been found.
+bool find_ret2oep_offset(t_woody *woody)
 {
     for (uint32_t i = 0; i < woody->payload_size; i++)
     {
@@ -67,12 +67,12 @@ void find_ret2oep_offset(t_woody *woody)
                     // Removing 3 to go to actual start of ret2oep.
                     woody->ret2oep_offset = i - 2;
                     printf("find ret2oep at offset : %i\n", woody->ret2oep_offset);
-                    return;
+                    return true;
                 }
             }
         }
     }
-    woody->ret2oep_offset = -1;
+    return false;
 }
 
 void silvio_text_infection(t_woody *woody)
@@ -124,7 +124,10 @@ void silvio_text_infection(t_woody *woody)
             woody->shdr[i].sh_size += woody->payload_size;
     }
 
-    find_ret2oep_offset(woody);
+    if (!find_ret2oep_offset(woody))
+    {
+        error(ERROR_RET2OEP_NOT_FOUND, woody);
+    }
 
     // Rewrite info in payload ret2oep.
     // Rewrite payload size without ret2oep. + 2 to skip two first instructions and go to address.
