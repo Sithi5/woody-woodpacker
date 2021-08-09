@@ -23,3 +23,13 @@ void free_woody(t_woody *woody)
         free(woody);
     }
 }
+
+void print_memory(void *memory_ptr, int memory_size)
+{
+    printf("printing memory at address : %p :\n\n", memory_ptr);
+    for (int i = 0; i < memory_size; i++)
+    {
+        printf("%x ", ((char *)(memory_ptr))[i]);
+    }
+    printf("\n\n");
+}

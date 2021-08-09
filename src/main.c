@@ -23,7 +23,7 @@ void get_binary_data(char *file_name, t_woody *woody)
     }
     if ((binary_data_size = lseek(fd, 0, SEEK_END)) != -1)
     {
-        woody->binary_data_size = (long unsigned int)binary_data_size;
+        woody->binary_data_size = (uint32_t)binary_data_size;
         /* Go back to the start of the file. */
         if (lseek(fd, 0, SEEK_SET) != 0)
         {
@@ -52,8 +52,6 @@ void set_elf_ptr(t_woody *woody)
     woody->old_entry_point = woody->ehdr->e_entry;
     woody->phdr = (Elf64_Phdr *)((woody->mmap_ptr + woody->ehdr->e_phoff));
     woody->shdr = (Elf64_Shdr *)((woody->mmap_ptr + woody->ehdr->e_shoff));
-    woody->is_exec = true;
-    woody->is_dyn = true;
 }
 
 void write_woody_file(t_woody *woody)
@@ -86,6 +84,6 @@ int main(int ac, char **av)
     check_ehdr(woody);
     silvio_text_infection(woody);
     write_woody_file(woody);
-    free_woody(woody);
+    // free_woody(woody);
     return 0;
 }

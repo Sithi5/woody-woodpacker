@@ -38,15 +38,17 @@
 #define OUTPUT_FILE_NAME "woody"
 #define PAYLOAD_NAME "payload"
 
+#define size_t uint32_t
+
 /*
 ** struct
 */
 
 typedef struct s_woody
 {
-    long unsigned int binary_data_size;
+    uint32_t binary_data_size;
 
-    long unsigned int payload_size;
+    uint32_t payload_size;
     void *payload_data;
 
     void *mmap_ptr;
@@ -56,12 +58,10 @@ typedef struct s_woody
     Elf64_Shdr *shdr;
     Elf64_Addr new_entry_point;
     Elf64_Addr old_entry_point;
-
-    bool is_exec;
-    bool is_dyn;
+    int ret2oep_offset;
 
     void *infected_file;
-    int infected_file_size;
+    uint32_t infected_file_size;
 } t_woody;
 
 /*
@@ -73,6 +73,8 @@ void free_woody(t_woody *woody);
 void check_ehdr(t_woody *woody);
 void elf64_pt_note_to_pt_load_infection(t_woody *woody);
 void silvio_text_infection(t_woody *woody);
+void print_memory(void *memory_ptr, int memory_size);
+
 /*
 ** ERROR CODE
 */
@@ -88,6 +90,7 @@ void silvio_text_infection(t_woody *woody);
 #define ERROR_MMAP 9
 #define ERROR_NOT_EXECUTABLE_BINARY 10
 #define ERROR_ELF_NOT_LITTLE_ENDIAN 11
+#define ERROR_RET2OEP_NOT_FOUND 13
 #define ERROR_NOT_DEFINED 12
 
 /*

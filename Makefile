@@ -1,4 +1,4 @@
-SHELL				=	/bin/zsh
+SHELL				=	/bin/sh
 
 # Executable name
 NAME				=	woody_woodpacker

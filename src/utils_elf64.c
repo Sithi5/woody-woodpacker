@@ -42,13 +42,7 @@ void check_ehdr(t_woody *woody)
         error(ERROR_ELF_NOT_LITTLE_ENDIAN, woody);
     }
     /*Next check if the EIF type is an executable or a shared library e_type == ET_EXEC or ET_DYN.*/
-    if (woody->ehdr->e_type == ET_EXEC)
-        woody->is_dyn = false;
-    else if (woody->ehdr->e_type == ET_DYN)
-    {
-        woody->is_exec = false;
-    }
-    else
+    if (woody->ehdr->e_type != ET_EXEC && woody->ehdr->e_type != ET_DYN)
     {
         error(ERROR_NOT_EXECUTABLE_BINARY, woody);
     }
