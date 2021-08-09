@@ -17,7 +17,6 @@ void load_payload(t_woody *woody, char *payload_name)
     double payload_size;
     int fd;
 
-    printf("Pyaload name = %s\n", payload_name);
     if ((fd = open(payload_name, O_RDONLY)) == -1)
     {
         error(ERROR_OPEN, woody);
