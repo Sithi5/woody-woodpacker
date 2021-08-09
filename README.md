@@ -23,5 +23,5 @@ make all
 
 # Testing
 ```bash
-make check
+make tests
 ```
