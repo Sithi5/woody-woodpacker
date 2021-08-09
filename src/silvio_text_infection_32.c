@@ -23,13 +23,12 @@ size_t find_ret2oep_offset_elf32(t_woody *woody)
             {
                 // Actually checking we are in ret2oep
                 if (((char *)woody->payload_data)[i + 1] == 0x77 && ((char *)woody->payload_data)[i + 2] == 0x77 &&
-                    ((char *)woody->payload_data)[i + 3] == 0x77 &&
-                    ((char *)woody->payload_data)[i + 4] == 0x48 && ((char *)woody->payload_data)[i + 5] == 0x2d &&
-                    ((char *)woody->payload_data)[i + 6] == 0x77 && ((char *)woody->payload_data)[i + 7] == 0x77 &&
-                    ((char *)woody->payload_data)[i + 8] == 0x77 && ((char *)woody->payload_data)[i + 9] == 0x77 &&
-                    ((char *)woody->payload_data)[i + 10] == 0x48 && ((char *)woody->payload_data)[i + 11] == 0x05 &&
-                    ((char *)woody->payload_data)[i + 12] == 0x77 && ((char *)woody->payload_data)[i + 13] == 0x77 &&
-                    ((char *)woody->payload_data)[i + 14] == 0x77 && ((char *)woody->payload_data)[i + 15] == 0x77)
+                    ((char *)woody->payload_data)[i + 3] == 0x77 && ((char *)woody->payload_data)[i + 4] == 0x2d &&
+                    ((char *)woody->payload_data)[i + 5] == 0x77 && ((char *)woody->payload_data)[i + 6] == 0x77 &&
+                    ((char *)woody->payload_data)[i + 7] == 0x77 && ((char *)woody->payload_data)[i + 8] == 0x77 &&
+                    ((char *)woody->payload_data)[i + 9] == 0x05 &&
+                    ((char *)woody->payload_data)[i + 10] == 0x77 && ((char *)woody->payload_data)[i + 11] == 0x77 &&
+                    ((char *)woody->payload_data)[i + 12] == 0x77 && ((char *)woody->payload_data)[i + 13] == 0x77)
                 {
                     // Removing 2 to go to actual start of ret2oep.
                     return i - 2;
@@ -58,6 +57,11 @@ void silvio_text_infection_elf32(t_woody *woody)
     }
 
     Elf64_Addr payload_vaddr, text_end_offset;
+
+    for (uint32_t i = 0; i < woody->payload_size; i++)
+    {
+        printf("%x ", ((char *)(woody->payload_data))[i]);
+    }
 
     // Increase section header offset by PAGE_SIZE
     woody->elf32_ptrs->ehdr->e_shoff += PAGE_SZ32;
@@ -93,6 +97,33 @@ void silvio_text_infection_elf32(t_woody *woody)
     }
 
     size_t ret2oep_offset = find_ret2oep_offset_elf32(woody);
+
+    //
+
+    for (uint32_t i = 0; i < woody->payload_size; i++)
+    {
+        printf("%x ", ((char *)(woody->payload_data))[i]);
+    }
+    printf("\n\nEntry virus size: ");
+    for (uint32_t i = 0; i < 4; i++)
+    {
+        printf("%x ", ((char *)(woody->payload_data))[ret2oep_offset + 3 + i]);
+    }
+    printf("\n\nEntry NEW in VX: ");
+    for (uint32_t i = 0; i < 4; i++)
+    {
+        printf("%x ", ((char *)(woody->payload_data))[ret2oep_offset + 9 + i]);
+    }
+
+    printf("\n");
+    printf("\nEntry OLD in VX: ");
+    for (uint32_t i = 0; i < 4; i++)
+    {
+        printf("%x ", ((char *)(woody->payload_data))[ret2oep_offset + 15 + i]);
+    }
+    printf("\n\n");
+
+    //
     // Rewrite info in payload ret2oep.
     // Rewrite payload size without ret2oep. + 2 to skip two first instructions and go to address.
     memcpy(woody->payload_data + ret2oep_offset + 2, (void *)(&(ret2oep_offset)), 4);

@@ -2,7 +2,8 @@ SHELL				=	/bin/sh
 
 # Executable name
 NAME				=	woody_woodpacker
-PAYLOAD_NAME		=	payload
+PAYLOAD_64_NAME		=	payload_64
+PAYLOAD_32_NAME		=	payload_32
 
 # Compilation mode
 WALL				=	yes
@@ -60,7 +61,9 @@ SRC_NAME			=	main.c						\
 						silvio_text_infection_32.c	\
 						silvio_text_infection_64.c	\
 
-SRC_PAYLOAD_NAME	=	test.asm					\
+SRC_PAYLOAD_64_NAME	=	test64.asm					\
+
+SRC_PAYLOAD_32_NAME	=	test32.asm					\
 
 INCLUDE_NAME		=	woody_woodpacker.h	\
 
@@ -69,7 +72,7 @@ TESTS_FILES	= ./tests/test*.sh
 # Path
 SRC_PATH			=	./src/
 
-SRC_PAYLOAD_PATH	=	./payloads/
+SRC_PAYLOADS_PATH	=	./payloads/
 
 OBJ_PATH 			=	./obj/
 
@@ -110,7 +113,7 @@ _IPURPLE	=	\033[45m
 _ICYAN		=	\033[46m
 _IGREY		=	\033[47m
 
-all: $(NAME) $(PAYLOAD_NAME)
+all: $(NAME) $(PAYLOAD_64_NAME) $(PAYLOAD_32_NAME)
 
 $(NAME): $(OBJ)
 	@echo "\n$(NAME) : $(GEN)"
@@ -126,17 +129,23 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.c $(INCLUDE)
 	@echo "$(_END)$(_GREEN)[OK]\t$(_UNDER)$(_YELLOW)\t"	\
 		"COMPILE :$(_END)$(_BOLD)$(_WHITE)\t$<"
 
-$(PAYLOAD_NAME):
+$(PAYLOAD_64_NAME):
 	@echo "\n$(_WHITE)====================================================$(_END)"
-	@echo "$(_YELLOW)		COMPILING $(PAYLOAD_NAME)$(_END)"
+	@echo "$(_YELLOW)		COMPILING $(PAYLOAD_64_NAME)$(_END)"
 	@echo "$(_WHITE)====================================================$(_END)"
-	@nasm -f bin -o $(PAYLOAD_NAME) $(SRC_PAYLOAD_PATH)/$(SRC_PAYLOAD_NAME)
+	@nasm -f bin -o $(PAYLOAD_64_NAME) $(SRC_PAYLOADS_PATH)$(SRC_PAYLOAD_64_NAME)
 	@echo "\n$(_WHITE)$(_BOLD)$@\t$(_END)$(_GREEN)[OK]\n$(_END)"
 
+$(PAYLOAD_32_NAME):
+	@echo "\n$(_WHITE)====================================================$(_END)"
+	@echo "$(_YELLOW)		COMPILING $(PAYLOAD_32_NAME)$(_END)"
+	@echo "$(_WHITE)====================================================$(_END)"
+	@nasm -f bin  -o $(PAYLOAD_32_NAME) $(SRC_PAYLOADS_PATH)$(SRC_PAYLOAD_32_NAME)
+	@echo "\n$(_WHITE)$(_BOLD)$@\t$(_END)$(_GREEN)[OK]\n$(_END)"
 
 tests: all
 	@echo "\n$(_WHITE)====================================================$(_END)"
-	@echo "$(_YELLOW)		LAUNCHING TESTS $(PAYLOAD_NAME)$(_END)"
+	@echo "$(_YELLOW)		LAUNCHING TESTS$(_END)"
 	@echo "$(_WHITE)====================================================$(_END)"
 	@for f in $(TESTS_FILES);  do sh $${f}; done;
 
@@ -148,8 +157,10 @@ clean:
 fclean: clean
 	@rm -f $(NAME) woody
 	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(NAME)
-	@rm -f $(PAYLOAD_NAME)
-	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(PAYLOAD_NAME)
+	@rm -f $(PAYLOAD_32_NAME)
+	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(PAYLOAD_32_NAME)
+	@rm -f $(PAYLOAD_64_NAME)
+	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(PAYLOAD_64_NAME)
 
 re: fclean all
 

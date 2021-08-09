@@ -22,7 +22,6 @@ void set_elf32_ptrs(t_woody *woody)
 
 void infect_elf_32(t_woody *woody)
 {
-    printf("testing elf32 now\n");
     if (!(woody->elf32_ptrs = (t_elf32_ptrs *)malloc(sizeof(t_elf32_ptrs))))
         error(ERROR_MALLOC, woody);
     set_elf32_ptrs(woody);
