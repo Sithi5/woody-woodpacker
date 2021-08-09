@@ -23,14 +23,14 @@ void swap(char *a, char *b)
 
 void encryption(char *stream, t_woody *woody)
 {
-    int i = 0, j = 0;
+    int i = 0, j = 0, res = 0;
 
     for (int k = 0; k < woody->text_section_size; k++)
     {
         i = (i + 1) % N;
         j = (j + stream[i]) % N;
         swap(&stream[i], &stream[j]);
-        int res = stream[(stream[i] + stream[j]) % N];
+        res = stream[(stream[i] + stream[j]) % N];
         woody->encryption_result[k] = res ^ woody->encryption_data[k];
     }
 }
