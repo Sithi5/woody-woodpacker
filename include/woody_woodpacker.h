@@ -38,15 +38,17 @@
 #define OUTPUT_FILE_NAME "woody"
 #define PAYLOAD_NAME "payload"
 
+#define size_t uint32_t
+
 /*
 ** struct
 */
 
 typedef struct s_woody
 {
-    long unsigned int binary_data_size;
+    uint32_t binary_data_size;
 
-    long unsigned int payload_size;
+    uint32_t payload_size;
     void *payload_data;
 
     void *mmap_ptr;

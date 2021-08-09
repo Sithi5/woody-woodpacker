@@ -23,7 +23,7 @@ void get_binary_data(char *file_name, t_woody *woody)
     }
     if ((binary_data_size = lseek(fd, 0, SEEK_END)) != -1)
     {
-        woody->binary_data_size = (long unsigned int)binary_data_size;
+        woody->binary_data_size = (uint32_t)binary_data_size;
         /* Go back to the start of the file. */
         if (lseek(fd, 0, SEEK_SET) != 0)
         {
