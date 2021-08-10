@@ -1,5 +1,6 @@
 BITS 32
 
+
 SECTION .data
         woody_msg: db "...WOODY...",10
         woody_msg_len  : equ $-woody_msg
@@ -7,9 +8,9 @@ SECTION .data
         debug_msg: db "debug",10
         debug_msg_len  : equ $-woody_msg
 
-SECTION .text
 
-%define syscall int 0x80
+SECTION .text
+%define sys_call int 0x80
 
 _start_payload:
     push eax                 ; save all clobbered registers
@@ -20,7 +21,6 @@ _start_payload:
     jmp _infection
 
 _infection:
-    call _print_woody
     jmp _end_payload
 
 _end_payload:
@@ -31,23 +31,7 @@ _end_payload:
     pop eax
 
     call _ret2oep           ; jump to original entry point(oep)
-    push eax
-    ret
-
-_debug_write:
-    mov eax,1                ; sys_write
-    mov edi,1                ; stdout
-    mov edx,debug_msg_len;    ; len
-    lea esi,[rel $+debug_msg-$]  ; debug msg
-    syscall
-    ret
-
-_print_woody:
-    mov eax,1                ; sys_write
-    mov edi,1                ; stdout
-    mov edx,woody_msg_len;len
-    lea esi,[rel $+woody_msg-$]  ; woody
-    syscall
+    push 0x8048310
     ret
 
 _get_rip:
@@ -59,5 +43,21 @@ _ret2oep:
     sub eax, 0x77777777 ; virus size without ret2oep
     sub eax, 0x77777777 ; new_entry_point
     add eax, 0x77777777 ; old entry_point
+    ret
+
+_print_woody:
+    mov eax,1                ; sys_write
+    mov edi,1                ; stdout
+    mov edx,woody_msg_len;len
+    lea esi,[rel $+woody_msg-$]  ; woody
+    sys_call
+    ret
+
+_debug_write:
+    mov eax,1                ; sys_write
+    mov edi,1                ; stdout
+    mov edx,debug_msg_len;    ; len
+    lea esi,[rel $+debug_msg-$]  ; debug msg
+    sys_call
     ret
 
