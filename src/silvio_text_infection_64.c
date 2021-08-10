@@ -57,11 +57,13 @@ void silvio_text_infection_elf64(t_woody *woody)
         error(ERROR_PAYLOAD_TOO_BIG, woody);
     }
 
+    Elf64_Addr payload_vaddr, text_end_offset;
+
     // Increase section header offset by PAGE_SIZE
     woody->elf64_ptrs->ehdr->e_shoff += PAGE_SZ64;
     // Set a flag in the EI_PAD header padding that indicate the file have been infected.
     woody->elf64_ptrs->ehdr->e_ident[EI_PAD + 3] = 7;
-    Elf64_Addr payload_vaddr;
+
     for (int i = 0; i < woody->elf64_ptrs->ehdr->e_phnum; i++)
     {
         if (woody->elf64_ptrs->phdr[i].p_type == PT_LOAD && woody->elf64_ptrs->phdr[i].p_flags == (PF_R | PF_X))
@@ -70,6 +72,7 @@ void silvio_text_infection_elf64(t_woody *woody)
             woody->elf64_ptrs->text_start_offset = woody->elf64_ptrs->phdr[i].p_offset;
             woody->elf64_ptrs->text_end_offset = woody->elf64_ptrs->text_start_offset + woody->elf64_ptrs->phdr[i].p_filesz;
 
+            text_end_offset = woody->elf64_ptrs->phdr[i].p_offset + woody->elf64_ptrs->phdr[i].p_filesz;
             payload_vaddr = woody->elf64_ptrs->phdr[i].p_vaddr + woody->elf64_ptrs->phdr[i].p_filesz;
             woody->elf64_ptrs->ehdr->e_entry = payload_vaddr;
             woody->elf64_ptrs->new_entry_point = payload_vaddr;
@@ -86,7 +89,7 @@ void silvio_text_infection_elf64(t_woody *woody)
     // Adding offset of one page in all section located after text section end.
     for (int i = 0; i < woody->elf64_ptrs->ehdr->e_shnum; i++)
     {
-        if (woody->elf64_ptrs->shdr[i].sh_offset > woody->elf64_ptrs->text_end_offset)
+        if (woody->elf64_ptrs->shdr[i].sh_offset > text_end_offset)
             woody->elf64_ptrs->shdr[i].sh_offset += PAGE_SZ64;
         else if (woody->elf64_ptrs->shdr[i].sh_addr + woody->elf64_ptrs->shdr[i].sh_size == payload_vaddr)
             woody->elf64_ptrs->shdr[i].sh_size += woody->payload_size;
@@ -104,9 +107,14 @@ void silvio_text_infection_elf64(t_woody *woody)
     // Rewrite old entry_point in payload ret2oep.
     memcpy(woody->payload_data + ret2oep_offset + 14, (void *)&(woody->elf64_ptrs->old_entry_point), 4);
 
+    memcpy(woody->infected_file + woody->elf64_ptrs->text_end_offset + PAGE_SZ64, woody->mmap_ptr + woody->elf64_ptrs->text_end_offset, woody->binary_data_size - woody->elf64_ptrs->text_end_offset);
+
+    // Insert binary before text section
     memcpy(woody->infected_file, woody->mmap_ptr, (size_t)woody->elf64_ptrs->text_end_offset);
     // Rewrite text section with cipher data.
     memcpy(woody->infected_file + woody->elf64_ptrs->text_start_offset, woody->cipher, (size_t)(woody->elf64_ptrs->text_end_offset - woody->elf64_ptrs->text_start_offset));
+    // Insert payload
     memcpy(woody->infected_file + woody->elf64_ptrs->text_end_offset, woody->payload_data, woody->payload_size);
+    // Insert rest of binary
     memcpy(woody->infected_file + woody->elf64_ptrs->text_end_offset + PAGE_SZ64, woody->mmap_ptr + woody->elf64_ptrs->text_end_offset, woody->binary_data_size - woody->elf64_ptrs->text_end_offset);
 }
