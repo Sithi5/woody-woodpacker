@@ -199,4 +199,4 @@ help:
 	@echo "$(_YELLOW)   make tests                          launch tests scripts               $(_END)"
 	@echo "$(_YELLOW)   make help                           prints this message                $(_END)"
 
-.PHONY: all clean fclean re check
+.PHONY: all clean fclean re check payloads help tests clean_payloads
