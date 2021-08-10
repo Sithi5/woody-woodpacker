@@ -1,14 +1,6 @@
 BITS 32
 
-SECTION .data
-        woody_msg: db "...WOODY...",10
-        woody_msg_len  : equ $-woody_msg
-
-        debug_msg: db "debug",10
-        debug_msg_len  : equ $-woody_msg
-
 SECTION .text
-
 %define syscall int 0x80
 
 _start_payload:
@@ -17,6 +9,9 @@ _start_payload:
     push edx
     push esi
     push edi
+
+
+
     jmp _infection
 
 _infection:
@@ -24,6 +19,8 @@ _infection:
     jmp _end_payload
 
 _end_payload:
+
+
     pop edi
     pop esi
     pop edx
@@ -32,22 +29,6 @@ _end_payload:
 
     call _ret2oep           ; jump to original entry point(oep)
     push eax
-    ret
-
-_debug_write:
-    mov eax,1                ; sys_write
-    mov edi,1                ; stdout
-    mov edx,debug_msg_len;    ; len
-    lea esi,[rel $+debug_msg-$]  ; debug msg
-    syscall
-    ret
-
-_print_woody:
-    mov eax,1                ; sys_write
-    mov edi,1                ; stdout
-    mov edx,woody_msg_len;len
-    lea esi,[rel $+woody_msg-$]  ; woody
-    syscall
     ret
 
 _get_rip:
@@ -61,3 +42,23 @@ _ret2oep:
     add eax, 0x77777777 ; old entry_point
     ret
 
+_print_woody:
+    ; Setting the string woody on stack
+    sub esp, 0xf
+    push 10
+    push '...'
+    push 'OODY'
+    push '...W'
+	mov ecx, esp        ; string to write
+
+    mov eax,4            ; 'write' system call = 4
+	mov ebx,1            ; file descriptor 1 = STDOUT
+	mov edx, 13     ; length of string to write
+	syscall              ; call the kernel
+
+    add esp, 0xf
+    pop edi
+    pop edi
+    pop edi
+    pop edi
+    ret

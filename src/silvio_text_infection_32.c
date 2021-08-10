@@ -93,7 +93,9 @@ void silvio_text_infection_elf32(t_woody *woody)
 
     size_t ret2oep_offset = find_ret2oep_offset_elf32(woody);
 
-    //
+    printf("woody->elf32_ptrs->new_entry_point : %p\n", woody->elf32_ptrs->new_entry_point);
+    printf("woody->elf32_ptrs->old_entry_point : %p\n", woody->elf32_ptrs->old_entry_point);
+
     // Rewrite info in payload ret2oep.
     // Rewrite payload size without ret2oep. + 1 to skip first instructions and go to address.
     memcpy(woody->payload_data + ret2oep_offset + 1, (void *)(&(ret2oep_offset)), 4);
