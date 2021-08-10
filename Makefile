@@ -17,6 +17,8 @@ DEBUG				=	no
 O2					=	no
 
 CC					:=	gcc
+AS					:= nasm
+AS_FLAG				:= -f elf64
 GEN					:=	Generation in mode
 
 ifeq ($(WALL), yes)
@@ -63,6 +65,9 @@ SRC_NAME			=	main.c						\
 						utils_payload.c				\
 						silvio_text_infection_32.c	\
 						silvio_text_infection_64.c	\
+						crypto.c					\
+
+ASM_SRC_NAME		=	xor_cipher.asm		\
 
 SRC_PAYLOAD_64_NAME	=	test64.asm					\
 
@@ -73,14 +78,22 @@ INCLUDE_NAME		=	woody_woodpacker.h	\
 TESTS_FILES	= ./tests/test*.sh
 
 # Path
+ASM_SRC_PATH	=	./asm/
+
 SRC_PATH			=	./src/
+
+ASM_OBJ_PATH	= 	./obj/
 
 OBJ_PATH 			=	./obj/
 
 INCLUDE_PATH		=	./include/
 
 # Name + Path
+ASM_SRC			= 	$(addprefix $(ASM_SRC_PATH), $(ASM_SRC_NAME))
+
 SRC					=	$(addprefix $(SRC_PATH), $(SRC_NAME))
+
+ASM_OBJ			=	$(patsubst $(ASM_SRC_PATH)%.asm, $(OBJ_PATH)%.o,	$(ASM_SRC))
 
 OBJ					=	$(patsubst $(SRC_PATH)%.c, $(OBJ_PATH)%.o,	$(SRC))
 
@@ -116,17 +129,23 @@ _IGREY		=	\033[47m
 
 all: $(NAME) $(SRC_PAYLOADS_PATH)$(PAYLOAD_64_NAME) $(SRC_PAYLOADS_PATH)$(PAYLOAD_32_NAME)
 
-$(NAME): $(OBJ)
+$(NAME): $(ASM_OBJ) $(OBJ)
 	@echo "\n$(NAME) : $(GEN)"
 	@echo "\n$(_WHITE)====================================================$(_END)"
 	@echo "$(_YELLOW)		COMPILING $(NAME)$(_END)"
 	@echo "$(_WHITE)====================================================$(_END)"
-	@$(CC) -o $(NAME) $(OBJ)
+	@$(CC) -o $(NAME) $(OBJ) $(ASM_OBJ)
 	@echo "\n$(_WHITE)$(_BOLD)$@\t$(_END)$(_GREEN)[OK]\n$(_END)"
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c $(INCLUDE)
 	@mkdir -p $(OBJ_PATH)
 	@$(CC) -I $(INCLUDE_PATH) -I $(INCLUDE_PATH) -c $< -o $@
+	@echo "$(_END)$(_GREEN)[OK]\t$(_UNDER)$(_YELLOW)\t"	\
+		"COMPILE :$(_END)$(_BOLD)$(_WHITE)\t$<"
+
+$(ASM_OBJ_PATH)%.o: $(ASM_SRC_PATH)%.asm
+	@mkdir -p $(OBJ_PATH)
+	$(AS) $(AS_FLAG) $< -o $@
 	@echo "$(_END)$(_GREEN)[OK]\t$(_UNDER)$(_YELLOW)\t"	\
 		"COMPILE :$(_END)$(_BOLD)$(_WHITE)\t$<"
 
