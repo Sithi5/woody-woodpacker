@@ -172,8 +172,10 @@ re: fclean all
 help:
 	@echo "$(_YELLOW)Makefile for generating binary infectors.$(_END)"
 	@echo "$(_YELLOW)Usage:                                                                    $(_END)"
-	@echo "$(_YELLOW)   make                                runs rules specified under all     $(_END)"
-	@echo "$(_YELLOW)   make all                            generates all of the file formats  $(_END)"
+	@echo "$(_YELLOW)   make                                runs all                           $(_END)"
+	@echo "$(_YELLOW)   make all                            generates all binaries             $(_END)"
+	@echo "$(_YELLOW)   make payloads                       generates payloads binaries        $(_END)"
+	@echo "$(_YELLOW)   make clean_payload                  clean payloads binaries            $(_END)"
 	@echo "$(_YELLOW)   make clean                          remove the generated files         $(_END)"
 	@echo "$(_YELLOW)   make tests                          launch tests scripts               $(_END)"
 	@echo "$(_YELLOW)   make help                           prints this message                $(_END)"
