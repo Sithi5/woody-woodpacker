@@ -130,9 +130,9 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.c $(INCLUDE)
 	@echo "$(_END)$(_GREEN)[OK]\t$(_UNDER)$(_YELLOW)\t"	\
 		"COMPILE :$(_END)$(_BOLD)$(_WHITE)\t$<"
 
-payloads: clean_payload $(SRC_PAYLOADS_PATH)$(PAYLOAD_64_NAME) $(SRC_PAYLOADS_PATH)$(PAYLOAD_32_NAME)
+payloads: clean_payloads $(SRC_PAYLOADS_PATH)$(PAYLOAD_64_NAME) $(SRC_PAYLOADS_PATH)$(PAYLOAD_32_NAME)
 
-clean_payload:
+clean_payloads:
 	@rm -f $(SRC_PAYLOADS_PATH)$(PAYLOAD_32_NAME)
 	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(PAYLOAD_32_NAME)
 	@rm -f $(SRC_PAYLOADS_PATH)$(PAYLOAD_64_NAME)
@@ -163,7 +163,7 @@ clean:
 	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(OBJ_PATH)"$(_END)"
 	@rm -rf $(OBJ_PATH) 2> /dev/null || true
 
-fclean: clean clean_payload
+fclean: clean clean_payloads
 	@rm -f $(NAME) woody
 	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(NAME)
 
@@ -175,7 +175,7 @@ help:
 	@echo "$(_YELLOW)   make                                runs all                           $(_END)"
 	@echo "$(_YELLOW)   make all                            generates all binaries             $(_END)"
 	@echo "$(_YELLOW)   make payloads                       generates payloads binaries        $(_END)"
-	@echo "$(_YELLOW)   make clean_payload                  clean payloads binaries            $(_END)"
+	@echo "$(_YELLOW)   make clean_payloads                 clean payloads binaries            $(_END)"
 	@echo "$(_YELLOW)   make clean                          remove the generated files         $(_END)"
 	@echo "$(_YELLOW)   make tests                          launch tests scripts               $(_END)"
 	@echo "$(_YELLOW)   make help                           prints this message                $(_END)"

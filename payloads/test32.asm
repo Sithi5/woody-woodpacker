@@ -31,7 +31,7 @@ _end_payload:
     pop eax
 
     call _ret2oep           ; jump to original entry point(oep)
-    push 0x8048310
+    push eax
     ret
 
 _get_rip:
