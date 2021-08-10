@@ -69,7 +69,7 @@ SRC_NAME			=	main.c						\
 
 ASM_SRC_NAME		=	xor_cipher.asm		\
 
-SRC_PAYLOAD_64_NAME	=	test64.asm					\
+SRC_PAYLOAD_64_NAME	=	decrypt64.asm				\
 
 SRC_PAYLOAD_32_NAME	=	test32.asm					\
 
