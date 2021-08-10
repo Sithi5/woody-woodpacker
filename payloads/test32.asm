@@ -10,12 +10,7 @@ _start_payload:
     push esi
     push edi
 
-    sub esp, 0xf
-    push 10
-    push '...'
-    push 'OODY'
-    push '...W'
-	mov ecx, esp        ; string to write
+
 
     jmp _infection
 
@@ -24,11 +19,7 @@ _infection:
     jmp _end_payload
 
 _end_payload:
-    add esp, 0xf
-    pop edi
-    pop edi
-    pop edi
-    pop edi
+
 
     pop edi
     pop esi
@@ -52,8 +43,22 @@ _ret2oep:
     ret
 
 _print_woody:
+    ; Setting the string woody on stack
+    sub esp, 0xf
+    push 10
+    push '...'
+    push 'OODY'
+    push '...W'
+	mov ecx, esp        ; string to write
+
     mov eax,4            ; 'write' system call = 4
 	mov ebx,1            ; file descriptor 1 = STDOUT
 	mov edx, 13     ; length of string to write
 	syscall              ; call the kernel
+
+    add esp, 0xf
+    pop edi
+    pop edi
+    pop edi
+    pop edi
     ret
