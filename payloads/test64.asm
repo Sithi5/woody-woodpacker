@@ -5,7 +5,7 @@ SECTION .data
         woody_msg_len  : equ $-woody_msg
 
         debug_msg: db "debug",10
-        debug_msg_len  : equ $-woody_msg
+        debug_msg_len  : equ $-debug_msg
 
 SECTION .text
 
