@@ -1,16 +1,7 @@
 BITS 32
 
-
-SECTION .data
-        woody_msg: db "...WOODY...",10
-        woody_msg_len  : equ $-woody_msg
-
-        debug_msg: db "debug",10
-        debug_msg_len  : equ $-woody_msg
-
-
 SECTION .text
-%define sys_call int 0x80
+%define syscall int 0x80
 
 _start_payload:
     push eax                 ; save all clobbered registers
@@ -18,12 +9,27 @@ _start_payload:
     push edx
     push esi
     push edi
+
+    sub esp, 0xf
+    push 10
+    push '...'
+    push 'OODY'
+    push '...W'
+	mov ecx, esp        ; string to write
+
     jmp _infection
 
 _infection:
+    call _print_woody
     jmp _end_payload
 
 _end_payload:
+    add esp, 0xf
+    pop edi
+    pop edi
+    pop edi
+    pop edi
+
     pop edi
     pop esi
     pop edx
@@ -46,18 +52,8 @@ _ret2oep:
     ret
 
 _print_woody:
-    mov eax,1                ; sys_write
-    mov edi,1                ; stdout
-    mov edx,woody_msg_len;len
-    lea esi,[rel $+woody_msg-$]  ; woody
-    sys_call
+    mov eax,4            ; 'write' system call = 4
+	mov ebx,1            ; file descriptor 1 = STDOUT
+	mov edx, 13     ; length of string to write
+	syscall              ; call the kernel
     ret
-
-_debug_write:
-    mov eax,1                ; sys_write
-    mov edi,1                ; stdout
-    mov edx,debug_msg_len;    ; len
-    lea esi,[rel $+debug_msg-$]  ; debug msg
-    sys_call
-    ret
-

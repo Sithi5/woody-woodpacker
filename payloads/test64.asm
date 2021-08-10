@@ -4,9 +4,6 @@ SECTION .data
         woody_msg: db "...WOODY...",10
         woody_msg_len  : equ $-woody_msg
 
-        debug_msg: db "debug",10
-        debug_msg_len  : equ $-debug_msg
-
 SECTION .text
 
 _start_payload:
@@ -32,14 +29,6 @@ _end_payload:
 
     call _ret2oep           ; jump to original entry point(oep)
     push rax
-    ret
-
-_debug_write:
-    mov rax,1                ; sys_write
-    mov rdi,1                ; stdout
-    mov rdx,debug_msg_len;    ; len
-    lea rsi,[rel $+debug_msg-$]  ; debug msg
-    syscall
     ret
 
 _print_woody:
