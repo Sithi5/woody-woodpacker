@@ -116,8 +116,6 @@ typedef struct s_woody
 
     void *cipher;
 
-    char ei_class; //Used as a flag for elfclass.
-
     t_elf_ehdr *ehdr;
     t_elf_phdr *phdr;
     t_elf_shdr *shdr;
