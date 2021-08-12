@@ -82,7 +82,7 @@ ASM_SRC_PATH	=	./asm/
 
 SRC_PATH			=	./src/
 
-ASM_OBJ_PATH	= 	./obj/
+ASM_OBJ_PATH	= 	./obj_asm/
 
 OBJ_PATH 			=	./obj/
 
@@ -93,7 +93,7 @@ ASM_SRC			= 	$(addprefix $(ASM_SRC_PATH), $(ASM_SRC_NAME))
 
 SRC					=	$(addprefix $(SRC_PATH), $(SRC_NAME))
 
-ASM_OBJ			=	$(patsubst $(ASM_SRC_PATH)%.asm, $(OBJ_PATH)%.o,	$(ASM_SRC))
+ASM_OBJ			=	$(patsubst $(ASM_SRC_PATH)%.asm, $(ASM_OBJ_PATH)%.o,	$(ASM_SRC))
 
 OBJ					=	$(patsubst $(SRC_PATH)%.c, $(OBJ_PATH)%.o,	$(SRC))
 
@@ -146,7 +146,7 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.c $(INCLUDE)
 		"COMPILE :$(_END)$(_BOLD)$(_WHITE)\t$<"
 
 $(ASM_OBJ_PATH)%.o: $(ASM_SRC_PATH)%.asm
-	@mkdir -p $(OBJ_PATH)
+	@mkdir -p $(ASM_OBJ_PATH)
 	$(AS) $(AS_FLAG) $< -o $@
 	@echo "$(_END)$(_GREEN)[OK]\t$(_UNDER)$(_YELLOW)\t"	\
 		"COMPILE :$(_END)$(_BOLD)$(_WHITE)\t$<"
@@ -182,7 +182,8 @@ tests: all
 clean:
 	@rm -rf $(OBJ_PATH) 2> /dev/null || true
 	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(OBJ_PATH)"$(_END)"
-	@rm -rf $(OBJ_PATH) 2> /dev/null || true
+	@rm -rf $(ASM_OBJ_PATH) 2> /dev/null || true
+	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(ASM_OBJ_PATH)"$(_END)"
 
 fclean: clean clean_payloads
 	@rm -f $(NAME) woody
