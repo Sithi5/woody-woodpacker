@@ -22,9 +22,10 @@ AS					:= nasm
 AS_FLAG				:= -f elf64
 GEN					:=	Generation in mode
 
+LONG_BITS := $(shell getconf LONG_BIT)
+ifeq ($(LONG_BITS),32)
 # Define 32bit flags for use in headers.
-ifeq ($(32BIT), 1)
-	CC				:= $(CC) -D 32BIT
+	CC				:= $(CC) -D ARCH_32
 endif
 
 ifeq ($(WALL), yes)
@@ -140,9 +141,6 @@ _IGREY		=	\033[47m
 all: art $(NAME) $(SRC_PAYLOADS_PATH)$(PAYLOAD_64_NAME) $(SRC_PAYLOADS_PATH)$(PAYLOAD_32_NAME)
 
 $(NAME): $(ASM_OBJ) $(OBJ)
-
-
-
 	@echo "\n$(NAME) : $(GEN)"
 	@echo "\n$(_WHITE)====================================================$(_END)"
 	@echo "$(_YELLOW)		COMPILING $(NAME)$(_END)"
@@ -158,7 +156,7 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.c $(INCLUDE)
 
 $(ASM_OBJ_PATH)%.o: $(ASM_SRC_PATH)%.asm
 	@mkdir -p $(ASM_OBJ_PATH)
-	$(AS) $(AS_FLAG) $< -o $@
+	@$(AS) $(AS_FLAG) $< -o $@
 	@echo "$(_END)$(_GREEN)[OK]\t$(_UNDER)$(_YELLOW)\t"	\
 		"COMPILE :$(_END)$(_BOLD)$(_WHITE)\t$<"
 
