@@ -91,6 +91,8 @@ typedef struct s_woody
 
     void *infected_file;
     uint32_t infected_file_size;
+
+    char *encryption_key;
 } t_woody;
 
 /*
@@ -101,6 +103,7 @@ void error(int err, t_woody *woody);
 void free_woody(t_woody *woody);
 void elf64_pt_note_to_pt_load_infection(t_woody *woody);
 void cipher_woody_file_data(t_woody *woody);
+char *rc4_cipher(t_woody *woody, char *data, int len);
 void print_memory(void *memory_ptr, int memory_size);
 void check_elf_header_and_set_type(t_woody *woody);
 

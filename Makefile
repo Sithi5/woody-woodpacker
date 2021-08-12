@@ -66,8 +66,9 @@ SRC_NAME			=	main.c						\
 						silvio_text_infection_32.c	\
 						silvio_text_infection_64.c	\
 						crypto.c					\
+						rc4_cipher.c				\
 
-ASM_SRC_NAME		=	xor_cipher.asm		\
+ASM_SRC_NAME		=	rc4_cipher.asm		\
 
 SRC_PAYLOAD_64_NAME	=	test64.asm				\
 
