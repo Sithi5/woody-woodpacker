@@ -155,9 +155,18 @@ typedef struct s_woody
     void *cipher;
 
     char ei_class; //Used as a flag for elfclass.
-    t_elf_addr ehdr;
-    t_elf32_ptrs *elf32_ptrs;
-    t_elf64_ptrs *elf64_ptrs;
+
+    t_elf_ehdr *ehdr;
+    t_elf_phdr *phdr;
+    t_elf_shdr *shdr;
+    t_elf_addr new_entry_point;
+    t_elf_addr old_entry_point;
+    t_elf_addr payload_vaddr;
+
+    t_elf_off text_start_offset;
+    t_elf_off text_end_offset;
+    t_elf_off text_section_size;
+    t_elf_addr text_p_vaddr;
 
     int ret2oep_offset;
 
