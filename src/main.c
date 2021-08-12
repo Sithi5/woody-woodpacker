@@ -68,7 +68,7 @@ int main(int ac, char **av)
         error(ERROR_INPUT_ARGUMENTS_NUMBERS, woody);
     }
     get_binary_data(av[1], woody);
-    check_elf_header_and_set_type(woody);
+    check_elf_header(woody);
     infect_elf(woody);
 
     write_woody_file(woody);

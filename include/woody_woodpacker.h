@@ -71,8 +71,7 @@ enum e_error
     NB_OF_ERROR_CODES /* Always keep last */
 };
 
-#define PAGE_SZ64 0x1000
-#define PAGE_SZ32 0x1000
+#define PAGE_SIZE 0x1000
 
 #define OUTPUT_FILE_NAME "woody"
 #define PAYLOAD_64_NAME "./payloads/payload_64"
@@ -183,12 +182,11 @@ void free_woody(t_woody *woody);
 void pt_note_to_pt_load_infection(t_woody *woody);
 void cipher_woody_file_data(t_woody *woody);
 void print_memory(void *memory_ptr, int memory_size);
-void check_elf_header_and_set_type(t_woody *woody);
+void check_elf_header(t_woody *woody);
 
 void infect_elf(t_woody *woody);
-void silvio_text_infection_elf(t_woody *woody);
+void silvio_text_infection(t_woody *woody);
 
-void set_elf64_ptr(t_woody *woody);
 void load_payload(t_woody *woody, char *payload_name);
 void set_woody_ptrs_to_null(t_woody *woody);
 

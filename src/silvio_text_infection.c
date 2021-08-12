@@ -129,18 +129,16 @@ void overwrite_payload_settextsectionsize(t_woody *woody)
 void silvio_text_infection(t_woody *woody)
 {
     // Create the output file
-    if (!(woody->infected_file = malloc(woody->binary_data_size + PAGE_SZ64)))
+    if (!(woody->infected_file = malloc(woody->binary_data_size + PAGE_SIZE)))
     {
         error(ERROR_MALLOC, woody);
     }
-    woody->infected_file_size = woody->binary_data_size + PAGE_SZ64;
+    woody->infected_file_size = woody->binary_data_size + PAGE_SIZE;
 
     load_payload(woody, PAYLOAD_64_NAME);
 
-    Elf64_Addr payload_vaddr, text_end_offset;
-
     // Increase section header offset by PAGE_SIZE
-    woody->ehdr->e_shoff += PAGE_SZ64;
+    woody->ehdr->e_shoff += PAGE_SIZE;
     // Set a flag in the EI_PAD header padding that indicate the file have been infected.
     woody->ehdr->e_ident[EI_PAD + 3] = 7;
 
@@ -154,7 +152,7 @@ void silvio_text_infection(t_woody *woody)
             woody->text_section_size = woody->phdr[i].p_filesz;
 
             // Check if there is enought space for our payload.
-            if (woody->text_end_offset % PAGE_SZ64 + woody->payload_size > PAGE_SZ64)
+            if (woody->text_end_offset % PAGE_SIZE + woody->payload_size > PAGE_SIZE)
             {
                 error(ERROR_NOT_ENOUGHT_SPACE_FOR_PAYLOAD, woody);
             }
@@ -168,7 +166,7 @@ void silvio_text_infection(t_woody *woody)
             woody->phdr[i].p_memsz += woody->payload_size;
 
             for (int j = i + 1; j < woody->ehdr->e_phnum; j++)
-                woody->phdr[j].p_offset += PAGE_SZ64;
+                woody->phdr[j].p_offset += PAGE_SIZE;
 
             break;
         }
@@ -178,7 +176,7 @@ void silvio_text_infection(t_woody *woody)
     for (int i = 0; i < woody->ehdr->e_shnum; i++)
     {
         if (woody->shdr[i].sh_offset > woody->text_end_offset)
-            woody->shdr[i].sh_offset += PAGE_SZ64;
+            woody->shdr[i].sh_offset += PAGE_SIZE;
         else if (woody->shdr[i].sh_addr + woody->shdr[i].sh_size == woody->payload_vaddr)
             woody->shdr[i].sh_size += woody->payload_size;
     }
@@ -195,5 +193,5 @@ void silvio_text_infection(t_woody *woody)
     // Insert payload
     memcpy(woody->infected_file + woody->text_end_offset, woody->payload_data, woody->payload_size);
     // Insert rest of binary
-    memcpy(woody->infected_file + woody->text_end_offset + PAGE_SZ64, woody->mmap_ptr + woody->text_end_offset, woody->binary_data_size - woody->text_end_offset);
+    memcpy(woody->infected_file + woody->text_end_offset + PAGE_SIZE, woody->mmap_ptr + woody->text_end_offset, woody->binary_data_size - woody->text_end_offset);
 }
