@@ -15,45 +15,45 @@
 static void error_msg(int err)
 {
     err == ERROR_OPEN
-        ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_OPEN\n", err)
+        ? fprintf(stderr, RED "error" END ": %d -> ERROR_OPEN\n", err)
         : 0;
-    err == ERROR_READ ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_READ\n", err)
+    err == ERROR_READ ? fprintf(stderr, RED "error" END ": %d -> ERROR_READ\n", err)
                       : 0;
-    err == ERROR_WRITE ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_WRITE\n", err)
+    err == ERROR_WRITE ? fprintf(stderr, RED "error" END ": %d -> ERROR_WRITE\n", err)
                        : 0;
-    err == ERROR_CLOSE ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_CLOSE\n", err)
+    err == ERROR_CLOSE ? fprintf(stderr, RED "error" END ": %d -> ERROR_CLOSE\n", err)
                        : 0;
-    err == ERROR_MALLOC ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_MALLOC\n", err)
+    err == ERROR_MALLOC ? fprintf(stderr, RED "error" END ": %d -> ERROR_MALLOC\n", err)
                         : 0;
-    err == ERROR_INPUT_ARGUMENTS_NUMBERS ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_INPUT_ARGUMENTS_NUMBERS\n", err)
+    err == ERROR_INPUT_ARGUMENTS_NUMBERS ? fprintf(stderr, RED "error" END ": %d -> ERROR_INPUT_ARGUMENTS_NUMBERS\n", err)
                                          : 0;
-    err == ERROR_LSEEK ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_LSEEK\n", err)
+    err == ERROR_LSEEK ? fprintf(stderr, RED "error" END ": %d -> ERROR_LSEEK\n", err)
                        : 0;
-    err == ERROR_NOT_ELF ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_NOT_ELF\n", err)
+    err == ERROR_NOT_ELF ? fprintf(stderr, RED "error" END ": %d -> ERROR_NOT_ELF\n", err)
                          : 0;
-    err == ERROR_NOT_ELF32 ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_NOT_ELF32\n", err)
+    err == ERROR_NOT_ELF32 ? fprintf(stderr, RED "error" END ": %d -> ERROR_NOT_ELF32\n", err)
                            : 0;
-    err == ERROR_NOT_ELF64 ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_NOT_ELF64\n", err)
+    err == ERROR_NOT_ELF64 ? fprintf(stderr, RED "error" END ": %d -> ERROR_NOT_ELF64\n", err)
                            : 0;
-    err == ERROR_MMAP ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_MMAP\n", err)
+    err == ERROR_MMAP ? fprintf(stderr, RED "error" END ": %d -> ERROR_MMAP\n", err)
                       : 0;
-    err == ERROR_NOT_EXECUTABLE_BINARY ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_NOT_EXECUTABLE_BINARY\n", err)
+    err == ERROR_NOT_EXECUTABLE_BINARY ? fprintf(stderr, RED "error" END ": %d -> ERROR_NOT_EXECUTABLE_BINARY\n", err)
                                        : 0;
-    err == ERROR_ELF_NOT_LITTLE_ENDIAN ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_ELF_NOT_LITTLE_ENDIAN\n", err)
+    err == ERROR_ELF_NOT_LITTLE_ENDIAN ? fprintf(stderr, RED "error" END ": %d -> ERROR_ELF_NOT_LITTLE_ENDIAN\n", err)
                                        : 0;
-    err == ERROR_RET2OEP_NOT_FOUND ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_RET2OEP_NOT_FOUND\n", err)
+    err == ERROR_RET2OEP_NOT_FOUND ? fprintf(stderr, RED "error" END ": %d -> ERROR_RET2OEP_NOT_FOUND\n", err)
                                    : 0;
-    err == ERROR_RET2TEXTSECTION_NOT_FOUND ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_RET2TEXTSECTION_NOT_FOUND\n", err)
+    err == ERROR_RET2TEXTSECTION_NOT_FOUND ? fprintf(stderr, RED "error" END ": %d -> ERROR_RET2TEXTSECTION_NOT_FOUND\n", err)
                                            : 0;
-    err == ERROR_FILE_IS_ALREADY_INFECTED ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_FILE_IS_ALREADY_INFECTED\n", err)
+    err == ERROR_FILE_IS_ALREADY_INFECTED ? fprintf(stderr, RED "error" END ": %d -> ERROR_FILE_IS_ALREADY_INFECTED\n", err)
                                           : 0;
-    err == ERROR_NOT_ENOUGHT_SPACE_FOR_PAYLOAD ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_NOT_ENOUGHT_SPACE_FOR_PAYLOAD\n", err)
+    err == ERROR_NOT_ENOUGHT_SPACE_FOR_PAYLOAD ? fprintf(stderr, RED "error" END ": %d -> ERROR_NOT_ENOUGHT_SPACE_FOR_PAYLOAD\n", err)
                                                : 0;
-    err == ERROR_SETTEXTSECTIONSIZE_NOT_FOUND ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_SETTEXTSECTIONSIZE_NOT_FOUND\n", err)
+    err == ERROR_SETTEXTSECTIONSIZE_NOT_FOUND ? fprintf(stderr, RED "error" END ": %d -> ERROR_SETTEXTSECTIONSIZE_NOT_FOUND\n", err)
                                               : 0;
     if (errno != 0)
     {
-        fprintf(stderr, RED "errno " DEF ": %d -> %s\n", errno, strerror(errno));
+        fprintf(stderr, RED "errno " END ": %d -> %s\n", errno, strerror(errno));
     }
 }
 

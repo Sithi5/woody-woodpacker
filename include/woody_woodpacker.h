@@ -13,9 +13,9 @@
 #ifndef WOODY_WOODPACKER_H
 #define WOODY_WOODPACKER_H
 
-/*
-** includes
-*/
+/****************************************************************************/
+/*                          INCLUDES                                        */
+/****************************************************************************/
 
 #include <stdio.h>       // FFLUSH FPUTS PERROR
 #include <stdlib.h>      // MALOC/FREE
@@ -28,9 +28,48 @@
 #include <errno.h>
 #include <stdbool.h>
 
-/*
-** Defines
-*/
+/****************************************************************************/
+/*                          DEFINES                                         */
+/****************************************************************************/
+
+/* Colors */
+#define END "\033[0m"
+#define RED "\033[0;31m"
+#define B_RED "\033[1;31m"
+#define GREEN "\033[0;32m"
+#define B_GREEN "\033[1;32m"
+#define YELLOW "\033[0;33m"
+#define B_YELLOW "\033[1;33m"
+#define BLUE "\033[0;34m"
+#define B_BLUE "\033[1;34m"
+#define MAGENTA "\033[0;35m"
+#define B_MAGENTA "\033[1;35m"
+#define CYAN "\033[0;36m"
+#define B_CYAN "\033[1;36m"
+
+/* Error codes */
+enum e_error
+{
+    ERROR_OPEN = 1,
+    ERROR_READ,
+    ERROR_WRITE,
+    ERROR_CLOSE,
+    ERROR_MALLOC,
+    ERROR_INPUT_ARGUMENTS_NUMBERS,
+    ERROR_LSEEK,
+    ERROR_NOT_ELF,
+    ERROR_NOT_ELF32,
+    ERROR_NOT_ELF64,
+    ERROR_MMAP,
+    ERROR_NOT_EXECUTABLE_BINARY,
+    ERROR_ELF_NOT_LITTLE_ENDIAN,
+    ERROR_NOT_ENOUGHT_SPACE_FOR_PAYLOAD,
+    ERROR_RET2OEP_NOT_FOUND,
+    ERROR_RET2TEXTSECTION_NOT_FOUND,
+    ERROR_SETTEXTSECTIONSIZE_NOT_FOUND,
+    ERROR_FILE_IS_ALREADY_INFECTED,
+    NB_OF_ERROR_CODES /* Always keep last */
+};
 
 #define PAGE_SZ64 0x1000
 #define PAGE_SZ32 0x1000
@@ -41,9 +80,9 @@
 
 #define size_t uint32_t
 
-/*
-** struct
-*/
+/****************************************************************************/
+/*                          STRUCTS                                         */
+/****************************************************************************/
 
 typedef struct s_elf64_ptrs
 {
@@ -93,9 +132,9 @@ typedef struct s_woody
     uint32_t infected_file_size;
 } t_woody;
 
-/*
-** Functions definitions
-*/
+/****************************************************************************/
+/*                          FUNCTIONS DEFINITIONS                           */
+/****************************************************************************/
 
 void error(int err, t_woody *woody);
 void free_woody(t_woody *woody);
@@ -112,45 +151,9 @@ void silvio_text_infection_elf32(t_woody *woody);
 void set_elf64_ptr(t_woody *woody);
 void load_payload(t_woody *woody, char *payload_name);
 void set_woody_ptrs_to_null(t_woody *woody);
-/*
-** ERROR CODE
-*/
 
-#define ERROR_OPEN 1
-#define ERROR_READ 2
-#define ERROR_WRITE 3
-#define ERROR_CLOSE 4
-#define ERROR_MALLOC 5
-#define ERROR_INPUT_ARGUMENTS_NUMBERS 6
-#define ERROR_LSEEK 7
-#define ERROR_NOT_ELF 8
-#define ERROR_NOT_ELF32 9
-#define ERROR_NOT_ELF64 10
-#define ERROR_MMAP 11
-#define ERROR_NOT_EXECUTABLE_BINARY 12
-#define ERROR_ELF_NOT_LITTLE_ENDIAN 13
-#define ERROR_NOT_ENOUGHT_SPACE_FOR_PAYLOAD 14
-#define ERROR_RET2OEP_NOT_FOUND 15
-#define ERROR_RET2TEXTSECTION_NOT_FOUND 16
-#define ERROR_SETTEXTSECTIONSIZE_NOT_FOUND 18
-#define ERROR_FILE_IS_ALREADY_INFECTED 17
-
-/*
-** COLOR
-*/
-
-#define DEF "\033[0m"
-#define RED "\033[0;31m"
-#define B_RED "\033[1;31m"
-#define GRE "\033[0;32m"
-#define B_GRE "\033[1;32m"
-#define YEL "\033[0;33m"
-#define B_YEL "\033[1;33m"
-#define BLU "\033[0;34m"
-#define B_BLU "\033[1;34m"
-#define MAG "\033[0;35m"
-#define B_MAG "\033[1;35m"
-#define CYA "\033[0;36m"
-#define B_CYA "\033[1;36m"
+/****************************************************************************/
+/*                          GLOBAL VARIABLES                                */
+/****************************************************************************/
 
 #endif
