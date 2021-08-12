@@ -157,7 +157,11 @@ void silvio_text_infection_elf64(t_woody *woody)
             woody->elf64_ptrs->text_start_offset = woody->elf64_ptrs->phdr[i].p_offset;
             woody->elf64_ptrs->text_end_offset = woody->elf64_ptrs->text_start_offset + woody->elf64_ptrs->phdr[i].p_filesz;
             woody->elf64_ptrs->text_section_size = woody->elf64_ptrs->phdr[i].p_filesz;
-            printf("text_section_size = %i\n", woody->elf64_ptrs->text_section_size);
+
+            printf("PAGE_SZ64 = %i\n", PAGE_SZ64);
+            printf("woody->elf64_ptrs->text_end_offset = %i\n", woody->elf64_ptrs->text_end_offset);
+            printf("woody->elf64_ptrs->text_end_offset modulo PAGE_SZ64 = %i\n", woody->elf64_ptrs->text_end_offset % PAGE_SZ64);
+            printf("woody->elf64_ptrs->text_end_offset modulo PAGE_SZ64 + payload_size = %i\n", woody->elf64_ptrs->text_end_offset % PAGE_SZ64 + woody->payload_size);
 
             woody->elf64_ptrs->text_p_vaddr = woody->elf64_ptrs->phdr[i].p_vaddr;
             woody->elf64_ptrs->payload_vaddr = woody->elf64_ptrs->text_p_vaddr + woody->elf64_ptrs->phdr[i].p_filesz;
@@ -177,7 +181,7 @@ void silvio_text_infection_elf64(t_woody *woody)
     // Adding offset of one page in all section located after text section end.
     for (int i = 0; i < woody->elf64_ptrs->ehdr->e_shnum; i++)
     {
-        if (woody->elf64_ptrs->shdr[i].sh_offset > woody->elf64_ptrs->text_section_size)
+        if (woody->elf64_ptrs->shdr[i].sh_offset > woody->elf64_ptrs->text_end_offset)
             woody->elf64_ptrs->shdr[i].sh_offset += PAGE_SZ64;
         else if (woody->elf64_ptrs->shdr[i].sh_addr + woody->elf64_ptrs->shdr[i].sh_size == woody->elf64_ptrs->payload_vaddr)
             woody->elf64_ptrs->shdr[i].sh_size += woody->payload_size;
