@@ -52,6 +52,12 @@ typedef struct s_elf64_ptrs
     Elf64_Shdr *shdr;
     Elf64_Addr new_entry_point;
     Elf64_Addr old_entry_point;
+    Elf64_Addr payload_vaddr;
+
+    Elf64_Off text_start_offset;
+    Elf64_Off text_end_offset;
+    uint64_t text_section_size;
+    Elf64_Addr text_p_vaddr;
 } t_elf64_ptrs;
 
 typedef struct s_elf32_ptrs
@@ -62,6 +68,9 @@ typedef struct s_elf32_ptrs
     Elf32_Addr new_entry_point;
     Elf32_Addr old_entry_point;
 
+    Elf32_Off text_start_offset;
+    Elf32_Off text_end_offset;
+
 } t_elf32_ptrs;
 
 typedef struct s_woody
@@ -71,6 +80,8 @@ typedef struct s_woody
 
     void *payload_data;
     uint32_t payload_size;
+
+    void *cipher;
 
     char ei_class; //Used as a flag for elfclass.
     t_elf32_ptrs *elf32_ptrs;
@@ -88,8 +99,8 @@ typedef struct s_woody
 
 void error(int err, t_woody *woody);
 void free_woody(t_woody *woody);
-void check_ehdr_elf64(t_woody *woody);
 void elf64_pt_note_to_pt_load_infection(t_woody *woody);
+void cipher_woody_file_data(t_woody *woody);
 void print_memory(void *memory_ptr, int memory_size);
 void check_elf_header_and_set_type(t_woody *woody);
 
@@ -101,7 +112,6 @@ void silvio_text_infection_elf32(t_woody *woody);
 void set_elf64_ptr(t_woody *woody);
 void load_payload(t_woody *woody, char *payload_name);
 void set_woody_ptrs_to_null(t_woody *woody);
-
 /*
 ** ERROR CODE
 */
@@ -121,7 +131,9 @@ void set_woody_ptrs_to_null(t_woody *woody);
 #define ERROR_ELF_NOT_LITTLE_ENDIAN 13
 #define ERROR_PAYLOAD_TOO_BIG 14
 #define ERROR_RET2OEP_NOT_FOUND 15
-#define ERROR_FILE_IS_ALREADY_INFECTED 16
+#define ERROR_RET2TEXTSECTION_NOT_FOUND 16
+#define ERROR_SETTEXTSECTIONSIZE_NOT_FOUND 18
+#define ERROR_FILE_IS_ALREADY_INFECTED 17
 
 /*
 ** COLOR

@@ -17,6 +17,8 @@ DEBUG				=	no
 O2					=	no
 
 CC					:=	gcc
+AS					:= nasm
+AS_FLAG				:= -f elf64
 GEN					:=	Generation in mode
 
 ifeq ($(WALL), yes)
@@ -63,8 +65,11 @@ SRC_NAME			=	main.c						\
 						utils_payload.c				\
 						silvio_text_infection_32.c	\
 						silvio_text_infection_64.c	\
+						crypto.c					\
 
-SRC_PAYLOAD_64_NAME	=	test64.asm					\
+ASM_SRC_NAME		=	xor_cipher.asm		\
+
+SRC_PAYLOAD_64_NAME	=	test64.asm				\
 
 SRC_PAYLOAD_32_NAME	=	test32.asm					\
 
@@ -73,21 +78,28 @@ INCLUDE_NAME		=	woody_woodpacker.h	\
 TESTS_FILES	= ./tests/test*.sh
 
 # Path
+ASM_SRC_PATH	=	./asm/
+
 SRC_PATH			=	./src/
+
+ASM_OBJ_PATH	= 	./obj/
 
 OBJ_PATH 			=	./obj/
 
 INCLUDE_PATH		=	./include/
 
 # Name + Path
+ASM_SRC			= 	$(addprefix $(ASM_SRC_PATH), $(ASM_SRC_NAME))
+
 SRC					=	$(addprefix $(SRC_PATH), $(SRC_NAME))
+
+ASM_OBJ			=	$(patsubst $(ASM_SRC_PATH)%.asm, $(OBJ_PATH)%.o,	$(ASM_SRC))
 
 OBJ					=	$(patsubst $(SRC_PATH)%.c, $(OBJ_PATH)%.o,	$(SRC))
 
 INCLUDE				=	$(addprefix $(INCLUDE_PATH), $(INCLUDE_NAME))
 
 # Text format
-_DEF		=	\033[0m
 _END		=	\033[0m
 _GRAS		=	\033[1m
 _SOUL		=	\033[4m
@@ -114,19 +126,28 @@ _IPURPLE	=	\033[45m
 _ICYAN		=	\033[46m
 _IGREY		=	\033[47m
 
-all: $(NAME) $(SRC_PAYLOADS_PATH)$(PAYLOAD_64_NAME) $(SRC_PAYLOADS_PATH)$(PAYLOAD_32_NAME)
+all: art $(NAME) $(SRC_PAYLOADS_PATH)$(PAYLOAD_64_NAME) $(SRC_PAYLOADS_PATH)$(PAYLOAD_32_NAME)
 
-$(NAME): $(OBJ)
+$(NAME): $(ASM_OBJ) $(OBJ)
+
+
+
 	@echo "\n$(NAME) : $(GEN)"
 	@echo "\n$(_WHITE)====================================================$(_END)"
 	@echo "$(_YELLOW)		COMPILING $(NAME)$(_END)"
 	@echo "$(_WHITE)====================================================$(_END)"
-	@$(CC) -o $(NAME) $(OBJ)
+	@$(CC) -o $(NAME) $(OBJ) $(ASM_OBJ)
 	@echo "\n$(_WHITE)$(_BOLD)$@\t$(_END)$(_GREEN)[OK]\n$(_END)"
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c $(INCLUDE)
 	@mkdir -p $(OBJ_PATH)
 	@$(CC) -I $(INCLUDE_PATH) -I $(INCLUDE_PATH) -c $< -o $@
+	@echo "$(_END)$(_GREEN)[OK]\t$(_UNDER)$(_YELLOW)\t"	\
+		"COMPILE :$(_END)$(_BOLD)$(_WHITE)\t$<"
+
+$(ASM_OBJ_PATH)%.o: $(ASM_SRC_PATH)%.asm
+	@mkdir -p $(OBJ_PATH)
+	$(AS) $(AS_FLAG) $< -o $@
 	@echo "$(_END)$(_GREEN)[OK]\t$(_UNDER)$(_YELLOW)\t"	\
 		"COMPILE :$(_END)$(_BOLD)$(_WHITE)\t$<"
 
@@ -166,18 +187,40 @@ clean:
 fclean: clean clean_payloads
 	@rm -f $(NAME) woody
 	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(NAME)
+	@echo "$(_END)"
 
 re: fclean all
 
+
 help:
-	@echo "$(_YELLOW)Makefile for generating binary infectors.$(_END)"
-	@echo "$(_YELLOW)Usage:                                                                    $(_END)"
-	@echo "$(_YELLOW)   make                                runs all                           $(_END)"
-	@echo "$(_YELLOW)   make all                            generates all binaries             $(_END)"
-	@echo "$(_YELLOW)   make payloads                       generates payloads binaries        $(_END)"
-	@echo "$(_YELLOW)   make clean_payloads                 clean payloads binaries            $(_END)"
-	@echo "$(_YELLOW)   make clean                          remove the generated files         $(_END)"
-	@echo "$(_YELLOW)   make tests                          launch tests scripts               $(_END)"
+	@echo "$(_YELLOW)Makefile for generating binary infectors."
+	@echo "$(_YELLOW)Usage:                                                                    "
+	@echo "$(_YELLOW)   make                                runs all                           "
+	@echo "$(_YELLOW)   make all                            generates all binaries             "
+	@echo "$(_YELLOW)   make art                            print a bird                       "
+	@echo "$(_YELLOW)   make payloads                       generates payloads binaries        "
+	@echo "$(_YELLOW)   make clean_payloads                 clean payloads binaries            "
+	@echo "$(_YELLOW)   make clean                          remove the generated files         "
+	@echo "$(_YELLOW)   make tests                          launch tests scripts               "
 	@echo "$(_YELLOW)   make help                           prints this message                $(_END)"
 
-.PHONY: all clean fclean re check
+.PHONY: all art clean fclean re check payloads help tests clean_payloads
+
+art:
+	@echo "$(_CYAN)"
+	@echo "       '-------------------.. "
+	@echo "         '\\_________         \`-.-----. "
+	@echo "             '\\_______          \`\\    \`.                   $(_GREEN)  __   ____ $(_CYAN)"
+	@echo "                  \\____           \`\\   :                    $(_GREEN)/_ | | .-.\\ $(_CYAN)"
+	@echo "    '._____         (____           \`\\.\`.             .--._ $(_GREEN)  \\\\' / $(_CYAN)"
+	@echo "     \\____  \"'..____.(_______          \`~-.________.-'  $(_RED)@$(_CYAN). \\___${_GREEN}\\.'${_CYAN}___ "
+	@echo "     )___     ___                                         /___________\\ "
+	@echo "      )___..''   '--.                    _.----------.____\`----$(_GREEN))'($(_CYAN)---' "
+	@echo "                   _:-'   ,          _.-'                $(_GREEN)     /( \\\\ $(_CYAN)"
+	@echo "               .-~~ __..-'~~~~~~~~~~'                    $(_GREEN)   .'    '\\ $(_CYAN)"
+	@echo "               \\ \\~~ \\ \\                             $(_GREEN)      / '    ) \\ $(_CYAN)"
+	@echo "                \\ \\   \\ \\_.-'                        $(_GREEN)     |      )   ' $(_CYAN)"
+	@echo "                 \\ \\_ _;-,,'                           $(_GREEN)   ( (      ) ) $(_CYAN)"
+	@echo "                 ;-,,'                                   $(_GREEN)  \"--------\" $(_CYAN)"
+	@echo ""
+	@echo "$(_END)"

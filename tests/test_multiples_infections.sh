@@ -3,7 +3,7 @@ _YELLOW=`tput setaf 3`
 _END=`tput sgr0`
 
 # echo filename
-echo "\n\n${_YELLOW}$0 :${_END}\n"
+echo "\n\n\n\n${_YELLOW}$0 :${_END}\n\n"
 
 
 # Multiples infections should fail

@@ -19,6 +19,7 @@ void set_woody_ptrs_to_null(t_woody *woody)
     woody->infected_file = NULL;
     woody->elf32_ptrs = NULL;
     woody->elf64_ptrs = NULL;
+    woody->cipher = NULL;
 }
 
 /* Free the woody structure properly. */
@@ -31,6 +32,7 @@ void free_woody(t_woody *woody)
         woody->infected_file ? free(woody->infected_file) : 0;
         woody->elf64_ptrs ? free(woody->elf64_ptrs) : 0;
         woody->elf32_ptrs ? free(woody->elf32_ptrs) : 0;
+        woody->cipher ? free(woody->cipher) : 0;
         free(woody);
     }
 }

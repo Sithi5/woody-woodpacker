@@ -10,8 +10,6 @@ _start_payload:
     push esi
     push edi
 
-
-
     jmp _infection
 
 _infection:
@@ -49,7 +47,7 @@ _print_woody:
     push '...'
     push 'OODY'
     push '...W'
-	mov ecx, esp        ; string to write
+	mov ecx, esp        ; string to writef
 
     mov eax,4            ; 'write' system call = 4
 	mov ebx,1            ; file descriptor 1 = STDOUT
