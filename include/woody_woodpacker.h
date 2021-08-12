@@ -112,6 +112,12 @@ typedef struct s_elf32_ptrs
 
 } t_elf32_ptrs;
 
+#ifdef ARCH_32
+
+#else
+
+#endif
+
 typedef struct s_woody
 {
     void *mmap_ptr;
