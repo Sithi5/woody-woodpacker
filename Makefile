@@ -70,13 +70,11 @@ endif
 # Name
 SRC_NAME			=	main.c						\
 						error.c						\
-						infect_elf_32.c				\
-						infect_elf_64.c				\
+						infect_elf.c				\
 						utils.c						\
 						utils_elf.c					\
 						utils_payload.c				\
-						silvio_text_infection_32.c	\
-						silvio_text_infection_64.c	\
+						silvio_text_infection.c		\
 						crypto.c					\
 
 ASM_SRC_NAME		=	xor_cipher.asm		\

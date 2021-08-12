@@ -13,7 +13,7 @@
 #include "woody_woodpacker.h"
 
 // Find the ret2oep offset in the payload. return true if ret2oep have been found.
-size_t find_ret2oep_offset_elf64(t_woody *woody)
+size_t find_ret2oep_offset(t_woody *woody)
 {
     for (size_t i = 0; i < woody->payload_size; i++)
     {
@@ -96,7 +96,7 @@ size_t find_settextsectionsize_offset_elf64(t_woody *woody)
 // Rewrite info in payload ret2oep.
 void overwrite_payload_ret2oep(t_woody *woody)
 {
-    size_t ret2oep_offset = find_ret2oep_offset_elf64(woody);
+    size_t ret2oep_offset = find_ret2oep_offset(woody);
 
     // Rewrite payload size without ret2oep. + 2 to skip two first instructions and go to address.
     memcpy(woody->payload_data + ret2oep_offset + 2, (void *)(&(ret2oep_offset)), 4);
@@ -126,7 +126,7 @@ void overwrite_payload_settextsectionsize(t_woody *woody)
     memcpy(woody->payload_data + settextsectionsize_offset + 2, (void *)&(woody->elf64_ptrs->text_section_size), 4);
 }
 
-void silvio_text_infection_elf64(t_woody *woody)
+void silvio_text_infection(t_woody *woody)
 {
     // Create the output file
     if (!(woody->infected_file = malloc(woody->binary_data_size + PAGE_SZ64)))

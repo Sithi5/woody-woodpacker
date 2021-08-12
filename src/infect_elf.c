@@ -12,7 +12,7 @@
 
 #include "woody_woodpacker.h"
 
-void set_elf64_ptrs(t_woody *woody)
+void set_ptrs(t_woody *woody)
 {
     woody->elf64_ptrs->ehdr = (Elf64_Ehdr *)woody->mmap_ptr;
     woody->elf64_ptrs->old_entry_point = woody->elf64_ptrs->ehdr->e_entry;
@@ -20,10 +20,10 @@ void set_elf64_ptrs(t_woody *woody)
     woody->elf64_ptrs->shdr = (Elf64_Shdr *)((woody->mmap_ptr + woody->elf64_ptrs->ehdr->e_shoff));
 }
 
-void infect_elf_64(t_woody *woody)
+void infect_elf(t_woody *woody)
 {
     if (!(woody->elf64_ptrs = (t_elf64_ptrs *)malloc(sizeof(t_elf64_ptrs))))
         error(ERROR_MALLOC, woody);
-    set_elf64_ptrs(woody);
-    silvio_text_infection_elf64(woody);
+    set_ptrs(woody);
+    silvio_text_infection(woody);
 }
