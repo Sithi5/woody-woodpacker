@@ -1,4 +1,4 @@
-rc4_cipher:
+rc4_cipher_asm:
 
     push rbp
     mov rbp, rsp
@@ -15,7 +15,7 @@ rc4_cipher:
 init_stream:
     cmp r9, 255
     je keystream_generation
-    mov rsp + r9, r9
+    ;mov rsp + r9, r9
     add r9, 1
     jmp init_stream
 

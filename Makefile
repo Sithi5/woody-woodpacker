@@ -68,7 +68,7 @@ SRC_NAME			=	main.c						\
 						crypto.c					\
 						rc4_cipher.c				\
 
-ASM_SRC_NAME		=	rc4_cipher.asm		\
+ASM_SRC_NAME		=	cipher_asm.asm		\
 
 SRC_PAYLOAD_64_NAME	=	test64.asm				\
 

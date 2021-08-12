@@ -81,7 +81,10 @@ char *rc4_cipher(t_woody *woody, char *data, int len)
     printf("encryption key = ");
     for (int i = 0; i < 40; i++)
         printf("%c", woody->encryption_key[i]);
-    printf("\n");
+    printf("\n\n");
     encryption(stream, result, data, len);
+    printf("result = ");
+    for (int i = 0; i < len; i++)
+        printf("%c", result[i]);
     return result;
 }
