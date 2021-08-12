@@ -89,6 +89,9 @@ typedef Elf32_Off t_elf_off;
 
 #else /* 64 bits */
 
+// If ARCH_32 not define, define it to 0.
+#define ARCH_32 0
+
 /* Data types for 64bit */
 typedef Elf64_Addr t_elf_addr; // (Size 8) Unsigned program addresses
 typedef Elf64_Ehdr t_elf_ehdr;

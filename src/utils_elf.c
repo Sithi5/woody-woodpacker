@@ -37,19 +37,16 @@ void check_elf_header(t_woody *woody)
     {
         error(ERROR_NOT_ELF, woody);
     }
-    // Setting type here, elf64 or elf32.
-    if (ehdr->e_ident[EI_CLASS] == ELFCLASS64)
-    {
-        woody->ei_class = ELFCLASS64;
-    }
-    else if (ehdr->e_ident[EI_CLASS] == ELFCLASS32)
-    {
-        woody->ei_class = ELFCLASS32;
-    }
-    else
+    // Checking if class is well define.
+    if (ARCH_32 && ehdr->e_ident[EI_CLASS] != ELFCLASS32)
     {
         error(ERROR_NOT_ELF, woody);
     }
+    else if (!ARCH_32 && ehdr->e_ident[EI_CLASS] != ELFCLASS64)
+    {
+        error(ERROR_NOT_ELF, woody);
+    }
+
     // Check if file have already been infected
     if (ehdr->e_ident[EI_PAD + 3] == 7)
     {
