@@ -70,7 +70,6 @@ endif
 # Name
 SRC_NAME			=	main.c						\
 						error.c						\
-						infect_elf.c				\
 						utils.c						\
 						utils_elf.c					\
 						utils_payload.c				\

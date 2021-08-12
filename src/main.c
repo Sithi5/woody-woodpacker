@@ -69,7 +69,11 @@ int main(int ac, char **av)
     }
     get_binary_data(av[1], woody);
     check_elf_header(woody);
-    infect_elf(woody);
+    woody->ehdr = (t_elf_ehdr *)woody->mmap_ptr;
+    woody->old_entry_point = woody->ehdr->e_entry;
+    woody->phdr = (t_elf_phdr *)((woody->mmap_ptr + woody->ehdr->e_phoff));
+    woody->shdr = (t_elf_shdr *)((woody->mmap_ptr + woody->ehdr->e_shoff));
+    silvio_text_infection(woody);
 
     write_woody_file(woody);
     free_woody(woody);

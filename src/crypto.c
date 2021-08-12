@@ -33,7 +33,7 @@ void cipher_woody_file_data(t_woody *woody)
     char *key = "0";
 
     // printf("uncrypted data: \n");
-    for (int i = 0; i < text_len; i++)
+    for (size_t i = 0; i < text_len; i++)
     {
         // printf("%#x ", ((unsigned char *)(woody->mmap_ptr))[i]);
     }
@@ -52,7 +52,7 @@ void cipher_woody_file_data(t_woody *woody)
     // printf("DIFF: %d\n", memcmp(woody->cipher, crypt, text_len));
     decrypt = asmxorcipher(crypt, key, text_len, strlen(key));
     // printf("crypted data: \n");
-    for (int i = 0; i < text_len; i++)
+    for (size_t i = 0; i < text_len; i++)
     {
         // printf("%#x ", ((unsigned char *)(woody->cipher))[i]);
     }

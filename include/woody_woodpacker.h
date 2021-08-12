@@ -78,27 +78,16 @@ enum e_error
 #define PAYLOAD_32_NAME "./payloads/payload_32"
 
 /* Custom types for 32bit compatibility. */
-
 #ifdef ARCH_32
 /* Data types for 32bit */
-typedef Elf32_Addr t_elf_addr;    // (Size 4) Unsigned program addresses
-typedef Elf32_Off t_elf_off;      // (Size 4) Unsigned file offsets
-typedef Elf32_Half t_elf_half;    // (Size 2) Unsigned medium integers
-typedef Elf32_Word t_elf_word;    // (Size 4) Unsigned large integers
-typedef Elf32_Sword t_elf_sword;  // (Size 4) Signed large integers
-typedef Elf32_Word t_elf_xword;   // Defined for compatibility with Elf64_Xword
-typedef Elf32_Sword t_elf_sxword; // Defined for compatibility with Elf64_Sxword
+typedef Elf32_Addr t_elf_addr;
+typedef Elf32_Ehdr t_elf_ehdr;
+typedef Elf32_Phdr t_elf_phdr;
+typedef Elf32_Shdr t_elf_shdr;
+typedef Elf32_Off t_elf_off;
+#define size_t uint32_t
 
-/* Data structures for 32bit */
-typedef Elf32_Ehdr t_elf_ehdr; // Elf header located at file offset 0
-typedef Elf32_Phdr t_elf_phdr; // Program headers contaning segment informations
-typedef Elf32_Shdr t_elf_shdr; // Section header containing section informations
-typedef Elf32_Sym t_elf_sym;   // Symbol table entries
-typedef Elf32_Rel t_elf_rel;   // Relocation entries
-typedef Elf32_Rela t_elf_rela; // Relocation entries with an r_addend member
-typedef Elf32_Dyn t_elf_dyn;   // Dynamic table entries
-
-#else /* not WOODY_32BIT */
+#else /* 64 bits */
 
 /* Data types for 64bit */
 typedef Elf64_Addr t_elf_addr; // (Size 8) Unsigned program addresses
@@ -106,42 +95,13 @@ typedef Elf64_Ehdr t_elf_ehdr;
 typedef Elf64_Phdr t_elf_phdr;
 typedef Elf64_Shdr t_elf_shdr;
 typedef Elf64_Off t_elf_off;
+#define size_t uint64_t
 
-#endif /* not WOODY_32BIT */
-
-#define size_t uint32_t
+#endif
 
 /****************************************************************************/
 /*                          STRUCTS                                         */
 /****************************************************************************/
-
-typedef struct s_elf64_ptrs
-{
-    t_elf_ehdr *ehdr;
-    t_elf_phdr *phdr;
-    t_elf_shdr *shdr;
-    t_elf_addr new_entry_point;
-    t_elf_addr old_entry_point;
-    t_elf_addr payload_vaddr;
-
-    t_elf_off text_start_offset;
-    t_elf_off text_end_offset;
-    t_elf_off text_section_size;
-    t_elf_addr text_p_vaddr;
-} t_elf64_ptrs;
-
-typedef struct s_elf32_ptrs
-{
-    Elf32_Ehdr *ehdr;
-    Elf32_Phdr *phdr;
-    Elf32_Shdr *shdr;
-    Elf32_Addr new_entry_point;
-    Elf32_Addr old_entry_point;
-
-    Elf32_Off text_start_offset;
-    Elf32_Off text_end_offset;
-
-} t_elf32_ptrs;
 
 typedef struct s_woody
 {
@@ -184,7 +144,6 @@ void cipher_woody_file_data(t_woody *woody);
 void print_memory(void *memory_ptr, int memory_size);
 void check_elf_header(t_woody *woody);
 
-void infect_elf(t_woody *woody);
 void silvio_text_infection(t_woody *woody);
 
 void load_payload(t_woody *woody, char *payload_name);
