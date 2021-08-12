@@ -11,6 +11,7 @@ PAYLOAD_32_NAME		=	payload_32
 # Compilation mode
 WALL				=	yes
 WEXTRA				=	yes
+WSHADOW				=	yes
 WERROR				=	no
 FSANITIZE			=	no
 DEBUG				=	no
@@ -21,38 +22,48 @@ AS					:= nasm
 AS_FLAG				:= -f elf64
 GEN					:=	Generation in mode
 
+# Define 32bit flags for use in headers.
+ifeq ($(32BIT), 1)
+	CC				:= $(CC) -D 32BIT
+endif
+
 ifeq ($(WALL), yes)
-	CC				:=	$(CC) -Wall
-	GEN				:=	$(GEN) all
+	CC				+=	-Wall
+	GEN				+=	 all
 endif
 
 ifeq ($(WEXTRA), yes)
-	CC				:=	$(CC) -Wextra
-	GEN				:=	$(GEN) extra
+	CC				+=	-Wextra
+	GEN				+=	extra
+endif
+
+ifeq ($(WSHADOW), yes)
+	CC				+=	-Wshadow
+	GEN				+=	shadow
 endif
 
 ifeq ($(WERROR), yes)
-	CC				:=	$(CC) -Werror
-	GEN				:=	$(GEN) error
+	CC				+=	-Werror
+	GEN				+=	error
 endif
 
 ifeq ($(FSANITIZE), yes)
-	CC				:=	$(CC) -fsanitize=address
-	GEN				:=	$(GEN) sanitize
+	CC				+=	-fsanitize=address
+	GEN				+=	sanitize
 endif
 
 ifeq ($(DEBUG), yes)
-	CC				:=	$(CC) -g
-	GEN				:=	$(GEN) debug
+	CC				+=	-g
+	GEN				+=	debug
 endif
 
 ifeq ($(O2),yes)
-	CC				:=	$(CC) -O2
-	GEN				:=	$(GEN) O2
+	CC				+=	-O2
+	GEN				+=	O2
 endif
 
 ifeq ($(GEN), "Generation in mode")
-	GEN				:=	$(GEN) no flags
+	GEN				+=	no flags
 endif
 
 # Name
