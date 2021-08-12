@@ -157,6 +157,7 @@ void silvio_text_infection_elf64(t_woody *woody)
             woody->elf64_ptrs->text_start_offset = woody->elf64_ptrs->phdr[i].p_offset;
             woody->elf64_ptrs->text_end_offset = woody->elf64_ptrs->text_start_offset + woody->elf64_ptrs->phdr[i].p_filesz;
             woody->elf64_ptrs->text_section_size = woody->elf64_ptrs->phdr[i].p_filesz;
+            printf("text_section_size = %i\n", woody->elf64_ptrs->text_section_size);
 
             woody->elf64_ptrs->text_p_vaddr = woody->elf64_ptrs->phdr[i].p_vaddr;
             woody->elf64_ptrs->payload_vaddr = woody->elf64_ptrs->text_p_vaddr + woody->elf64_ptrs->phdr[i].p_filesz;
