@@ -12,13 +12,13 @@
 
 #include "woody_woodpacker.h"
 
-void check_elf_header_and_set_type(t_woody *woody)
+void check_elf_header(t_woody *woody)
 {
-    if (woody->binary_data_size < sizeof(Elf32_Ehdr))
+    if (woody->binary_data_size < sizeof(t_elf_ehdr))
     {
         error(ERROR_NOT_ELF, woody);
     }
-    Elf32_Ehdr *ehdr = (Elf32_Ehdr *)woody->mmap_ptr;
+    t_elf_ehdr *ehdr = (t_elf_ehdr *)woody->mmap_ptr;
     /*
     The first check we make to the Ehdr is whether it is an Elf64 file.
     This means that the first four bytes (e_ident[EI_MAG0..EI_MAG3])
@@ -37,19 +37,16 @@ void check_elf_header_and_set_type(t_woody *woody)
     {
         error(ERROR_NOT_ELF, woody);
     }
-    // Setting type here, elf64 or elf32.
-    if (ehdr->e_ident[EI_CLASS] == ELFCLASS64)
-    {
-        woody->ei_class = ELFCLASS64;
-    }
-    else if (ehdr->e_ident[EI_CLASS] == ELFCLASS32)
-    {
-        woody->ei_class = ELFCLASS32;
-    }
-    else
+    // Checking if class is well define.
+    if (ARCH_32 && ehdr->e_ident[EI_CLASS] != ELFCLASS32)
     {
         error(ERROR_NOT_ELF, woody);
     }
+    else if (!ARCH_32 && ehdr->e_ident[EI_CLASS] != ELFCLASS64)
+    {
+        error(ERROR_NOT_ELF, woody);
+    }
+
     // Check if file have already been infected
     if (ehdr->e_ident[EI_PAD + 3] == 7)
     {

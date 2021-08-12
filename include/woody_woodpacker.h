@@ -71,52 +71,40 @@ enum e_error
     NB_OF_ERROR_CODES /* Always keep last */
 };
 
-#define PAGE_SZ64 0x1000
-#define PAGE_SZ32 0x1000
+#define PAGE_SIZE 0x1000
 
 #define OUTPUT_FILE_NAME "woody"
 #define PAYLOAD_64_NAME "./payloads/payload_64"
 #define PAYLOAD_32_NAME "./payloads/payload_32"
 
+/* Custom types for 32bit compatibility. */
+#ifdef ARCH_32
+/* Data types for 32bit */
+typedef Elf32_Addr t_elf_addr;
+typedef Elf32_Ehdr t_elf_ehdr;
+typedef Elf32_Phdr t_elf_phdr;
+typedef Elf32_Shdr t_elf_shdr;
+typedef Elf32_Off t_elf_off;
 #define size_t uint32_t
+
+#else /* 64 bits */
+
+// If ARCH_32 not define, define it to 0.
+#define ARCH_32 0
+
+/* Data types for 64bit */
+typedef Elf64_Addr t_elf_addr; // (Size 8) Unsigned program addresses
+typedef Elf64_Ehdr t_elf_ehdr;
+typedef Elf64_Phdr t_elf_phdr;
+typedef Elf64_Shdr t_elf_shdr;
+typedef Elf64_Off t_elf_off;
+#define size_t uint64_t
+
+#endif
 
 /****************************************************************************/
 /*                          STRUCTS                                         */
 /****************************************************************************/
-
-typedef struct s_elf64_ptrs
-{
-    Elf64_Ehdr *ehdr;
-    Elf64_Phdr *phdr;
-    Elf64_Shdr *shdr;
-    Elf64_Addr new_entry_point;
-    Elf64_Addr old_entry_point;
-    Elf64_Addr payload_vaddr;
-
-    Elf64_Off text_start_offset;
-    Elf64_Off text_end_offset;
-    uint64_t text_section_size;
-    Elf64_Addr text_p_vaddr;
-} t_elf64_ptrs;
-
-typedef struct s_elf32_ptrs
-{
-    Elf32_Ehdr *ehdr;
-    Elf32_Phdr *phdr;
-    Elf32_Shdr *shdr;
-    Elf32_Addr new_entry_point;
-    Elf32_Addr old_entry_point;
-
-    Elf32_Off text_start_offset;
-    Elf32_Off text_end_offset;
-
-} t_elf32_ptrs;
-
-#ifdef ARCH_32
-
-#else
-
-#endif
 
 typedef struct s_woody
 {
@@ -128,9 +116,17 @@ typedef struct s_woody
 
     void *cipher;
 
-    char ei_class; //Used as a flag for elfclass.
-    t_elf32_ptrs *elf32_ptrs;
-    t_elf64_ptrs *elf64_ptrs;
+    t_elf_ehdr *ehdr;
+    t_elf_phdr *phdr;
+    t_elf_shdr *shdr;
+    t_elf_addr new_entry_point;
+    t_elf_addr old_entry_point;
+    t_elf_addr payload_vaddr;
+
+    t_elf_off text_start_offset;
+    t_elf_off text_end_offset;
+    t_elf_off text_section_size;
+    t_elf_addr text_p_vaddr;
 
     int ret2oep_offset;
 
@@ -144,17 +140,13 @@ typedef struct s_woody
 
 void error(int err, t_woody *woody);
 void free_woody(t_woody *woody);
-void elf64_pt_note_to_pt_load_infection(t_woody *woody);
+void pt_note_to_pt_load_infection(t_woody *woody);
 void cipher_woody_file_data(t_woody *woody);
 void print_memory(void *memory_ptr, int memory_size);
-void check_elf_header_and_set_type(t_woody *woody);
+void check_elf_header(t_woody *woody);
 
-void infect_elf_64(t_woody *woody);
-void infect_elf_32(t_woody *woody);
-void silvio_text_infection_elf64(t_woody *woody);
-void silvio_text_infection_elf32(t_woody *woody);
+void silvio_text_infection(t_woody *woody);
 
-void set_elf64_ptr(t_woody *woody);
 void load_payload(t_woody *woody, char *payload_name);
 void set_woody_ptrs_to_null(t_woody *woody);
 
