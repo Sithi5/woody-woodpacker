@@ -1,5 +1,5 @@
 #!sh
-nasm -f elf64 xor_cipher.asm
-gcc maintest.c xor_cipher.o
+nasm -f elf64 cipher_asm.asm
+gcc maintest.c cipher_asm.o
 ./a.out
 rm *.o
