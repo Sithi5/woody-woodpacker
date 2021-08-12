@@ -53,7 +53,7 @@ void silvio_text_infection_elf32(t_woody *woody)
 
     if (woody->payload_size > PAGE_SZ32)
     {
-        error(ERROR_PAYLOAD_TOO_BIG, woody);
+        error(ERROR_NOT_ENOUGHT_SPACE_FOR_PAYLOAD, woody);
     }
 
     Elf64_Addr payload_vaddr, text_end_offset;

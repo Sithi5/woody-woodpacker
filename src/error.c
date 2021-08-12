@@ -47,8 +47,8 @@ static void error_msg(int err)
                                            : 0;
     err == ERROR_FILE_IS_ALREADY_INFECTED ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_FILE_IS_ALREADY_INFECTED\n", err)
                                           : 0;
-    err == ERROR_PAYLOAD_TOO_BIG ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_PAYLOAD_TOO_BIG\n", err)
-                                 : 0;
+    err == ERROR_NOT_ENOUGHT_SPACE_FOR_PAYLOAD ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_NOT_ENOUGHT_SPACE_FOR_PAYLOAD\n", err)
+                                               : 0;
     err == ERROR_SETTEXTSECTIONSIZE_NOT_FOUND ? fprintf(stderr, RED "error" DEF ": %d -> ERROR_SETTEXTSECTIONSIZE_NOT_FOUND\n", err)
                                               : 0;
     if (errno != 0)

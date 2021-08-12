@@ -19,6 +19,7 @@ readelf -l # Display program-header info
 ```bash
 make all
 ./woody-woopacker (binary_file)
+./woody
 ```
 
 # Testing

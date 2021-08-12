@@ -137,11 +137,6 @@ void silvio_text_infection_elf64(t_woody *woody)
 
     load_payload(woody, PAYLOAD_64_NAME);
 
-    if (woody->payload_size > PAGE_SZ64)
-    {
-        error(ERROR_PAYLOAD_TOO_BIG, woody);
-    }
-
     Elf64_Addr payload_vaddr, text_end_offset;
 
     // Increase section header offset by PAGE_SIZE
@@ -158,10 +153,11 @@ void silvio_text_infection_elf64(t_woody *woody)
             woody->elf64_ptrs->text_end_offset = woody->elf64_ptrs->text_start_offset + woody->elf64_ptrs->phdr[i].p_filesz;
             woody->elf64_ptrs->text_section_size = woody->elf64_ptrs->phdr[i].p_filesz;
 
-            printf("PAGE_SZ64 = %i\n", PAGE_SZ64);
-            printf("woody->elf64_ptrs->text_end_offset = %i\n", woody->elf64_ptrs->text_end_offset);
-            printf("woody->elf64_ptrs->text_end_offset modulo PAGE_SZ64 = %i\n", woody->elf64_ptrs->text_end_offset % PAGE_SZ64);
-            printf("woody->elf64_ptrs->text_end_offset modulo PAGE_SZ64 + payload_size = %i\n", woody->elf64_ptrs->text_end_offset % PAGE_SZ64 + woody->payload_size);
+            // Check if there is enought space for our payload.
+            if (woody->elf64_ptrs->text_end_offset % PAGE_SZ64 + woody->payload_size > PAGE_SZ64)
+            {
+                error(ERROR_NOT_ENOUGHT_SPACE_FOR_PAYLOAD, woody);
+            }
 
             woody->elf64_ptrs->text_p_vaddr = woody->elf64_ptrs->phdr[i].p_vaddr;
             woody->elf64_ptrs->payload_vaddr = woody->elf64_ptrs->text_p_vaddr + woody->elf64_ptrs->phdr[i].p_filesz;
