@@ -5,95 +5,81 @@ section .bss
     global stream_cpy
 
     stream resb 256
-    stream_cpy resb 256
+    ;stream_cpy resb 256
 
 section .text
     GLOBAL rc4_cipher_start
 
+_swap:
+    mov r11b, [r8 + r9]          ; tmp_i = stream[i]
+    mov r12b, [r8 + r10]         ; tmp_j = stream[j]
+    mov [r8 + r10], r11b         ; stream[j] = stream[i]
+    mov [r8 + r9], r12b          ; stream[i] = tmp_j
+    mov rax, r8
+    ret
 
 rc4_cipher_start:
     ;rdi = start offset
     ;rsi = size
     ;rdx = key
     ;rcx = key_size
+    mov r14, rdx                    ; r14 = key
+    lea r8, [rel stream]            ; load stream to memory
+    xor r9, r9                      ; int i = 0
 
-    lea r8, [rel stream]			; stream 
-    cmp byte [r8 + 1], 0			; check if stream has to be init
-    jne encrypt_reset_vals			; if yes, skip initialisation
-    xor r9, r9
-    mov r13, rdx					; r13 = key
+init_stream:
+    cmp r9, 256                     ; while i < 256
+    jne init_index_values             ; reset i and j when i = 256 and continue
+    mov [r8 + r9], r9b              ; key_tab[i] = i;
+    add r9, 1                       ; i++
+    jmp init_stream
 
-init_stream_default_values:
-    cmp r9, 256						; for (i = 0; i < 256; i++)
-    je init_stream_reset_vals
-    mov [r8 + r9], r9b				; stream[i] = i;
-    inc r9
-    jmp init_stream_default_values
+init_index_value:
+    xor r9, r9                      ; int i
+    xor r10, r10                    ; int j
+    xor r11, r11                    ; int tmp_i for swap
+    xor r12, r12                    ; int tmp_j for swap
 
-init_stream_reset_vals:
-    xor r9, r9						; i
-    xor r10, r10					; j
-    xor r11, r11					; tmp_i
-    xor r12, r12					; tmp_j
+stream_generation:
+    cmp r9, 256                     ; while i < 256
+    jne reset_index_values
+    add r10b, [r8 + r9]             ; j = j + stream[i] (using r10b for modulo 256)
+    xor rdx, rdx                    ; remainder of %
+    mov rax, r9                     ; div using rax for diviser
+    div rcx                         ; rax / rcx = rdx = i % rdx
+    add r10b, [r14 + rdx]           ; + key[i % key_size]
+    call _swap
+    add r9 + 1                      ; i + 1
 
-init_stream_real_values:
-    cmp r9, 256						; for (i = 0; i < 256; i++)
-    je copy_stream
-    add r10b, [r8 + r9]				; j = (j + stream[i]
-
-    xor rdx, rdx					; rdx is remainder
-    mov rax, r9						; rax = i
-    div rcx							; rcx = key_size : rax / rcx -> rdx = %
-
-    add r10b, [r13 + rdx]			; + key[i % key_size])
-    mov r11b, [r8 + r9]				; tmp_i = stream[i]
-    mov r12b, [r8 + r10]			; tmp_j = stream[j]
-    mov [r8 + r10], r11b			; stream[j] = stream[i]
-    mov [r8 + r9], r12b				; stream[i] = tmp_j
-
-    inc r9
-    jmp init_stream_real_values
-
-copy_stream:
-    ;save rdi, rsi and rcx
-    push rdi
-    push rsi
-    push rcx
-
-    lea rdi, [rel stream_cpy]		; dest
-    lea rsi, [rel stream]			; src
-    mov rcx, 256					; n
-    rep movsb						; memcpy
-
-    ;restore rdi, rsi ans rcx
-    pop rcx
-    pop rsi
-    pop rdi
-
-encrypt_reset_vals:
-    xor r9, r9						; i
-    xor r10, r10					; j
-    xor r11, r11					; tmp_i
-    xor r12, r12					; tmp_j
-    xor r13, r13					; k
-    xor r14, r14					; K
-    xor r15, r15					; l
+reset_index_values:
+    xor r9, r9                      ; int i
+    xor r10, r10                    ; int j
+    xor r11, r11                    ; int tmp_i for swap
+    xor r12, r12                    ; int tmp_j for swap
+    xor r13, r13                    ; int k
+    xor r15, r15                    ; int res
 
 encrypt:
-    cmp r15, rsi					; while (l < size)
-    jge end
-    add r9b, 1						; i = (i + 1) % 256
-    add r10b, [r8 + r9]				; j = j + stream[i]
-    mov r11b, [r8 + r9]				; tmp_i = stream[i]
-    mov r12b, [r8 + r10]			; tmp_j = stream[j]
-    mov [r8 + r10], r11b			; stream[j] = tmp_i
-    mov [r8 + r9], r12b				; stream[i] = tmp_j
-
-    mov r13b, [r8 + r9]				; k = stream[i]
-    add r13b, [r8 + r10]			; k = k + stream[j]
-    mov r14b, [r8 + r13]			; K = stream[k]
-    xor [rdi + r15], r14b			; byte to encrpt ^ K
-    inc r15							; l++
+    cmp r13, rsi                    ; while k < len
+    jne return
+    add r9b, [r9 + 1]               ; i = (i + 1) % N;
+    add r10b, [r8 + r9]             ; j = (j + stream[i]) % N
+    call _swap
+    mov r14b, [r8 + r9b]
+    add r14b, [r8 + r10b]
+    mov r15, [r8 + r14b]
+    xor [rdi + r13], r15
+    add r13, 1                      ; k++
     jmp encrypt
 
-end:
+return:
+    pop rsi
+    pop rdx
+    pop rcx
+    mov rax, rdi
+    pop rdi
+    ret
+
+
+
+
