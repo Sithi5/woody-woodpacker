@@ -135,7 +135,7 @@ void get_payload(t_woody *woody)
     }
     woody->infected_file_size = woody->binary_data_size + PAGE_SIZE;
 
-    load_payload(woody, PAYLOAD_64_NAME);
+    load_payload(woody, PAYLOAD_NAME);
 }
 
 void find_text_and_set_offset(t_woody *woody)
