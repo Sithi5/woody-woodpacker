@@ -135,14 +135,14 @@ void silvio_text_infection(t_woody *woody)
     }
     woody->infected_file_size = woody->binary_data_size + PAGE_SIZE;
 
-    load_payload(woody, PAYLOAD_64_NAME);
+    load_payload(woody, PAYLOAD_NAME);
 
     // Increase section header offset by PAGE_SIZE
     woody->ehdr->e_shoff += PAGE_SIZE;
     // Set a flag in the EI_PAD header padding that indicate the file have been infected.
     woody->ehdr->e_ident[EI_PAD + 3] = 7;
 
-    for (int i = 0; i < woody->ehdr->e_phnum; i++)
+    for (size_t i = 0; i < woody->ehdr->e_phnum; i++)
     {
         if (woody->phdr[i].p_type == PT_LOAD && woody->phdr[i].p_flags == (PF_R | PF_X))
         {
@@ -173,7 +173,7 @@ void silvio_text_infection(t_woody *woody)
     }
 
     // Adding offset of one page in all section located after text section end.
-    for (int i = 0; i < woody->ehdr->e_shnum; i++)
+    for (size_t i = 0; i < woody->ehdr->e_shnum; i++)
     {
         if (woody->shdr[i].sh_offset > woody->text_end_offset)
             woody->shdr[i].sh_offset += PAGE_SIZE;

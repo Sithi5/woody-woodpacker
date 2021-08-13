@@ -74,8 +74,6 @@ enum e_error
 #define PAGE_SIZE 0x1000
 
 #define OUTPUT_FILE_NAME "woody"
-#define PAYLOAD_64_NAME "./payloads/payload_64"
-#define PAYLOAD_32_NAME "./payloads/payload_32"
 
 /* Custom types for 32bit compatibility. */
 #ifdef ARCH_32
@@ -86,6 +84,7 @@ typedef Elf32_Phdr t_elf_phdr;
 typedef Elf32_Shdr t_elf_shdr;
 typedef Elf32_Off t_elf_off;
 #define size_t uint32_t
+#define PAYLOAD_NAME "./payloads/payload_32"
 
 #else /* 64 bits */
 
@@ -99,6 +98,7 @@ typedef Elf64_Phdr t_elf_phdr;
 typedef Elf64_Shdr t_elf_shdr;
 typedef Elf64_Off t_elf_off;
 #define size_t uint64_t
+#define PAYLOAD_NAME "./payloads/payload_64"
 
 #endif
 
@@ -109,10 +109,10 @@ typedef Elf64_Off t_elf_off;
 typedef struct s_woody
 {
     void *mmap_ptr;
-    uint32_t binary_data_size;
+    size_t binary_data_size;
 
     void *payload_data;
-    uint32_t payload_size;
+    size_t payload_size;
 
     void *cipher;
 
@@ -131,7 +131,7 @@ typedef struct s_woody
     int ret2oep_offset;
 
     void *infected_file;
-    uint32_t infected_file_size;
+    size_t infected_file_size;
 } t_woody;
 
 /****************************************************************************/
@@ -142,7 +142,7 @@ void error(int err, t_woody *woody);
 void free_woody(t_woody *woody);
 void pt_note_to_pt_load_infection(t_woody *woody);
 void cipher_woody_file_data(t_woody *woody);
-void print_memory(void *memory_ptr, int memory_size);
+void print_memory(void *memory_ptr, size_t memory_size);
 void check_elf_header(t_woody *woody);
 
 void silvio_text_infection(t_woody *woody);

@@ -23,7 +23,7 @@ void load_payload(t_woody *woody, char *payload_name)
     }
     if ((payload_size = lseek(fd, 0, SEEK_END)) != -1)
     {
-        woody->payload_size = (uint32_t)payload_size;
+        woody->payload_size = (size_t)payload_size;
         /* Go back to the start of the file. */
         if (lseek(fd, 0, SEEK_SET) != 0)
         {

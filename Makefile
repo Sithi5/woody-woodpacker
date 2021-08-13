@@ -5,8 +5,6 @@ NAME				=	woody_woodpacker
 
 SRC_PAYLOADS_PATH	=	./payloads/
 
-PAYLOAD_64_NAME		=	payload_64
-PAYLOAD_32_NAME		=	payload_32
 
 # Compilation mode
 WALL				=	yes
@@ -24,8 +22,14 @@ GEN					:=	Generation in mode
 
 LONG_BITS := $(shell getconf LONG_BIT)
 ifeq ($(LONG_BITS),32)
-# Define 32bit flags for use in headers.
-	CC				:= $(CC) -D ARCH_32
+# Define for 32bits
+CC				:= $(CC) -D ARCH_32
+PAYLOAD_NAME		=	payload_32
+SRC_PAYLOAD_NAME	=	test32.asm
+else
+# Define for 64bits
+PAYLOAD_NAME		=	payload_64
+SRC_PAYLOAD_NAME	=	test64.asm
 endif
 
 ifeq ($(WALL), yes)
@@ -78,9 +82,7 @@ SRC_NAME			=	main.c						\
 
 ASM_SRC_NAME		=	xor_cipher.asm		\
 
-SRC_PAYLOAD_64_NAME	=	test64.asm				\
 
-SRC_PAYLOAD_32_NAME	=	test32.asm					\
 
 INCLUDE_NAME		=	woody_woodpacker.h	\
 
@@ -135,7 +137,7 @@ _IPURPLE	=	\033[45m
 _ICYAN		=	\033[46m
 _IGREY		=	\033[47m
 
-all: art $(NAME) $(SRC_PAYLOADS_PATH)$(PAYLOAD_64_NAME) $(SRC_PAYLOADS_PATH)$(PAYLOAD_32_NAME)
+all: art $(NAME) $(SRC_PAYLOADS_PATH)$(PAYLOAD_NAME)
 
 $(NAME): $(ASM_OBJ) $(OBJ)
 	@echo "\n$(NAME) : $(GEN)"
@@ -157,26 +159,17 @@ $(ASM_OBJ_PATH)%.o: $(ASM_SRC_PATH)%.asm
 	@echo "$(_END)$(_GREEN)[OK]\t$(_UNDER)$(_YELLOW)\t"	\
 		"COMPILE :$(_END)$(_BOLD)$(_WHITE)\t$<"
 
-payloads: clean_payloads $(SRC_PAYLOADS_PATH)$(PAYLOAD_64_NAME) $(SRC_PAYLOADS_PATH)$(PAYLOAD_32_NAME)
+payloads: clean_payloads $(SRC_PAYLOADS_PATH)$(PAYLOAD_NAME)
 
 clean_payloads:
-	@rm -f $(SRC_PAYLOADS_PATH)$(PAYLOAD_32_NAME)
-	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(PAYLOAD_32_NAME)
-	@rm -f $(SRC_PAYLOADS_PATH)$(PAYLOAD_64_NAME)
-	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(PAYLOAD_64_NAME)
+	@rm -f $(SRC_PAYLOADS_PATH)$(PAYLOAD_NAME)
+	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(PAYLOAD_NAME)
 
-$(SRC_PAYLOADS_PATH)$(PAYLOAD_64_NAME):
+$(SRC_PAYLOADS_PATH)$(PAYLOAD_NAME):
 	@echo "\n$(_WHITE)====================================================$(_END)"
-	@echo "$(_YELLOW)		COMPILING $(PAYLOAD_64_NAME)$(_END)"
+	@echo "$(_YELLOW)		COMPILING $(PAYLOAD_NAME)$(_END)"
 	@echo "$(_WHITE)====================================================$(_END)"
-	@nasm -f bin -o $(SRC_PAYLOADS_PATH)$(PAYLOAD_64_NAME) $(SRC_PAYLOADS_PATH)$(SRC_PAYLOAD_64_NAME)
-	@echo "\n$(_WHITE)$(_BOLD)$@\t$(_END)$(_GREEN)[OK]\n$(_END)"
-
-$(SRC_PAYLOADS_PATH)$(PAYLOAD_32_NAME):
-	@echo "\n$(_WHITE)====================================================$(_END)"
-	@echo "$(_YELLOW)		COMPILING $(PAYLOAD_32_NAME)$(_END)"
-	@echo "$(_WHITE)====================================================$(_END)"
-	@nasm -f bin  -o $(SRC_PAYLOADS_PATH)$(PAYLOAD_32_NAME) $(SRC_PAYLOADS_PATH)$(SRC_PAYLOAD_32_NAME)
+	@nasm -f bin -o $(SRC_PAYLOADS_PATH)$(PAYLOAD_NAME) $(SRC_PAYLOADS_PATH)$(SRC_PAYLOAD_NAME)
 	@echo "\n$(_WHITE)$(_BOLD)$@\t$(_END)$(_GREEN)[OK]\n$(_END)"
 
 tests: all

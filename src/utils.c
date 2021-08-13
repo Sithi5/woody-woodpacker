@@ -33,10 +33,10 @@ void free_woody(t_woody *woody)
     }
 }
 
-void print_memory(void *memory_ptr, int memory_size)
+void print_memory(void *memory_ptr, size_t memory_size)
 {
     printf("printing memory at address : %p :\n\n", memory_ptr);
-    for (int i = 0; i < memory_size; i++)
+    for (size_t i = 0; i < memory_size; i++)
     {
         printf("%x ", ((char *)(memory_ptr))[i]);
     }
