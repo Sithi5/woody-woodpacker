@@ -1,6 +1,9 @@
 /* example.c */
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h> // CLOSE EXIT LSEEK WRITE
+#include <stdlib.h> // MALOC/FREE
+#include <fcntl.h>  // OPEN
 
 int main(int argc, char *argv[])
 {
@@ -11,11 +14,11 @@ int main(int argc, char *argv[])
     char *decrypt;
     int len = strlen(data);
     int keylen = strlen(key);
-    printf("data:%s | key: %s \n", data, key);
+    printf("data:%s| key: %s \n", data, key);
     rc4_cipher_start(data, len, key, keylen);
     // int cryptlen = strlen(crypt);
     // printf("crypt %s\n", crypt);
-    // printf("hexvalue: |");
+    // printf("| hexvalue: |");
     for (int i = 0; i < 18; i++)
     {
         printf(" %x |", ((unsigned char *)(data))[i]);

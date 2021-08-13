@@ -9,9 +9,17 @@ section .bss
 section .text
     GLOBAL rc4_cipher_start
 
-_modulo:                            ; transfert into rax directly before calling
-    xor rdx, 256                    ; remainder of %
-    div rcx
+_minus:
+    sub rax, 256
+
+_modulo:
+    cmp rax, 256
+    jge _minus
+    ret
+
+;_modulo:                            ; transfert into rax directly before calling
+;    xor rdx, 256                    ; remainder of %
+;    div rcx
 
 _swap:
     mov r11b, [r8 + r9]          ; tmp_i = stream[i]
@@ -49,7 +57,6 @@ stream_generation:
     cmp r9, 256                     ; while i < 256
     jne reset_index_values
     add r10, [r8 + r9]              ; j = j + stream[i]
-    mov rax, r10
     xor rdx, rdx                    ; remainder of %
     mov rax, r9                     ; div using rax for diviser
     div rcx                         ; rax / rcx = rdx = i % rdx
@@ -73,7 +80,7 @@ reset_index_values:
 encrypt:
     cmp r13, rsi                    ; while k < len
     jge return
-    add r9, 1                ; i = (i + 1) % N;
+    add r9, 1                       ; i = (i + 1) % N;
     mov rax, r9
     call _modulo
     mov r9, rax
@@ -91,9 +98,6 @@ encrypt:
     jmp encrypt
 
 return:
-    ;pop rdx                         ; release key from stack
-    ;mov rax, rdi                    ; move rdi in rax
-    ;pop rdi                         ; release data from stack
     ret
 
 
