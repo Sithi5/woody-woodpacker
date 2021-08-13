@@ -82,8 +82,6 @@ SRC_NAME			=	main.c						\
 
 ASM_SRC_NAME		=	xor_cipher.asm		\
 
-
-
 INCLUDE_NAME		=	woody_woodpacker.h	\
 
 TESTS_FILES	= ./tests/test*.sh
@@ -159,11 +157,11 @@ $(ASM_OBJ_PATH)%.o: $(ASM_SRC_PATH)%.asm
 	@echo "$(_END)$(_GREEN)[OK]\t$(_UNDER)$(_YELLOW)\t"	\
 		"COMPILE :$(_END)$(_BOLD)$(_WHITE)\t$<"
 
-payloads: clean_payloads $(SRC_PAYLOADS_PATH)$(PAYLOAD_NAME)
+payload: clean_payload $(SRC_PAYLOADS_PATH)$(PAYLOAD_NAME)
 
-clean_payloads:
+clean_payload:
 	@rm -f $(SRC_PAYLOADS_PATH)$(PAYLOAD_NAME)
-	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(PAYLOAD_NAME)
+	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(PAYLOAD_NAME)"$(_END)"
 
 $(SRC_PAYLOADS_PATH)$(PAYLOAD_NAME):
 	@echo "\n$(_WHITE)====================================================$(_END)"
@@ -184,7 +182,7 @@ clean:
 	@rm -rf $(ASM_OBJ_PATH) 2> /dev/null || true
 	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(ASM_OBJ_PATH)"$(_END)"
 
-fclean: clean clean_payloads
+fclean: clean clean_payload
 	@rm -f $(NAME) woody
 	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(NAME)
 	@echo "$(_END)"
@@ -198,13 +196,13 @@ help:
 	@echo "$(_YELLOW)   make                                runs all                           "
 	@echo "$(_YELLOW)   make all                            generates all binaries             "
 	@echo "$(_YELLOW)   make art                            print a bird                       "
-	@echo "$(_YELLOW)   make payloads                       generates payloads binaries        "
-	@echo "$(_YELLOW)   make clean_payloads                 clean payloads binaries            "
+	@echo "$(_YELLOW)   make payload                        generates payload binary           "
+	@echo "$(_YELLOW)   make clean_payload                  clean payload binary               "
 	@echo "$(_YELLOW)   make clean                          remove the generated files         "
 	@echo "$(_YELLOW)   make tests                          launch tests scripts               "
 	@echo "$(_YELLOW)   make help                           prints this message                $(_END)"
 
-.PHONY: all art clean fclean re check payloads help tests clean_payloads
+.PHONY: all art clean fclean re check payload help tests clean_payload
 
 art:
 	@echo "$(_CYAN)"
