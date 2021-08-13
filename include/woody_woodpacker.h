@@ -128,8 +128,6 @@ typedef struct s_woody
     t_elf_off text_section_size;
     t_elf_addr text_p_vaddr;
 
-    int ret2oep_offset;
-
     void *infected_file;
     size_t infected_file_size;
 } t_woody;
@@ -141,7 +139,7 @@ typedef struct s_woody
 // Utils
 void error(int err, t_woody *woody);
 void free_woody(t_woody *woody);
-void print_memory(void *memory_ptr, int memory_size);
+void print_memory(void *memory_ptr, size_t memory_size);
 void set_woody_ptrs_to_null(t_woody *woody);
 
 void cipher_woody_file_data(t_woody *woody);
