@@ -32,7 +32,7 @@
 /*                          DEFINES                                         */
 /****************************************************************************/
 
-/* Colors */
+// Colors
 #define END "\033[0m"
 #define RED "\033[0;31m"
 #define B_RED "\033[1;31m"
@@ -47,7 +47,7 @@
 #define CYAN "\033[0;36m"
 #define B_CYAN "\033[1;36m"
 
-/* Error codes */
+// Error codes
 enum e_error
 {
     ERROR_OPEN = 1,
@@ -68,16 +68,16 @@ enum e_error
     ERROR_RET2TEXTSECTION_NOT_FOUND,
     ERROR_SETTEXTSECTIONSIZE_NOT_FOUND,
     ERROR_FILE_IS_ALREADY_INFECTED,
-    NB_OF_ERROR_CODES /* Always keep last */
+    NB_OF_ERROR_CODES // Always keep last.
 };
 
 #define PAGE_SIZE 0x1000
 
 #define OUTPUT_FILE_NAME "woody"
 
-/* Custom types for 32bit compatibility. */
+// Custom types for 32bit compatibility.
 #ifdef ARCH_32
-/* Data types for 32bit */
+// Data types for 32bit.
 typedef Elf32_Addr t_elf_addr;
 typedef Elf32_Ehdr t_elf_ehdr;
 typedef Elf32_Phdr t_elf_phdr;
@@ -86,12 +86,12 @@ typedef Elf32_Off t_elf_off;
 #define size_t uint32_t
 #define PAYLOAD_NAME "./payloads/payload_32"
 
-#else /* 64 bits */
+#else // 64 bits
 
 // If ARCH_32 not define, define it to 0.
 #define ARCH_32 0
 
-/* Data types for 64bit */
+// Data types for 64bit.
 typedef Elf64_Addr t_elf_addr; // (Size 8) Unsigned program addresses
 typedef Elf64_Ehdr t_elf_ehdr;
 typedef Elf64_Phdr t_elf_phdr;
@@ -138,17 +138,16 @@ typedef struct s_woody
 /*                          FUNCTIONS DEFINITIONS                           */
 /****************************************************************************/
 
+// Utils
 void error(int err, t_woody *woody);
 void free_woody(t_woody *woody);
-void pt_note_to_pt_load_infection(t_woody *woody);
-void cipher_woody_file_data(t_woody *woody);
-void print_memory(void *memory_ptr, size_t memory_size);
-void check_elf_header(t_woody *woody);
-
-void silvio_text_infection(t_woody *woody);
-
-void load_payload(t_woody *woody, char *payload_name);
+void print_memory(void *memory_ptr, int memory_size);
 void set_woody_ptrs_to_null(t_woody *woody);
+
+void cipher_woody_file_data(t_woody *woody);
+void check_elf_header(t_woody *woody);
+void silvio_text_infection(t_woody *woody);
+void load_payload(t_woody *woody, char *payload_name);
 
 /****************************************************************************/
 /*                          GLOBAL VARIABLES                                */
