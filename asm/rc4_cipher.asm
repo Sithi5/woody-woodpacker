@@ -1,6 +1,3 @@
-
-section .data
-
 section .bss
     global stream
 
@@ -42,7 +39,6 @@ rc4_cipher_start:
     lea r8, [rel stream]            ; load stream to memory
     xor r9, r9                      ; int i = 0
     mov r14, rdx                    ; using rdx for modulo, store rdx in r14
-    jmp init_stream
 
 init_stream:
     cmp r9, 256                     ; while i < 256
@@ -56,7 +52,6 @@ init_index_values:
     xor r10, r10                    ; int j
     xor r11, r11                    ; int tmp_i for swap
     xor r12, r12                    ; int tmp_j for swap
-    jmp stream_generation
 
 stream_generation:
     cmp r9, 256                     ; while i < 256
@@ -80,7 +75,6 @@ reset_index_values:
     xor r13, r13                    ; int k
     xor r14, r14
     xor r15, r15                    ; int res
-    jmp encrypt
 
 encrypt:
     cmp r13, rsi                    ; while k < len
