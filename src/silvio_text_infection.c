@@ -20,9 +20,7 @@ size_t find_keysection_offset(t_woody *woody)
         {
             if (woody->payload_size - i > 128)
             {
-                // Actually checking we are in ret2textsection
-                if (((char *)woody->payload_data)[i + 1] == 0x44 && ((char *)woody->payload_data)[i + 2] == 0x44
-                && ((char *)woody->payload_data)[i + 3] == 0x44)
+                if (((char *)woody->payload_data)[i + 1] == 0x44 && ((char *)woody->payload_data)[i + 2] == 0x44 && ((char *)woody->payload_data)[i + 3] == 0x44)
                 {
                     return i;
                 }
@@ -147,17 +145,19 @@ void overwrite_payload_settextsectionsize(t_woody *woody)
     memcpy(woody->payload_data + settextsectionsize_offset + 2, (void *)&(woody->text_section_size), 4);
 }
 
-void overwrite_keysection_payload(t_woody *woody) {
+void overwrite_keysection_payload(t_woody *woody)
+{
     size_t keysection_offset = find_keysection_offset(woody);
-    for(int n = 0; n < 128;n++){
-                        printf("%x |", ((char *)woody->payload_data)[keysection_offset + n]);
+    for (int n = 0; n < 128; n++)
+    {
+        printf("%x |", ((char *)woody->payload_data)[keysection_offset + n]);
     }
     printf("\n\n");
     memcpy(woody->payload_data + keysection_offset, woody->encryption_key, 128);
-    for(int n = 0; n < 128;n++){
-                        printf("%x |", ((char *)woody->payload_data)[keysection_offset + n]);
+    for (int n = 0; n < 128; n++)
+    {
+        printf("%x |", ((char *)woody->payload_data)[keysection_offset + n]);
     }
-
 }
 
 void silvio_text_infection(t_woody *woody)
