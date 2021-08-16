@@ -14,14 +14,14 @@
 
 #define N 256
 
-void ft_swap(char *a, char *b)
+void ft_swap(unsigned char *a, unsigned char *b)
 {
-    char tmp = *b;
+    char tmp = *a;
     *a = *b;
     *b = tmp;
 }
 
-void encryption(char *stream, char *result, char *data, int len)
+void encryption(unsigned char *stream, char *result, char *data, int len)
 {
     int i = 0, j = 0, res = 0;
 
@@ -35,7 +35,7 @@ void encryption(char *stream, char *result, char *data, int len)
     }
 }
 
-void Keystream_generation(char *stream, char *key)
+void Keystream_generation(unsigned char *stream, char *key)
 {
     int j = 0;
     for (int i = 0; i < N; i++)
@@ -67,10 +67,10 @@ char *random_string(char *key, int len, t_woody *woody)
 
 char *rc4_cipher(t_woody *woody, char *data, int len)
 {
-    char *stream;
+    unsigned char *stream;
     char *result;
 
-    if (!(stream = (char *)malloc(sizeof(char) * N)))
+    if (!(stream = (unsigned char *)malloc(sizeof(unsigned char) * N)))
         error(ERROR_MALLOC, woody);
     if (!(result = (char *)malloc(sizeof(char) * len)))
         error(ERROR_MALLOC, woody);

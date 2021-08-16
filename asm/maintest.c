@@ -7,14 +7,14 @@
 
 #define N 256
 
-void ft_swap(char *a, char *b)
+void ft_swap(unsigned char *a, unsigned char *b)
 {
     char tmp = *a;
     *a = *b;
     *b = tmp;
 }
 
-void encryption(char *stream, char *result, char *data, int len)
+void encryption(unsigned char *stream, char *result, char *data, int len)
 {
     int i = 0, j = 0, res = 0;
 
@@ -28,7 +28,7 @@ void encryption(char *stream, char *result, char *data, int len)
     }
 }
 
-void Keystream_generation(char *stream, char *key, int key_len)
+void Keystream_generation(unsigned char *stream, char *key, int key_len)
 {
     int j = 0;
     for (int i = 0; i < N; i++)
@@ -49,15 +49,15 @@ int main(int argc, char *argv[])
     char data[18] = "wakonda for ever\n";
     char data2[18] = "wakonda for ever\n";
     char *key = "KEY";
-    char *stream;
-    char *result;
+    unsigned char *stream;
+    unsigned char *result;
     int len = strlen(data);
     int keylen = strlen(key);
     printf("data:%s| key: %s \n", data, key);
     rc4_cipher_start(data, len, key, keylen);
-    if (!(stream = (char *)malloc(sizeof(char) * N)))
+    if (!(stream = (unsigned char *)malloc(sizeof(unsigned char) * N)))
         return 0;
-    if (!(result = (char *)malloc(sizeof(char) * len)))
+    if (!(result = (unsigned char *)malloc(sizeof(unsigned char) * len)))
         return 0;
     Keystream_generation(stream, key, keylen);
     encryption(stream, result, data2, len);
