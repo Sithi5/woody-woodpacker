@@ -3,8 +3,8 @@ BITS 64
 SECTION .data
         woody_msg: db "...WOODY...",10
         woody_msg_len  : equ $-woody_msg
-        key_msg: db "0"
-        key_len  : equ $-key_msg
+        key_msg: times 128 db "D"
+        key_len  : dw 128
 
 section .bss
     global stream

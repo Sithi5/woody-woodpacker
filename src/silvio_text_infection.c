@@ -12,6 +12,27 @@
 
 #include "woody_woodpacker.h"
 
+size_t find_keysection_offset(t_woody *woody)
+{
+    for (size_t i = 0; i < woody->payload_size; i++)
+    {
+        if (((char *)woody->payload_data)[i] == 0x44)
+        {
+            if (woody->payload_size - i > 128)
+            {
+                // Actually checking we are in ret2textsection
+                if (((char *)woody->payload_data)[i + 1] == 0x44 && ((char *)woody->payload_data)[i + 2] == 0x44
+                && ((char *)woody->payload_data)[i + 3] == 0x44)
+                {
+                    return i;
+                }
+            }
+        }
+    }
+    error(ERROR_KEYSECTION_NOT_FOUND, woody);
+    return -1;
+}
+
 // Find the ret2oep offset in the payload. return true if ret2oep have been found.
 size_t find_ret2oep_offset(t_woody *woody)
 {
@@ -126,6 +147,19 @@ void overwrite_payload_settextsectionsize(t_woody *woody)
     memcpy(woody->payload_data + settextsectionsize_offset + 2, (void *)&(woody->text_section_size), 4);
 }
 
+void overwrite_keysection_payload(t_woody *woody) {
+    size_t keysection_offset = find_keysection_offset(woody);
+    for(int n = 0; n < 128;n++){
+                        printf("%x |", ((char *)woody->payload_data)[keysection_offset + n]);
+    }
+    printf("\n\n");
+    memcpy(woody->payload_data + keysection_offset, woody->encryption_key, 128);
+    for(int n = 0; n < 128;n++){
+                        printf("%x |", ((char *)woody->payload_data)[keysection_offset + n]);
+    }
+
+}
+
 void silvio_text_infection(t_woody *woody)
 {
     // Create the output file
@@ -182,6 +216,7 @@ void silvio_text_infection(t_woody *woody)
     }
 
     cipher_woody_file_data(woody);
+    overwrite_keysection_payload(woody);
     overwrite_payload_ret2textsection(woody);
     overwrite_payload_ret2oep(woody);
     overwrite_payload_settextsectionsize(woody);

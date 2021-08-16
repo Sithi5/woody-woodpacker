@@ -67,6 +67,7 @@ enum e_error
     ERROR_RET2OEP_NOT_FOUND,
     ERROR_RET2TEXTSECTION_NOT_FOUND,
     ERROR_SETTEXTSECTIONSIZE_NOT_FOUND,
+    ERROR_KEYSECTION_NOT_FOUND,
     ERROR_FILE_IS_ALREADY_INFECTED,
     NB_OF_ERROR_CODES /* Always keep last */
 };
@@ -145,6 +146,7 @@ void pt_note_to_pt_load_infection(t_woody *woody);
 void cipher_woody_file_data(t_woody *woody);
 void print_memory(void *memory_ptr, size_t memory_size);
 void check_elf_header(t_woody *woody);
+void key_generator(t_woody *woody);
 char *rc4_cipher(t_woody *woody, char *data, int len);
 
 void silvio_text_infection(t_woody *woody);
