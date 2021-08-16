@@ -79,6 +79,8 @@ SRC_NAME			=	main.c						\
 						utils_payload.c				\
 						silvio_text_infection.c		\
 						crypto.c					\
+						create_infected_file.c		\
+						get_payload.c				\
 
 ASM_SRC_NAME		=	xor_cipher.asm		\
 
