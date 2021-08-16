@@ -79,7 +79,6 @@ SRC_NAME			=	main.c						\
 						utils_payload.c				\
 						silvio_text_infection.c		\
 						crypto.c					\
-						rc4_cipher.c				\
 
 ASM_SRC_NAME		=	xor_cipher.asm		\
 						rc4_cipher.asm		\
