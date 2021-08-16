@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "woody_woodpacker.h"
-
 /* Simple XOR encryption/decryption algorithm. */
 static char *XORCipher(char *data, char *key, int data_len, int key_len)
 {
@@ -32,20 +31,14 @@ void cipher_woody_file_data(t_woody *woody)
     text_len = woody->text_end_offset - woody->text_start_offset;
     char *key = "0";
 
-    // printf("uncrypted data: \n");
-    for (size_t i = 0; i < text_len; i++)
-    {
-        // printf("%#x ", ((unsigned char *)(woody->mmap_ptr))[i]);
-    }
-    // printf("\n");
-    // printf("C XOR CIPHER\n");
-    woody->cipher = XORCipher(woody->mmap_ptr + woody->text_start_offset, key, text_len, strlen(key));
-
+    char *buff = (char *)malloc(sizeof(char) * text_len);
+    memcpy(buff, woody->mmap_ptr + woody->text_start_offset, text_len);
+    woody->cipher = buff;
+    //woody->cipher = XORCipher(woody->mmap_ptr + woody->text_start_offset, key, text_len, strlen(key));
+    rc4_cipher_start(buff,text_len,key,strlen(key));
     //asm TEST
     // printf("ASM XOR CIPHER\n");
     // printf("binarylen %d\n", text_len);
-    extern void rc4_cipher_start(char *data, int datalen, char *key, int keylen);
-    extern char *asmxorcipher(void *data, char *key, int datalen, int keylen);
     void *crypt;
     void *decrypt;
     rc4_cipher_start(woody->mmap_ptr + woody->text_start_offset, text_len, key, strlen(key));

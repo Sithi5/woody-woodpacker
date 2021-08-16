@@ -113,6 +113,7 @@ typedef struct s_woody
 
     void *payload_data;
     size_t payload_size;
+    char *encryption_key;
 
     void *cipher;
 
@@ -144,11 +145,19 @@ void pt_note_to_pt_load_infection(t_woody *woody);
 void cipher_woody_file_data(t_woody *woody);
 void print_memory(void *memory_ptr, size_t memory_size);
 void check_elf_header(t_woody *woody);
+char *rc4_cipher(t_woody *woody, char *data, int len);
 
 void silvio_text_infection(t_woody *woody);
 
 void load_payload(t_woody *woody, char *payload_name);
 void set_woody_ptrs_to_null(t_woody *woody);
+
+/****************************************************************************/
+/*                          ASM FUNCTIONS DEFINITIONS                       */
+/****************************************************************************/
+extern void rc4_cipher_start(char *data, int datalen, char *key, int keylen);
+extern char *asmxorcipher(void *data, char *key, int datalen, int keylen);
+
 
 /****************************************************************************/
 /*                          GLOBAL VARIABLES                                */

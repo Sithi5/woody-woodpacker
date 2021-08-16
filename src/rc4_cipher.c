@@ -35,7 +35,7 @@ void encryption(unsigned char *stream, char *result, char *data, int len)
     }
 }
 
-void Keystream_generation(unsigned char *stream, char *key)
+void Keystream_generation(unsigned char *stream, char *key, int key_len)
 {
     int j = 0;
     for (int i = 0; i < N; i++)
@@ -44,7 +44,7 @@ void Keystream_generation(unsigned char *stream, char *key)
     }
     for (int i = 0; i < N; i++)
     {
-        j = (j + stream[i] + key[i % 40]) % N;
+        j = (j + stream[i] + key[i % key_len]) % N;
         ft_swap(&stream[i], &stream[j]);
     }
 }
@@ -74,12 +74,14 @@ char *rc4_cipher(t_woody *woody, char *data, int len)
         error(ERROR_MALLOC, woody);
     if (!(result = (char *)malloc(sizeof(char) * len)))
         error(ERROR_MALLOC, woody);
-    if (!(woody->encryption_key = (char *)malloc(sizeof(char) * 40)))
-        error(ERROR_MALLOC, woody);
-    woody->encryption_key = random_string(woody->encryption_key, 40, woody);
-    Keystream_generation(stream, woody->encryption_key);
+    //if (!(woody->encryption_key = (char *)malloc(sizeof(char) * 40)))
+     //   error(ERROR_MALLOC, woody);
+    //woody->encryption_key = random_string(woody->encryption_key, 40, woody);
+    woody->encryption_key = "0";
+    size_t keylen = strlen(woody->encryption_key);
+    Keystream_generation(stream, woody->encryption_key, keylen);
     printf("encryption key = ");
-    for (int i = 0; i < 40; i++)
+    for (int i = 0; i < keylen; i++)
         printf("%c", woody->encryption_key[i]);
     printf("\n\n");
     encryption(stream, result, data, len);

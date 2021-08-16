@@ -29,7 +29,7 @@ SRC_PAYLOAD_NAME	=	test32.asm
 else
 # Define for 64bits
 PAYLOAD_NAME		=	payload_64
-SRC_PAYLOAD_NAME	=	test64.asm
+SRC_PAYLOAD_NAME	=	rc4_64_payload.asm
 endif
 
 ifeq ($(WALL), yes)
@@ -79,9 +79,10 @@ SRC_NAME			=	main.c						\
 						utils_payload.c				\
 						silvio_text_infection.c		\
 						crypto.c					\
+						rc4_cipher.c				\
 
 ASM_SRC_NAME		=	xor_cipher.asm		\
-						cipher_asm.asm		\
+						rc4_cipher.asm		\
 
 INCLUDE_NAME		=	woody_woodpacker.h	\
 
