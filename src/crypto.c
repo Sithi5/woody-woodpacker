@@ -44,9 +44,11 @@ void cipher_woody_file_data(t_woody *woody)
     //asm TEST
     // printf("ASM XOR CIPHER\n");
     // printf("binarylen %d\n", text_len);
+    extern void rc4_cipher_start(char *data, int datalen, char *key, int keylen);
     extern char *asmxorcipher(void *data, char *key, int datalen, int keylen);
     void *crypt;
     void *decrypt;
+    rc4_cipher_start(woody->mmap_ptr + woody->text_start_offset, text_len, key, strlen(key));
     crypt = asmxorcipher(woody->mmap_ptr + woody->text_start_offset, key, text_len, strlen(key));
     // printf("crypt lenght = %ld\n\n", text_len);
     // printf("DIFF: %d\n", memcmp(woody->cipher, crypt, text_len));
