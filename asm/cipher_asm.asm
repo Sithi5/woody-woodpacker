@@ -2,24 +2,29 @@
 section .data
 
 section .bss
-    global stream_cpy
+    global stream
 
     stream resb 256
 
 section .text
     GLOBAL rc4_cipher_start
 
-_minus:
-    sub rax, 256
 
-_modulo:
-    cmp rax, 256
-    jge _minus
+_modulo_rcx:
+    xor rdx, rdx					; rdx is remainder
+    div rcx
+    mov rax, rdx
     ret
 
-;_modulo:                            ; transfert into rax directly before calling
-;    xor rdx, 256                    ; remainder of %
-;    div rcx
+_modulo:
+    push rcx                        ; save key_len
+    xor rdx, rdx                    ; rdx is remainder
+    mov rcx, 256                    ; give div argument
+    div rcx                         ; div
+    pop rcx                         ; restore rcx
+    mov rax, rdx
+    ret
+
 
 _swap:
     mov r11b, [r8 + r9]          ; tmp_i = stream[i]
@@ -34,15 +39,15 @@ rc4_cipher_start:
     ;rsi = size
     ;rdx = key
     ;rcx = key_size
-    mov r14, rdx                    ; r14 = key
     lea r8, [rel stream]            ; load stream to memory
     xor r9, r9                      ; int i = 0
+    mov r14, rdx                    ; using rdx for modulo, store rdx in r14
     jmp init_stream
 
 init_stream:
     cmp r9, 256                     ; while i < 256
-    jne init_index_values           ; reset i and j when i = 256 and continue
-    mov [r8 + r9], r9               ; key_tab[i] = i;
+    je init_index_values           ; reset i and j when i = 256 and continue
+    mov [r8 + r9], r9               ; stream[i] = i;
     inc r9                          ; i++
     jmp init_stream
 
@@ -55,12 +60,11 @@ init_index_values:
 
 stream_generation:
     cmp r9, 256                     ; while i < 256
-    jne reset_index_values
-    add r10, [r8 + r9]              ; j = j + stream[i]
-    xor rdx, rdx                    ; remainder of %
-    mov rax, r9                     ; div using rax for diviser
-    div rcx                         ; rax / rcx = rdx = i % rdx
-    add r10, [r14 + rdx]            ; + key[i % key_size]
+    je reset_index_values
+    add r10b, byte[r8 + r9]              ; j = j + stream[i]
+    mov rax, r9
+    call _modulo_rcx
+    add r10b, byte[r14 + rax]            ; + key[i % key_size]
     mov rax, r10
     call _modulo
     mov r10, rax
@@ -74,6 +78,7 @@ reset_index_values:
     xor r11, r11                    ; int tmp_i for swap
     xor r12, r12                    ; int tmp_j for swap
     xor r13, r13                    ; int k
+    xor r14, r14
     xor r15, r15                    ; int res
     jmp encrypt
 
@@ -84,15 +89,15 @@ encrypt:
     mov rax, r9
     call _modulo
     mov r9, rax
-    add r10, [r8 + r9]              ; j = (j + stream[i])
+    add r10b, byte[r8 + r9]              ; j = (j + stream[i])
     mov rax, r10                    ; % 256
     call _swap
-    mov r14, [r8 + r9]              ; stream[i] in r14
-    add r14, [r8 + r10]             ; + stream[j]
+    mov r14b, byte[r8 + r9]              ; stream[i] in r14
+    add r14b, byte[r8 + r10]             ; + stream[j]
     mov rax, r14
     call _modulo
     mov r14, rax
-    mov r15, [r8 + r14]             ;res = stream[stream[i] + stream[j] % 256]
+    mov r15b, byte[r8 + r14]             ;res = stream[(stream[i] + stream[j]) % 256]
     xor [rdi + r13], r15            ; data[k] ^ res (modify directly data)
     inc r13                         ; k++
     jmp encrypt
