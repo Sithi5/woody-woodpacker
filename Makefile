@@ -81,6 +81,7 @@ SRC_NAME			=	main.c						\
 						crypto.c					\
 
 ASM_SRC_NAME		=	xor_cipher.asm		\
+						cipher_asm.asm		\
 
 INCLUDE_NAME		=	woody_woodpacker.h	\
 
