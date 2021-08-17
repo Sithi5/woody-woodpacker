@@ -3,8 +3,8 @@ BITS 64
 SECTION .data
         woody_msg: db "...WOODY...",10
         woody_msg_len  : equ $-woody_msg
-        key_msg: times 128 db "D"
-        key_len  : dw 128
+        key_msg: db "ABCDEF",0 ;times 128 db "D"
+        key_len  dw 0x6 ;: dw 128
 
 section .bss
     global stream
@@ -86,7 +86,7 @@ _getxorciphervar:
     call _settextoffset
     mov rdi, rax
     mov rsi, r14
-    mov rcx, key_len
+    mov rcx, 6
     lea rdx,[rel $+key_msg-$]
     ret
 
