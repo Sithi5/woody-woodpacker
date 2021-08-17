@@ -3,8 +3,7 @@ SHELL				=	/bin/sh
 # Executable name
 NAME				=	woody_woodpacker
 
-SRC_PAYLOADS_PATH	=	./payloads/
-
+PAYLOAD_NAME		=	payload
 
 # Compilation mode
 WALL				=	yes
@@ -24,11 +23,9 @@ LONG_BITS := $(shell getconf LONG_BIT)
 ifeq ($(LONG_BITS),32)
 # Define for 32bits
 CC				:= $(CC) -D ARCH_32
-PAYLOAD_NAME		=	payload_32
 SRC_PAYLOAD_NAME	=	test32.asm
 else
 # Define for 64bits
-PAYLOAD_NAME		=	payload_64
 SRC_PAYLOAD_NAME	=	rc4_64_payload.asm
 endif
 
@@ -89,15 +86,17 @@ INCLUDE_NAME		=	woody_woodpacker.h	\
 TESTS_FILES	= ./tests/test*.sh
 
 # Path
-ASM_SRC_PATH	=	./asm/
+ASM_SRC_PATH		=	./asm/
 
 SRC_PATH			=	./src/
 
-ASM_OBJ_PATH	= 	./obj_asm/
+ASM_OBJ_PATH		= 	./obj_asm/
 
 OBJ_PATH 			=	./obj/
 
 INCLUDE_PATH		=	./include/
+
+PAYLOADS_PATH		=	./payloads/
 
 # Name + Path
 ASM_SRC			= 	$(addprefix $(ASM_SRC_PATH), $(ASM_SRC_NAME))
@@ -137,7 +136,7 @@ _IPURPLE	=	\033[45m
 _ICYAN		=	\033[46m
 _IGREY		=	\033[47m
 
-all: art $(NAME) $(SRC_PAYLOADS_PATH)$(PAYLOAD_NAME)
+all: art $(NAME) $(PAYLOADS_PATH)$(PAYLOAD_NAME)
 
 $(NAME): $(ASM_OBJ) $(OBJ)
 	@echo "\n$(NAME) : $(GEN)"
@@ -159,17 +158,17 @@ $(ASM_OBJ_PATH)%.o: $(ASM_SRC_PATH)%.asm
 	@echo "$(_END)$(_GREEN)[OK]\t$(_UNDER)$(_YELLOW)\t"	\
 		"COMPILE :$(_END)$(_BOLD)$(_WHITE)\t$<"
 
-payload: clean_payload $(SRC_PAYLOADS_PATH)$(PAYLOAD_NAME)
+payload: clean_payload $(PAYLOADS_PATH)$(PAYLOAD_NAME)
 
 clean_payload:
-	@rm -f $(SRC_PAYLOADS_PATH)$(PAYLOAD_NAME)
+	@rm -f $(PAYLOADS_PATH)$(PAYLOAD_NAME)
 	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(PAYLOAD_NAME)"$(_END)"
 
-$(SRC_PAYLOADS_PATH)$(PAYLOAD_NAME):
+$(PAYLOADS_PATH)$(PAYLOAD_NAME):
 	@echo "\n$(_WHITE)====================================================$(_END)"
 	@echo "$(_YELLOW)		COMPILING $(PAYLOAD_NAME)$(_END)"
 	@echo "$(_WHITE)====================================================$(_END)"
-	@nasm -f bin -o $(SRC_PAYLOADS_PATH)$(PAYLOAD_NAME) $(SRC_PAYLOADS_PATH)$(SRC_PAYLOAD_NAME)
+	@nasm -f bin -o $(PAYLOADS_PATH)$(PAYLOAD_NAME) $(PAYLOADS_PATH)$(SRC_PAYLOAD_NAME)
 	@echo "\n$(_WHITE)$(_BOLD)$@\t$(_END)$(_GREEN)[OK]\n$(_END)"
 
 tests: all

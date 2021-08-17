@@ -75,6 +75,7 @@ enum e_error
 #define PAGE_SIZE 0x1000
 
 #define OUTPUT_FILE_NAME "woody"
+#define PAYLOAD_NAME "./payloads/payload"
 
 /* Custom types for 32bit compatibility. */
 #ifdef ARCH_32
@@ -85,7 +86,6 @@ typedef Elf32_Phdr t_elf_phdr;
 typedef Elf32_Shdr t_elf_shdr;
 typedef Elf32_Off t_elf_off;
 #define size_t uint32_t
-#define PAYLOAD_NAME "./payloads/payload_32"
 
 #else /* 64 bits */
 
@@ -99,7 +99,6 @@ typedef Elf64_Phdr t_elf_phdr;
 typedef Elf64_Shdr t_elf_shdr;
 typedef Elf64_Off t_elf_off;
 #define size_t uint64_t
-#define PAYLOAD_NAME "./payloads/payload_64"
 
 #endif
 
@@ -159,7 +158,6 @@ void set_woody_ptrs_to_null(t_woody *woody);
 /****************************************************************************/
 extern void rc4_cipher_start(char *data, int datalen, char *key, int keylen);
 extern char *asmxorcipher(void *data, char *key, int datalen, int keylen);
-
 
 /****************************************************************************/
 /*                          GLOBAL VARIABLES                                */
