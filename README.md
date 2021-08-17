@@ -4,8 +4,9 @@ Projet qui a pour principe de modifier les headers d'un fichier de type ELF64. L
 # Usefull commands
 ```bash
 readelf -h # Display elf-header information for binaries files
-readelf --symbol # Display symbol information for binaries files
 readelf -l # Display program-header info
+readelf -S # Display section header
+readelf --symbol # Display symbol information for binaries files
 ```
 
 # Resources
