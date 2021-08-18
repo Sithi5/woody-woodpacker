@@ -3,13 +3,9 @@ BITS 64
 SECTION .data
         woody_msg: db "...WOODY...",10
         woody_msg_len  : equ $-woody_msg
-        key_msg: db "ABCDEF",0 ;times 128 db "D"
-        key_len  dw 0x6 ;: dw 128
-
-section .bss
-    global stream
-
-    stream resb 256
+        key_msg: times 128 db "D"
+        key_len: dw 0x80
+        stream: times 256 db 0x00
 
 SECTION .text
 
@@ -41,10 +37,10 @@ _end_payload:
     ret
 
 _print_woody:
-    mov rax,1                ; sys_write
-    mov rdi,1                ; stdout
-    mov rdx,woody_msg_len;len
-    lea rsi,[rel $+woody_msg-$]  ; woody
+    mov rax,1                       ; sys_write
+    mov rdi,1                       ; stdout
+    mov rdx,woody_msg_len           ;len
+    lea rsi,[rel $+woody_msg-$]     ; woody
     syscall
     ret
 
@@ -86,7 +82,7 @@ _getxorciphervar:
     call _settextoffset
     mov rdi, rax
     mov rsi, r14
-    mov rcx, 6
+    mov rcx, [rel $+key_len-$]
     lea rdx,[rel $+key_msg-$]
     ret
 
@@ -120,7 +116,7 @@ rc4_cipher_start:
     ;rsi = size
     ;rdx = key
     ;rcx = key_size
-    lea r8, [rel stream]            ; load stream to memory
+    lea r8, [rel $+stream-$]            ; load stream to memory
     xor r9, r9                      ; int i = 0
     mov r14, rdx                    ; using rdx for modulo, store rdx in r14
     jmp init_stream

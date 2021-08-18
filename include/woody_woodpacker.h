@@ -73,6 +73,7 @@ enum e_error
 };
 
 #define PAGE_SIZE 0x1000
+#define KEY_LEN 0x80
 
 #define OUTPUT_FILE_NAME "woody"
 #define PAYLOAD_NAME "./payloads/payload"
