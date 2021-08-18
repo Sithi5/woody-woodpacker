@@ -147,7 +147,7 @@ OBJ_PATH 			:=	./obj/
 
 ASM_OBJ_PATH		:= 	./obj_asm/
 
-PAYLOAD_OBJ_PATH	:= 	./obj_payload/
+PAYLOAD_OBJ_PATH	:= 	$(ASM_OBJ_PATH)
 
 INCLUDE_PATH		:=	./include/
 
