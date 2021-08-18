@@ -152,7 +152,16 @@ char *rc4_cipher(t_woody *woody, char *data, int len);
 void choose_infection_method(t_woody *woody);
 void silvio_text_infection(t_woody *woody);
 
+size_t find_keysection_offset(t_woody *woody);
+size_t find_ret2oep_offset(t_woody *woody);
+size_t find_ret2textsection_offset_elf64(t_woody *woody);
+size_t find_settextsectionsize_offset_elf64(t_woody *woody);
+void overwrite_payload_ret2oep(t_woody *woody);
+void overwrite_payload_ret2textsection(t_woody *woody);
+void overwrite_payload_settextsectionsize(t_woody *woody);
+void overwrite_keysection_payload(t_woody *woody);
 void load_payload(t_woody *woody, char *payload_name);
+
 void set_woody_ptrs_to_null(t_woody *woody);
 
 /****************************************************************************/

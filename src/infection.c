@@ -14,6 +14,8 @@
 
 void choose_infection_method(t_woody *woody)
 {
+    load_payload(woody, PAYLOAD_NAME);
+
     for (size_t i = 0; i < woody->ehdr->e_phnum; i++)
     {
         if (woody->phdr[i].p_type == PT_LOAD && woody->phdr[i].p_flags == (PF_R | PF_X))
