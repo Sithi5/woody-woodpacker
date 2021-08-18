@@ -1,18 +1,25 @@
 SHELL				=	/bin/sh
 
-# Executable name
+################################################################################
+#                                BINARIES NAME                                 #
+################################################################################
+
 NAME				=	woody_woodpacker
 
 PAYLOAD_NAME		=	payload
 
-# Compilation mode
-WALL				=	yes
-WEXTRA				=	yes
-WSHADOW				=	yes
-WERROR				=	no
-FSANITIZE			=	no
-DEBUG				=	no
-O2					=	no
+
+################################################################################
+#                                COMPILATION MODE                              #
+################################################################################
+
+WALL				:=	yes
+WEXTRA				:=	yes
+WSHADOW				:=	yes
+WERROR				:=	no
+FSANITIZE			:=	no
+DEBUG				:=	no
+O2					:=	no
 
 CC					:=	gcc
 AS					:= nasm
@@ -23,10 +30,6 @@ LONG_BITS := $(shell getconf LONG_BIT)
 ifeq ($(LONG_BITS),32)
 # Define for 32bits
 CC				:= $(CC) -D ARCH_32
-SRC_PAYLOAD_NAME	=	test32.asm
-else
-# Define for 64bits
-SRC_PAYLOAD_NAME	=	rc4_64_payload.asm
 endif
 
 ifeq ($(WALL), yes)
@@ -68,46 +71,9 @@ ifeq ($(GEN), "Generation in mode")
 	GEN				+=	no flags
 endif
 
-# Name
-SRC_NAME			=	main.c						\
-						error.c						\
-						utils.c						\
-						utils_elf.c					\
-						utils_payload.c				\
-						silvio_text_infection.c		\
-						crypto.c					\
-						key_gen.c					\
-
-ASM_SRC_NAME		=	xor_cipher.asm		\
-						rc4_cipher.asm		\
-
-INCLUDE_NAME		=	woody_woodpacker.h	\
-
-TESTS_FILES	= ./tests/test*.sh
-
-# Path
-ASM_SRC_PATH		=	./asm/
-
-SRC_PATH			=	./src/
-
-ASM_OBJ_PATH		= 	./obj_asm/
-
-OBJ_PATH 			=	./obj/
-
-INCLUDE_PATH		=	./include/
-
-PAYLOADS_PATH		=	./payloads/
-
-# Name + Path
-ASM_SRC			= 	$(addprefix $(ASM_SRC_PATH), $(ASM_SRC_NAME))
-
-SRC					=	$(addprefix $(SRC_PATH), $(SRC_NAME))
-
-ASM_OBJ			=	$(patsubst $(ASM_SRC_PATH)%.asm, $(ASM_OBJ_PATH)%.o,	$(ASM_SRC))
-
-OBJ					=	$(patsubst $(SRC_PATH)%.c, $(OBJ_PATH)%.o,	$(SRC))
-
-INCLUDE				=	$(addprefix $(INCLUDE_PATH), $(INCLUDE_NAME))
+################################################################################
+#                                    FORMAT                                    #
+################################################################################
 
 # Text format
 _END		=	\033[0m
@@ -116,7 +82,7 @@ _SOUL		=	\033[4m
 _CLIG		=	\033[5m
 _SURL		=	\033[7m
 
-# Colors
+# Colors format
 _BLACK		=	\033[30m
 _RED		=	\033[31m
 _GREEN		=	\033[32m
@@ -136,9 +102,82 @@ _IPURPLE	=	\033[45m
 _ICYAN		=	\033[46m
 _IGREY		=	\033[47m
 
-all: art $(NAME) $(PAYLOADS_PATH)$(PAYLOAD_NAME)
+################################################################################
+#                                     NAME                                     #
+################################################################################
 
-$(NAME): $(ASM_OBJ) $(OBJ)
+
+ifeq ($(LONG_BITS),32)
+# Define for 32bits
+PAYLOAD_SRC_NAME	=	test32.asm
+else
+# Define for 64bits
+PAYLOAD_SRC_NAME	=	rc4_64_payload.asm
+endif
+
+SRC_NAME			:=	main.c								\
+						error.c								\
+						utils.c								\
+						utils_elf.c							\
+						infection.c							\
+						utils_payload.c						\
+						silvio_text_infection.c				\
+						pt_note_to_pt_load_infection.c		\
+						crypto.c							\
+						key_gen.c							\
+
+ASM_SRC_NAME		:=	xor_cipher.asm						\
+						rc4_cipher.asm						\
+
+INCLUDE_NAME		:=	woody_woodpacker.h					\
+
+TESTS_SRC_NAME		:= 	./tests/test*.sh					\
+
+################################################################################
+#                                     PATH                                     #
+################################################################################
+
+SRC_PATH			:=	./src/
+
+ASM_SRC_PATH		:=	./asm/
+
+PAYLOAD_SRC_PATH	:=	./payloads/
+
+OBJ_PATH 			:=	./obj/
+
+ASM_OBJ_PATH		:= 	./obj_asm/
+
+PAYLOAD_OBJ_PATH	:= 	./obj_payloads/
+
+INCLUDE_PATH		:=	./include/
+
+
+################################################################################
+#                                 NAME + PATH                                  #
+################################################################################
+
+SRC					:=	$(addprefix $(SRC_PATH), $(SRC_NAME))
+
+ASM_SRC				:= 	$(addprefix $(ASM_SRC_PATH), $(ASM_SRC_NAME))
+
+PAYLOAD_SRC			:= 	$(addprefix $(PAYLOAD_SRC_PATH), $(PAYLOAD_SRC_NAME))
+
+OBJ					:=	$(patsubst $(SRC_PATH)%.c, $(OBJ_PATH)%.o,	$(SRC))
+
+ASM_OBJ				:=	$(patsubst $(ASM_SRC_PATH)%.asm, $(ASM_OBJ_PATH)%.o, $(ASM_SRC))
+
+PAYLOAD_OBJ			:=	$(patsubst $(PAYLOAD_SRC_PATH)%.asm, $(PAYLOAD_OBJ_PATH)%.o, $(PAYLOAD_SRC))
+
+INCLUDE				:=	$(addprefix $(INCLUDE_PATH), $(INCLUDE_NAME))
+
+
+################################################################################
+#                                     RULES                                    #
+################################################################################
+
+all: art $(NAME) $(PAYLOAD_NAME)
+
+$(NAME):  $(OBJ) $(ASM_OBJ)
 	@echo "\n$(NAME) : $(GEN)"
 	@echo "\n$(_WHITE)====================================================$(_END)"
 	@echo "$(_YELLOW)		COMPILING $(NAME)$(_END)"
@@ -158,34 +197,43 @@ $(ASM_OBJ_PATH)%.o: $(ASM_SRC_PATH)%.asm
 	@echo "$(_END)$(_GREEN)[OK]\t$(_UNDER)$(_YELLOW)\t"	\
 		"COMPILE :$(_END)$(_BOLD)$(_WHITE)\t$<"
 
-payload: clean_payload $(PAYLOADS_PATH)$(PAYLOAD_NAME)
+# Only use to know if there is any update in the file.
+$(PAYLOAD_OBJ_PATH)%.o: $(PAYLOAD_SRC_PATH)%.asm
+	@mkdir -p $(PAYLOAD_OBJ_PATH)
+	@$(AS) $(AS_FLAG) $< -o $@
+	@echo "$(_END)$(_GREEN)[OK]\t$(_UNDER)$(_YELLOW)\t"	\
+		"COMPILE :$(_END)$(_BOLD)$(_WHITE)\t$<"
 
-clean_payload:
-	@rm -f $(PAYLOADS_PATH)$(PAYLOAD_NAME)
-	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(PAYLOAD_NAME)"$(_END)"
-
-$(PAYLOADS_PATH)$(PAYLOAD_NAME):
+$(PAYLOAD_NAME): $(PAYLOAD_OBJ)
 	@echo "\n$(_WHITE)====================================================$(_END)"
 	@echo "$(_YELLOW)		COMPILING $(PAYLOAD_NAME)$(_END)"
 	@echo "$(_WHITE)====================================================$(_END)"
-	@nasm -f bin -o $(PAYLOADS_PATH)$(PAYLOAD_NAME) $(PAYLOADS_PATH)$(SRC_PAYLOAD_NAME)
+	@nasm -f bin -o $(PAYLOAD_NAME) $(PAYLOAD_SRC_PATH)$(PAYLOAD_SRC_NAME)
 	@echo "\n$(_WHITE)$(_BOLD)$@\t$(_END)$(_GREEN)[OK]\n$(_END)"
 
 tests: all
 	@echo "\n$(_WHITE)====================================================$(_END)"
 	@echo "$(_YELLOW)		LAUNCHING TESTS$(_END)"
 	@echo "$(_WHITE)====================================================$(_END)"
-	@for f in $(TESTS_FILES);  do sh $${f}; done;
+	@for f in $(TESTS_SRC_NAME);  do sh $${f}; done;
 
 clean:
 	@rm -rf $(OBJ_PATH) 2> /dev/null || true
 	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(OBJ_PATH)"$(_END)"
 	@rm -rf $(ASM_OBJ_PATH) 2> /dev/null || true
 	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(ASM_OBJ_PATH)"$(_END)"
+	@rm -rf $(PAYLOAD_OBJ_PATH) 2> /dev/null || true
+	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(PAYLOAD_OBJ_PATH)"$(_END)"
+
+
+clean_payload:
+	@rm -f $(PAYLOAD_NAME)
+	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(PAYLOAD_NAME)"$(_END)"
 
 fclean: clean clean_payload
 	@rm -f $(NAME) woody
 	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)$(NAME)
+	@echo "$(_YELLOW)Remove :\t$(_RED)" $(LDFLAGS)woody
 	@echo "$(_END)"
 
 re: fclean all
@@ -197,13 +245,12 @@ help:
 	@echo "$(_YELLOW)   make                                runs all                           "
 	@echo "$(_YELLOW)   make all                            generates all binaries             "
 	@echo "$(_YELLOW)   make art                            print a bird                       "
-	@echo "$(_YELLOW)   make payload                        generates payload binary           "
+	@echo "$(_YELLOW)   make $(PAYLOAD_NAME)                        generates payload binary           "
 	@echo "$(_YELLOW)   make clean_payload                  clean payload binary               "
 	@echo "$(_YELLOW)   make clean                          remove the generated files         "
 	@echo "$(_YELLOW)   make tests                          launch tests scripts               "
 	@echo "$(_YELLOW)   make help                           prints this message                $(_END)"
 
-.PHONY: all art clean fclean re check payload help tests clean_payload
 
 art:
 	@echo "$(_CYAN)"
@@ -223,3 +270,5 @@ art:
 	@echo "                 ;-,,'                                   $(_GREEN)  \"--------\" $(_CYAN)"
 	@echo ""
 	@echo "$(_END)"
+
+.PHONY: all art clean fclean re check payload help tests clean_payload

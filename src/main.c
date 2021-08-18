@@ -75,7 +75,7 @@ int main(int ac, char **av)
     woody->phdr = (t_elf_phdr *)((woody->mmap_ptr + woody->ehdr->e_phoff));
     woody->shdr = (t_elf_shdr *)((woody->mmap_ptr + woody->ehdr->e_shoff));
 
-    silvio_text_infection(woody);
+    choose_infection_method(woody);
     write_woody_file(woody);
     free_woody(woody);
     return 0;

@@ -149,6 +149,7 @@ void check_elf_header(t_woody *woody);
 void key_generator(t_woody *woody);
 char *rc4_cipher(t_woody *woody, char *data, int len);
 
+void choose_infection_method(t_woody *woody);
 void silvio_text_infection(t_woody *woody);
 
 void load_payload(t_woody *woody, char *payload_name);
