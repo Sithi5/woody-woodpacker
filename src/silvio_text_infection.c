@@ -60,6 +60,14 @@ void silvio_text_infection(t_woody *woody)
             woody->shdr[i].sh_size += woody->payload_size;
     }
 
+    // for (int i = 0; i < woody->payload_size; i++)
+    // {
+    //     printf("%x ", ((char *)woody->payload_data)[i]);
+    // }
+    // printf("\n");
+    // printf("\n");
+    // printf("\n");
+
     cipher_woody_file_data(woody);
     overwrite_keysection_payload(woody);
     overwrite_payload_ret2textsection(woody);

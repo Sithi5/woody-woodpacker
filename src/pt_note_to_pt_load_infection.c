@@ -14,7 +14,6 @@
 
 void pt_note_to_pt_load_infection(t_woody *woody)
 {
-
     // Create the output file
     if (!(woody->infected_file = malloc(woody->binary_data_size)))
     {
