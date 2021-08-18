@@ -149,11 +149,7 @@ void overwrite_keysection_payload(t_woody *woody)
 {
     size_t keysection_offset = find_keysection_offset(woody);
     printf("\n\n");
-    memcpy(woody->payload_data + keysection_offset, woody->encryption_key, 128);
-    for (int n = 0; n < 128; n++)
-    {
-        printf("%x |", ((char *)woody->payload_data)[keysection_offset + n]);
-    }
+    memcpy(woody->payload_data + keysection_offset, woody->encryption_key, KEY_LEN);
 }
 
 void choose_infection_method(t_woody *woody)
@@ -236,7 +232,7 @@ void silvio_text_infection(t_woody *woody)
     }
 
     cipher_woody_file_data(woody);
-    //overwrite_keysection_payload(woody);
+    overwrite_keysection_payload(woody);
     overwrite_payload_ret2textsection(woody);
     overwrite_payload_ret2oep(woody);
     overwrite_payload_settextsectionsize(woody);
