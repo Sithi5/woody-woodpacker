@@ -28,6 +28,7 @@ void choose_infection_method(t_woody *woody)
             // Check if there is enought space for our payload in the text section.
             if (woody->text_end_offset % PAGE_SIZE + woody->payload_size < PAGE_SIZE)
             {
+
                 silvio_text_infection(woody);
             }
             else

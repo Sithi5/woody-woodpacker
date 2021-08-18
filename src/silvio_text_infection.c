@@ -14,6 +14,7 @@
 
 void silvio_text_infection(t_woody *woody)
 {
+
     // Create the output file
     if (!(woody->infected_file = malloc(woody->binary_data_size + PAGE_SIZE)))
     {
@@ -30,11 +31,6 @@ void silvio_text_infection(t_woody *woody)
     {
         if (woody->phdr[i].p_type == PT_LOAD && woody->phdr[i].p_flags == (PF_R | PF_X))
         {
-            // Check if there is enought space for our payload.
-            if (woody->text_end_offset % PAGE_SIZE + woody->payload_size > PAGE_SIZE)
-            {
-                error(ERROR_NOT_ENOUGHT_SPACE_FOR_PAYLOAD, woody);
-            }
 
             woody->text_p_vaddr = woody->phdr[i].p_vaddr;
             woody->payload_vaddr = woody->text_p_vaddr + woody->phdr[i].p_filesz;
@@ -60,13 +56,13 @@ void silvio_text_infection(t_woody *woody)
             woody->shdr[i].sh_size += woody->payload_size;
     }
 
-    // for (int i = 0; i < woody->payload_size; i++)
-    // {
-    //     printf("%x ", ((char *)woody->payload_data)[i]);
-    // }
-    // printf("\n");
-    // printf("\n");
-    // printf("\n");
+    for (int i = 0; i < woody->payload_size; i++)
+    {
+        printf("%x ", ((char *)woody->payload_data)[i]);
+    }
+    printf("\n");
+    printf("\n");
+    printf("\n");
 
     cipher_woody_file_data(woody);
     overwrite_keysection_payload(woody);
