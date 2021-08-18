@@ -76,7 +76,7 @@ enum e_error
 #define KEY_LEN 0x80
 
 #define OUTPUT_FILE_NAME "woody"
-#define PAYLOAD_NAME "./payloads/payload"
+#define PAYLOAD_NAME "payload"
 
 /* Custom types for 32bit compatibility. */
 #ifdef ARCH_32

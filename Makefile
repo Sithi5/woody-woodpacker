@@ -147,7 +147,7 @@ OBJ_PATH 			:=	./obj/
 
 ASM_OBJ_PATH		:= 	./obj_asm/
 
-PAYLOAD_OBJ_PATH	:= 	./obj_payloads/
+PAYLOAD_OBJ_PATH	:= 	./obj_payload/
 
 INCLUDE_PATH		:=	./include/
 
@@ -185,6 +185,13 @@ $(NAME):  $(OBJ) $(ASM_OBJ)
 	@$(CC) -o $(NAME) $(OBJ) $(ASM_OBJ)
 	@echo "\n$(_WHITE)$(_BOLD)$@\t$(_END)$(_GREEN)[OK]\n$(_END)"
 
+$(PAYLOAD_NAME): $(PAYLOAD_OBJ)
+	@echo "\n$(_WHITE)====================================================$(_END)"
+	@echo "$(_YELLOW)		COMPILING $(PAYLOAD_NAME)$(_END)"
+	@echo "$(_WHITE)====================================================$(_END)"
+	@nasm -f bin -o $(PAYLOAD_NAME) $(PAYLOAD_SRC_PATH)$(PAYLOAD_SRC_NAME)
+	@echo "\n$(_WHITE)$(_BOLD)$@\t$(_END)$(_GREEN)[OK]\n$(_END)"
+
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c $(INCLUDE)
 	@mkdir -p $(OBJ_PATH)
 	@$(CC) -I $(INCLUDE_PATH) -I $(INCLUDE_PATH) -c $< -o $@
@@ -203,13 +210,6 @@ $(PAYLOAD_OBJ_PATH)%.o: $(PAYLOAD_SRC_PATH)%.asm
 	@$(AS) $(AS_FLAG) $< -o $@
 	@echo "$(_END)$(_GREEN)[OK]\t$(_UNDER)$(_YELLOW)\t"	\
 		"COMPILE :$(_END)$(_BOLD)$(_WHITE)\t$<"
-
-$(PAYLOAD_NAME): $(PAYLOAD_OBJ)
-	@echo "\n$(_WHITE)====================================================$(_END)"
-	@echo "$(_YELLOW)		COMPILING $(PAYLOAD_NAME)$(_END)"
-	@echo "$(_WHITE)====================================================$(_END)"
-	@nasm -f bin -o $(PAYLOAD_NAME) $(PAYLOAD_SRC_PATH)$(PAYLOAD_SRC_NAME)
-	@echo "\n$(_WHITE)$(_BOLD)$@\t$(_END)$(_GREEN)[OK]\n$(_END)"
 
 tests: all
 	@echo "\n$(_WHITE)====================================================$(_END)"
@@ -271,4 +271,4 @@ art:
 	@echo ""
 	@echo "$(_END)"
 
-.PHONY: all art clean fclean re check payload help tests clean_payload
+.PHONY: all art clean fclean re check help tests clean_payload
