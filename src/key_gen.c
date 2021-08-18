@@ -14,18 +14,19 @@ void random_string(int len, t_woody *woody)
         close(fd) == -1 ? error(ERROR_CLOSE, woody) : error(ERROR_READ, woody);
     }
     close(fd) == -1 ? error(ERROR_CLOSE, woody) : 0;
-    memcpy((void*)woody->encryption_key, key, len);
+    memcpy((void *)woody->encryption_key, key, len);
     printf("KEY IN HEX: %lu\n", strlen(woody->encryption_key));
-    for(int n = 0; n < KEY_LEN;n++){
-                        printf("%x |", ((char *)woody->encryption_key)[n]);
+    for (int n = 0; n < KEY_LEN; n++)
+    {
+        printf("%x |", ((char *)woody->encryption_key)[n]);
     }
     printf("\n");
 }
 
-void key_generator(t_woody *woody) {
-    if (!(woody->encryption_key = (char *)malloc(sizeof(char) * KEY_LEN)))
+void key_generator(t_woody *woody)
+{
+    if (!(woody->encryption_key = (char *)malloc(sizeof(char) * KEY_LEN + 1)))
         error(ERROR_MALLOC, woody);
     random_string(KEY_LEN, woody);
-    printf("key %s\n",woody->encryption_key);
-
+    printf("key %s\n", woody->encryption_key);
 }
