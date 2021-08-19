@@ -19,7 +19,6 @@ void random_string(t_woody *woody)
         key[index] < 0 ? key[index] *= -1 : 0;
         key[index] = (key[index] % 125);
         key[index] < 49 ? key[index] += 49 : 0;
-        printf("value of c = %i\n", key[index]);
     }
     close(fd) == -1 ? error(ERROR_CLOSE, woody) : 0;
     memcpy((void *)woody->encryption_key, key, KEY_LEN);
