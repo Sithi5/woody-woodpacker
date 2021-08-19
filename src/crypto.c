@@ -21,26 +21,25 @@ void cipher_woody_file_data(t_woody *woody)
     memcpy(woody->cipher, woody->mmap_ptr + woody->text_start_offset, text_len);
 
     printf("testing xor cipher : \n\n");
-    char key[5] = "ABOPR";
-    char cipher[10] = "Bonjour at";
+    char key[4] = "KEY";
+    char cipher[10] = "Bonjourln";
     printf("key : %s\n", key);
     printf("cipher : %s\n", cipher);
-    char *result = asm_xor_cipher(cipher, 10, key, 5);
-    printf("result %s\n", result);
+    asm_xor_cipher(cipher, strlen(cipher), key, strlen(key));
     printf("\nafter\n\n");
     printf("key : %s\n", key);
     printf("cipher : %s\n", cipher);
     printf("\n");
 
-    key_generator(woody);
-    if (ARCH_32)
-    {
-        printf("ARCH 32 CIPHER\n");
-        asm_xor_cipher(woody->cipher, text_len, woody->encryption_key, KEY_LEN);
-    }
-    else
-    {
-        printf("ARCH 64 CIPHER\n");
-        rc4_cipher_start(woody->cipher, text_len, woody->encryption_key, KEY_LEN);
-    }
+    // key_generator(woody);
+    // if (ARCH_32)
+    // {
+    //     printf("ARCH 32 CIPHER\n");
+    //     asm_xor_cipher(woody->cipher, text_len, woody->encryption_key, KEY_LEN);
+    // }
+    // else
+    // {
+    //     printf("ARCH 64 CIPHER\n");
+    //     rc4_cipher_start(woody->cipher, text_len, woody->encryption_key, KEY_LEN);
+    // }
 }
