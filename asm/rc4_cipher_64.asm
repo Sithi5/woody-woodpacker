@@ -1,10 +1,11 @@
+GLOBAL rc4_cipher_start
+
 section .bss
     global stream
 
     stream resb 256
 
 section .text
-    GLOBAL rc4_cipher_start
 
 
 _modulo_rcx:

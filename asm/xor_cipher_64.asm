@@ -1,5 +1,6 @@
+GLOBAL asmxorcipher
+
 section .text
-    GLOBAL asmxorcipher
 
 asmxorcipher:
 
