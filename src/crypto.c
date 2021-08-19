@@ -20,7 +20,6 @@ void cipher_woody_file_data(t_woody *woody)
     key_generator(woody);
     if (!(woody->cipher = (char *)malloc(sizeof(char) * text_len)))
         error(ERROR_MALLOC, woody);
-    printf("textlen: %lu\n", text_len);
     memcpy(woody->cipher, woody->mmap_ptr + woody->text_start_offset, text_len);
     //woody->cipher = XORCipher(woody->mmap_ptr + woody->text_start_offset, key, text_len, strlen(key));
     rc4_cipher_start(woody->cipher, text_len, woody->encryption_key, KEY_LEN);
