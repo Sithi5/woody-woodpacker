@@ -168,8 +168,8 @@ void set_woody_ptrs_to_null(t_woody *woody);
 /*                          ASM FUNCTIONS DEFINITIONS                       */
 /****************************************************************************/
 
-extern void rc4_cipher_start(char *data, int datalen, char *key, int keylen);
-extern char *asm_xor_cipher(void *data, char *key, int datalen, int keylen);
+extern void rc4_cipher_start(void *data, int datalen, char *key, int keylen);
+extern char *asm_xor_cipher(char *data, int datalen, char *key, int keylen);
 
 /****************************************************************************/
 /*                          GLOBAL VARIABLES                                */

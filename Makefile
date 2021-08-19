@@ -133,7 +133,7 @@ SRC_NAME			:=	main.c								\
 						silvio_text_infection.c				\
 						pt_note_to_pt_load_infection.c		\
 						crypto.c							\
-						key_gen.c							\
+						key_generator.c						\
 
 
 

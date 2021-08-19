@@ -16,7 +16,7 @@ void cipher_woody_file_data(t_woody *woody)
 {
     size_t text_len;
     text_len = woody->text_end_offset - woody->text_start_offset;
-    if (!(woody->cipher = (char *)malloc(sizeof(char) * text_len)))
+    if (!(woody->cipher = (void *)malloc(text_len)))
         error(ERROR_MALLOC, woody);
     memcpy(woody->cipher, woody->mmap_ptr + woody->text_start_offset, text_len);
 
@@ -24,7 +24,7 @@ void cipher_woody_file_data(t_woody *woody)
     if (ARCH_32)
     {
         printf("ARCH 32 CIPHER\n");
-        asm_xor_cipher(woody->mmap_ptr + woody->text_start_offset, woody->encryption_key, text_len, KEY_LEN);
+        asm_xor_cipher(woody->cipher, text_len, woody->encryption_key, KEY_LEN);
     }
     else
     {
