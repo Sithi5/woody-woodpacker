@@ -18,7 +18,7 @@ WALL				:=	yes
 WEXTRA				:=	yes
 WSHADOW				:=	yes
 WERROR				:=	no
-FSANITIZE			:=	yes
+FSANITIZE			:=	no
 DEBUG				:=	no
 O2					:=	no
 
@@ -118,8 +118,7 @@ else
 # Define for 64bits
 PAYLOAD_SRC_NAME	=	rc4_payload_64.asm
 
-ASM_SRC_NAME		:=	xor_cipher_64.asm					\
-						rc4_cipher_64.asm					\
+ASM_SRC_NAME		:=	rc4_cipher_64.asm					\
 
 endif
 

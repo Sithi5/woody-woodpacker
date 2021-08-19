@@ -1,10 +1,90 @@
-section .bss
-    global stream
+BITS 64
 
-    stream resb 256
+SECTION .data
+        woody_msg: db "...WOODY...",10
+        woody_msg_len  : equ $-woody_msg
+        key_msg: times 128 db "D"
+        key_len: dw 0x80
+        stream: times 256 db 0x00
 
-section .text
-    GLOBAL rc4_cipher_start
+SECTION .text
+
+_start_payload:
+    push rax                 ; save all clobbered registers
+    push rcx                 ; (rcx and r11 destroyed by kernel)
+    push rdx
+    push rsi
+    push rdi
+    push r11
+    jmp _infection
+
+_infection:
+    call _print_woody
+    call _mprotect
+    call _getxorciphervar
+    jmp rc4_cipher_start
+
+_end_payload:
+    pop r11
+    pop rdi
+    pop rsi
+    pop rdx
+    pop rcx
+    pop rax
+
+    call _ret2oep           ; jump to original entry point(oep)
+    push rax
+    ret
+
+_print_woody:
+    mov rax,1                       ; sys_write
+    mov rdi,1                       ; stdout
+    mov rdx,woody_msg_len           ;len
+    lea rsi,[rel $+woody_msg-$]     ; woody
+    syscall
+    ret
+
+_get_rip:
+    mov rax, qword [rsp]
+    ret
+
+_ret2oep:
+    call _get_rip
+    sub rax, 0x77777777 ; virus size without ret2oep
+    sub rax, 0x77777777 ; new_entry_point
+    add rax, 0x77777777 ; old entry_point
+    ret
+
+_ret2textsection:
+    call _get_rip
+    sub rax, 0x66666666 ; virus size without ret2oep
+    sub rax, 0x66666666 ; new_entry_point
+    add rax, 0x66666666 ; start of text section
+    ret
+
+_mprotect:
+    call _ret2textsection
+    call _settextoffset
+    mov rdi,  rax
+    and rdi, -0x1000
+    mov rax, 0xa
+    mov rsi, r14
+    mov rdx, 0x07
+    syscall
+    ret
+
+_settextoffset:
+    mov r14, 0x55555555
+    ret
+
+_getxorciphervar:
+    call _ret2textsection
+    call _settextoffset
+    mov rdi, rax
+    mov rsi, r14
+    mov rcx, [rel $+key_len-$]
+    lea rdx,[rel $+key_msg-$]
+    ret
 
 
 _modulo_rcx:
@@ -36,9 +116,10 @@ rc4_cipher_start:
     ;rsi = size
     ;rdx = key
     ;rcx = key_size
-    lea r8, [rel stream]            ; load stream to memory
+    lea r8, [rel $+stream-$]            ; load stream to memory
     xor r9, r9                      ; int i = 0
     mov r14, rdx                    ; using rdx for modulo, store rdx in r14
+    jmp init_stream
 
 init_stream:
     cmp r9, 256                     ; while i < 256
@@ -52,6 +133,7 @@ init_index_values:
     xor r10, r10                    ; int j
     xor r11, r11                    ; int tmp_i for swap
     xor r12, r12                    ; int tmp_j for swap
+    jmp stream_generation
 
 stream_generation:
     cmp r9, 256                     ; while i < 256
@@ -75,10 +157,11 @@ reset_index_values:
     xor r13, r13                    ; int k
     xor r14, r14
     xor r15, r15                    ; int res
+    jmp encrypt
 
 encrypt:
     cmp r13, rsi                    ; while k < len
-    jge return
+    jge _end_payload
     add r9, 1                       ; i = (i + 1) % N;
     mov rax, r9
     call _modulo
@@ -95,10 +178,3 @@ encrypt:
     xor [rdi + r13], r15            ; data[k] ^ res (modify directly data)
     inc r13                         ; k++
     jmp encrypt
-
-return:
-    ret
-
-
-
-
