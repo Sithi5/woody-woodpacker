@@ -24,13 +24,15 @@ O2					:=	no
 
 CC					:=	gcc
 AS					:= nasm
-AS_FLAG				:= -f elf64
 GEN					:=	Generation in mode
 
 LONG_BITS := $(shell getconf LONG_BIT)
 ifeq ($(LONG_BITS),32)
 # Define for 32bits
 CC				:= $(CC) -D ARCH_32
+AS_FLAG				:= -f elf32
+else
+AS_FLAG				:= -f elf64
 endif
 
 ifeq ($(WALL), yes)
@@ -181,9 +183,9 @@ INCLUDE				:=	$(addprefix $(INCLUDE_PATH), $(INCLUDE_NAME))
 #                                     RULES                                    #
 ################################################################################
 
-all: $(ART_NAME) $(NAME) $(PAYLOAD_NAME)
+all: $(ART_NAME) $(PAYLOAD_NAME) $(NAME)
 
-$(NAME):  $(OBJ) $(ASM_OBJ)
+$(NAME): $(ASM_OBJ) $(OBJ)
 
 	@echo "\n$(NAME) : $(GEN)"
 	@echo "\n$(_CYAN)====================================================$(_END)"

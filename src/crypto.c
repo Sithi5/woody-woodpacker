@@ -20,16 +20,15 @@ void cipher_woody_file_data(t_woody *woody)
         error(ERROR_MALLOC, woody);
     memcpy(woody->cipher, woody->mmap_ptr + woody->text_start_offset, text_len);
 
+    key_generator(woody);
     if (ARCH_32)
     {
         printf("ARCH 32 CIPHER\n");
-        //woody->cipher = XORCipher(woody->mmap_ptr + woody->text_start_offset, key, text_len, strlen(key));
+        asm_xor_cipher(woody->mmap_ptr + woody->text_start_offset, woody->encryption_key, text_len, KEY_LEN);
     }
     else
     {
         printf("ARCH 64 CIPHER\n");
-        key_generator(woody);
-
         rc4_cipher_start(woody->cipher, text_len, woody->encryption_key, KEY_LEN);
     }
 }

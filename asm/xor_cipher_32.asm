@@ -1,104 +1,54 @@
-section .bss
-    global stream
-
-    stream resb 256
-
 section .text
-    GLOBAL rc4_cipher_start
+    GLOBAL asm_xor_cipher
+
+asm_xor_cipher:
+
+    push ebp
+    mov ebp, esp
+
+    ;ecx ; keylen 4 param
+    ;edx ;len 3 param
+    ;esi ;key 2 param
+    ;edi ;data 1 param
+
+    mov r14, edx ; store data len
+    mov r15, ecx ; store key len
+
+    extern puts
+    push edi ; store arg pointeur to data
+    push esi ; store arg pointeur to key
+
+    mov r9, 00 ; len counter initialisation
+
+resetkeyloop:
+    cmp r9,r14d			; check len and len counter
+    je 	return		    ; jump if lencounter < len
+    pop esi             ; get start of key
+    push esi            ; send back start of key in stack
+    mov r8, 00          ; key len counter initialisation
+
+xorloop:
+    mov eax, edi        ; get data char address
+    mov bl, byte[esi]   ; get key byte to xor
+    xor byte[eax],bl	; xor operation on data with key
 
 
-_modulo_rcx:
-    xor rdx, rdx					; rdx is remainder
-    div rcx
-    mov rax, rdx
-    ret
-
-_modulo:
-    push rcx                        ; save key_len
-    xor rdx, rdx                    ; rdx is remainder
-    mov rcx, 256                    ; give div argument
-    div rcx                         ; div
-    pop rcx                         ; restore rcx
-    mov rax, rdx
-    ret
+    add edi,1			; add 1 to pointer data
+    add esi,1			; add 1 to pointer key
+    add r9,01			; add 1 to data len counter
+    add r8,01           ; add 1 to key len counter
+    cmp r8,r15          ; check key to reset
+    je resetkeyloop     ; reset key pointer
+    cmp r9,r14			; check len and len counter
+    jle xorloop			; jump if lencounter < len
 
 
-_swap:
-    mov r11b, [r8 + r9]          ; tmp_i = stream[i]
-    mov r12b, [r8 + r10]         ; tmp_j = stream[j]
-    mov [r8 + r10], r11b         ; stream[j] = stream[i]
-    mov [r8 + r9], r12b          ; stream[i] = tmp_j
-    mov rax, r8
-    ret
 
-rc4_cipher_start:
-    ;rdi = start offset
-    ;rsi = size
-    ;rdx = key
-    ;rcx = key_size
-    lea r8, [rel stream]            ; load stream to memory
-    xor r9, r9                      ; int i = 0
-    mov r14, rdx                    ; using rdx for modulo, store rdx in r14
-
-init_stream:
-    cmp r9, 256                     ; while i < 256
-    je init_index_values           ; reset i and j when i = 256 and continue
-    mov [r8 + r9], r9               ; stream[i] = i;
-    inc r9                          ; i++
-    jmp init_stream
-
-init_index_values:
-    xor r9, r9                      ; int i
-    xor r10, r10                    ; int j
-    xor r11, r11                    ; int tmp_i for swap
-    xor r12, r12                    ; int tmp_j for swap
-
-stream_generation:
-    cmp r9, 256                     ; while i < 256
-    je reset_index_values
-    add r10b, byte[r8 + r9]              ; j = j + stream[i]
-    mov rax, r9
-    call _modulo_rcx
-    add r10b, byte[r14 + rax]            ; + key[i % key_size]
-    mov rax, r10
-    call _modulo
-    mov r10, rax
-    call _swap
-    inc r9                          ; i + 1
-    jmp stream_generation
-
-reset_index_values:
-    xor r9, r9                      ; int i
-    xor r10, r10                    ; int j
-    xor r11, r11                    ; int tmp_i for swap
-    xor r12, r12                    ; int tmp_j for swap
-    xor r13, r13                    ; int k
-    xor r14, r14
-    xor r15, r15                    ; int res
-
-encrypt:
-    cmp r13, rsi                    ; while k < len
-    jge return
-    add r9, 1                       ; i = (i + 1) % N;
-    mov rax, r9
-    call _modulo
-    mov r9, rax
-    add r10b, byte[r8 + r9]              ; j = (j + stream[i])
-    mov rax, r10                    ; % 256
-    call _swap
-    mov r14b, byte[r8 + r9]              ; stream[i] in r14
-    add r14b, byte[r8 + r10]             ; + stream[j]
-    mov rax, r14
-    call _modulo
-    mov r14, rax
-    mov r15b, byte[r8 + r14]             ;res = stream[(stream[i] + stream[j]) % 256]
-    xor [rdi + r13], r15            ; data[k] ^ res (modify directly data)
-    inc r13                         ; k++
-    jmp encrypt
-
+; return function
 return:
+    pop esi             ; remove key address from stack
+    pop edi				; retreave data from the stack
+    mov eax, edi		; set return address to edi (data)
+    mov esp,ebp
+    pop ebp
     ret
-
-
-
-
