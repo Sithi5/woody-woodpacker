@@ -45,6 +45,3 @@ void key_generator(t_woody *woody)
     random_string(woody);
     print_key(woody);
 }
-
-// S>R*>;2@3ys<0F);0UqFh!(ntjh]T^;H#/56UF.gT\&I_'<>,8cT;tZ,UrL[RXKA+P=N6h;6xa{q@LZf?Nv-Di'((MQK.<1'B)7a+_wu9U--]Lr3LM=SwJ=:ax
-// 31r[8;8L2Z#e+9o<,2sn7\0g<H=+.8#k%3BL;jo7Cs06$5T&)/2]X/N1*'TqG@1<%7i%z"2%W{BxQ>Yg,+LIN9W=#J?49"+Yb6#*Q\)74c[w<1.rk)<1|.O<c!398D>
