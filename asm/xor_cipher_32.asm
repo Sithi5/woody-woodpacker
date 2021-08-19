@@ -14,45 +14,54 @@ asm_xor_cipher:
     push ebp
     mov ebp, esp
 
-    call debug_print
-    call print_newline
-    push edi
-    push esi
-    mov eax , [ebp + 8] ; first param
-    mov ebx, [ebp + 12] ; second param
-    mov ecx, [ebp + 16] ; third param
-    mov edx, [ebp + 20] ; fourth param
 
-
-	; ecx        ; string to write
-    ; edx string len
-    mov eax,write
-	mov ebx,STDOUT
-	syscall              ; call the kernel
-    call print_newline
-    call print_newline
-
-
-
+    mov ecx, [ebp + 12] ; datalen
     jmp _encrypt
 
+minus:
+    sub eax, ebx
+modulo:
+    CMP eax, ebx
+    JGE minus
+    leave   ; else result is already saved in eax
+    ret
+
 _encrypt:
+
+    ;getting char from data
+    mov eax, [ebp + 12] ; get datalen arg
+    sub eax, ecx ; sub to current index
+    mov ebx, [ebp + 8] ; data
+    add ebx, eax ; data[index]
+    mov al, [ebx]   ; save data[index] in al
+
+    ;getting char from key
+    mov eax, [ebp + 12] ; get datalen arg
+    sub eax, ecx ; sub to current index
+    mov ebx, [ebp + 20] ; keylen
+    call modulo ; eax % ebx, actually modulo index to keylen
+    mov ebx, [ebp + 16] ; key
+    add ebx, eax
+
+    xor byte[al], ebx
+
+
+    loop _encrypt
     jmp return
 
 return:
-    pop esi
-    pop edi
     mov esp, ebp
     pop ebp
     ret
 
 
-print_newline
+print_newline:
     push ebp
     mov ebp, esp
 
     push eax
     push ebx
+    push ecx
     push edx
 
     sub esp, 4 ; push string to write on stack
@@ -66,6 +75,7 @@ print_newline
     add esp, 4
 
     pop edx
+    pop ecx
     pop ebx
     pop eax
     mov esp , ebp
@@ -79,6 +89,7 @@ debug_print:
 
     push eax
     push ebx
+    push ecx
     push edx
 
     sub esp, 8 ; push string to write on stack
@@ -93,6 +104,7 @@ debug_print:
     add esp, 8
 
     pop edx
+    pop ecx
     pop ebx
     pop eax
     mov esp , ebp
