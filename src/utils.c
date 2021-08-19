@@ -18,6 +18,7 @@ void set_woody_ptrs_to_null(t_woody *woody)
     woody->payload_data = NULL;
     woody->infected_file = NULL;
     woody->cipher = NULL;
+    woody->encryption_key = NULL;
 }
 
 /* Free the woody structure properly. */
@@ -29,6 +30,7 @@ void free_woody(t_woody *woody)
         woody->payload_data ? free(woody->payload_data) : 0;
         woody->infected_file ? free(woody->infected_file) : 0;
         woody->cipher ? free(woody->cipher) : 0;
+        woody->encryption_key ? free(woody->encryption_key) : 0;
         free(woody);
     }
 }
