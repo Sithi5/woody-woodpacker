@@ -20,6 +20,18 @@ void cipher_woody_file_data(t_woody *woody)
         error(ERROR_MALLOC, woody);
     memcpy(woody->cipher, woody->mmap_ptr + woody->text_start_offset, text_len);
 
+    printf("testing xor cipher : \n\n");
+    char key[5] = "ABOPR";
+    char cipher[10] = "Bonjour at";
+    printf("key : %s\n", key);
+    printf("cipher : %s\n", cipher);
+    char *result = asm_xor_cipher(cipher, 10, key, 5);
+    printf("result %s\n", result);
+    printf("\nafter\n\n");
+    printf("key : %s\n", key);
+    printf("cipher : %s\n", cipher);
+    printf("\n");
+
     key_generator(woody);
     if (ARCH_32)
     {

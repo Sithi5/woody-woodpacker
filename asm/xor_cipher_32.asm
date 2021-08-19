@@ -23,17 +23,18 @@ minus:
 modulo:
     CMP eax, ebx
     JGE minus
-    leave   ; else result is already saved in eax
     ret
 
 _encrypt:
-
     ;getting char from data
     mov eax, [ebp + 12] ; get datalen arg
     sub eax, ecx ; sub to current index
     mov ebx, [ebp + 8] ; data
-    add ebx, eax ; data[index]
-    mov al, [ebx]   ; save data[index] in al
+
+
+
+    mov al, [ebx + eax]   ; save data[index] in al
+    push eax
 
     ;getting char from key
     mov eax, [ebp + 12] ; get datalen arg
@@ -41,15 +42,15 @@ _encrypt:
     mov ebx, [ebp + 20] ; keylen
     call modulo ; eax % ebx, actually modulo index to keylen
     mov ebx, [ebp + 16] ; key
-    add ebx, eax
 
-    xor byte[al], ebx
-
+    pop eax
+    xor al, byte[ebx + eax]
 
     loop _encrypt
     jmp return
 
 return:
+    mov eax, [ebp + 8]
     mov esp, ebp
     pop ebp
     ret
