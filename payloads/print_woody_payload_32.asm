@@ -40,28 +40,6 @@ _ret2oep:
     add eax, 0x77777777 ; old entry_point
     ret
 
-; _ret2textsection:
-;     call _get_rip
-;     sub eax, 0x66666666 ; virus size without ret2oep
-;     sub eax, 0x66666666 ; new_entry_point
-;     add eax, 0x66666666 ; start of text section
-;     ret
-
-; _ret2textoffset:
-;     mov eax, 0x55555555
-;     ret
-
-; _mprotect:
-;     call _ret2textsection
-;     mov edi,  eax
-;     and edi, -0x1000
-;     call _ret2textoffset
-;     mov esi, eax
-;     mov eax, 0xa
-;     mov edx, 0x07
-;     syscall
-;     ret
-
 _print_woody:
     enter 0,0 ; push ebp, mov ebp, esp
 
