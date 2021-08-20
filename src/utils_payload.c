@@ -155,7 +155,7 @@ void overwrite_payload_ret2oep(t_woody *woody)
         // Rewrite old entry_point in payload ret2oep.
         memcpy(woody->payload_data + ret2oep_offset + 11, (void *)&(woody->old_entry_point), 4);
     }
-    else
+    else if (ARCH_64)
     {
         ret2oep_offset = find_ret2oep_offset(woody);
         // Rewrite payload size without ret2oep. + 2 to skip two first instructions and go to address.

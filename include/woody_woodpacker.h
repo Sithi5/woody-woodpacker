@@ -80,6 +80,9 @@ enum e_error
 
 /* Custom types for 32bit compatibility. */
 #ifdef ARCH_32
+
+#define ARCH_64 0
+
 /* Data types for 32bit */
 typedef Elf32_Addr t_elf_addr;
 typedef Elf32_Ehdr t_elf_ehdr;
@@ -91,6 +94,7 @@ typedef Elf32_Off t_elf_off;
 #else /* 64 bits */
 
 // If ARCH_32 not define, define it to 0.
+#define ARCH_64 1
 #define ARCH_32 0
 
 /* Data types for 64bit */

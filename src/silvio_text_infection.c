@@ -61,7 +61,7 @@ void silvio_text_infection(t_woody *woody)
     {
         overwrite_payload_ret2oep(woody);
     }
-    else
+    else if (ARCH_64)
     {
         overwrite_keysection_payload(woody);
         overwrite_payload_ret2textsection(woody);
@@ -72,7 +72,7 @@ void silvio_text_infection(t_woody *woody)
     // Insert binary before text section
     memcpy(woody->infected_file, woody->mmap_ptr, (size_t)woody->text_end_offset);
 
-    if (!ARCH_32)
+    if (ARCH_64)
     {
         // Rewrite text section with cipher data.
         memcpy(woody->infected_file + woody->text_start_offset, woody->cipher, (size_t)(woody->text_end_offset - woody->text_start_offset));
