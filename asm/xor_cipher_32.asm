@@ -11,13 +11,13 @@ section .text
 
 
 asm_xor_cipher:
-    push ebp ; Sauvegarde de l’ancien bas de pile
-    mov ebp, esp ; on remonte le bas de pile a la position du haut de la pile
+    enter 0,0 ; push ebp, mov ebp, sub esp, N
 
     mov edx, [ebp + 20] ; keylen
     dec edx ; keylen
     mov ecx, [ebp + 12] ; datalen
     dec ecx ; datalen
+    call debug_print
     jmp _encrypt
 
 _encrypt:
@@ -30,6 +30,7 @@ _encrypt:
     mov edx, [ebp + 20] ; keylen
     dec edx ; dec keylen
     .continue:
+
     mov esi, [eax + ecx]
     mov bl, byte[ebx + edx] ; getting key char
     xor byte[eax + ecx], bl
@@ -45,8 +46,7 @@ return:
 
 
 debug_print:
-    push ebp ; Sauvegarde de l’ancien bas de pile
-    mov ebp, esp ; on remonte le bas de pile a la position du haut de la pile
+    enter 0,0 ; push ebp, mov ebp, sub esp, N
 
     push eax
     push ebx
@@ -56,7 +56,6 @@ debug_print:
     call print_newline
 
     ; Pushing string on stack
-    sub esp, 8 ; get 8 bytes on stack to push string on it
     push 'g'
     push 'debu'
 
@@ -69,7 +68,6 @@ debug_print:
     ; Removing string on stack to restore it.
     pop eax
     pop eax
-    add esp, 8
 
 
     call print_newline
@@ -83,8 +81,7 @@ debug_print:
     ret
 
 print_newline:
-    push ebp ; Sauvegarde de l’ancien bas de pile
-    mov ebp, esp ; on remonte le bas de pile a la position du haut de la pile
+    enter 0,0 ; push ebp, mov ebp, sub esp, N
 
     push eax
     push ebx
@@ -92,7 +89,6 @@ print_newline:
     push edx
 
     ; Pushing string on stack
-    sub esp, 4 ; get 4 bytes on stack to push string on it
     push 10
 
 	mov ecx, esp        ; string to write
@@ -103,8 +99,6 @@ print_newline:
 
     ; Removing string on stack to restore it.
     pop eax
-    pop eax
-    add esp, 4
 
     pop edx
     pop ecx

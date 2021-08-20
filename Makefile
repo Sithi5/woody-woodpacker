@@ -74,36 +74,6 @@ ifeq ($(GEN), "Generation in mode")
 	GEN				+=	no flags
 endif
 
-################################################################################
-#                                    FORMAT                                    #
-################################################################################
-
-# Text format
-_END		=	\033[0m
-_GRAS		=	\033[1m
-_SOUL		=	\033[4m
-_CLIG		=	\033[5m
-_SURL		=	\033[7m
-
-# Colors format
-_BLACK		=	\033[30m
-_RED		=	\033[31m
-_GREEN		=	\033[32m
-_YELLOW		=	\033[33m
-_BLUE		=	\033[34m
-_PURPLE		=	\033[35m
-_CYAN		=	\033[36m
-_GREY		=	\033[37m
-
-# Background
-_IBLACK		=	\033[40m
-_IRED		=	\033[41m
-_IGREEN		=	\033[42m
-_IYELLOW	=	\033[43m
-_IBLUE		=	\033[44m
-_IPURPLE	=	\033[45m
-_ICYAN		=	\033[46m
-_IGREY		=	\033[47m
 
 ################################################################################
 #                                     NAME                                     #
@@ -284,3 +254,34 @@ $(ART_NAME):
 	@cat $(ART_NAME)
 
 .PHONY: all clean fclean re check help tests clean_payload
+
+################################################################################
+#                                    FORMAT                                    #
+################################################################################
+
+# Text format
+_END		=	\033[0m
+_GRAS		=	\033[1m
+_SOUL		=	\033[4m
+_CLIG		=	\033[5m
+_SURL		=	\033[7m
+
+# Colors format
+_BLACK		=	\033[30m
+_RED		=	\033[31m
+_GREEN		=	\033[32m
+_YELLOW		=	\033[33m
+_BLUE		=	\033[34m
+_PURPLE		=	\033[35m
+_CYAN		=	\033[36m
+_GREY		=	\033[37m
+
+# Background
+_IBLACK		=	\033[40m
+_IRED		=	\033[41m
+_IGREEN		=	\033[42m
+_IYELLOW	=	\033[43m
+_IBLUE		=	\033[44m
+_IPURPLE	=	\033[45m
+_ICYAN		=	\033[46m
+_IGREY		=	\033[47m
