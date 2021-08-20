@@ -31,10 +31,11 @@ void silvio_text_infection(t_woody *woody)
     {
         if (woody->phdr[i].p_type == PT_LOAD && woody->phdr[i].p_flags == (PF_R | PF_X))
         {
-
             woody->text_p_vaddr = woody->phdr[i].p_vaddr;
             woody->payload_vaddr = woody->text_p_vaddr + woody->phdr[i].p_filesz;
+
             woody->ehdr->e_entry = woody->payload_vaddr;
+
             woody->new_entry_point = woody->payload_vaddr;
 
             woody->phdr[i].p_filesz += woody->payload_size;
@@ -56,15 +57,26 @@ void silvio_text_infection(t_woody *woody)
             woody->shdr[i].sh_size += woody->payload_size;
     }
 
-    overwrite_keysection_payload(woody);
-    overwrite_payload_ret2textsection(woody);
-    overwrite_payload_ret2oep(woody);
-    overwrite_payload_settextsectionsize(woody);
+    if (ARCH_32)
+    {
+        overwrite_payload_ret2oep(woody);
+    }
+    else
+    {
+        overwrite_keysection_payload(woody);
+        overwrite_payload_ret2textsection(woody);
+        overwrite_payload_ret2oep(woody);
+        overwrite_payload_settextsectionsize(woody);
+    }
 
     // Insert binary before text section
     memcpy(woody->infected_file, woody->mmap_ptr, (size_t)woody->text_end_offset);
-    // Rewrite text section with cipher data.
-    memcpy(woody->infected_file + woody->text_start_offset, woody->cipher, (size_t)(woody->text_end_offset - woody->text_start_offset));
+
+    if (!ARCH_32)
+    {
+        // Rewrite text section with cipher data.
+        memcpy(woody->infected_file + woody->text_start_offset, woody->cipher, (size_t)(woody->text_end_offset - woody->text_start_offset));
+    }
     // Insert payload
     memcpy(woody->infected_file + woody->text_end_offset, woody->payload_data, woody->payload_size);
     // Insert rest of binary

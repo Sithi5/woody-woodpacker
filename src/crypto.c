@@ -16,12 +16,19 @@ void cipher_woody_file_data(t_woody *woody)
 {
     size_t text_len;
     text_len = woody->text_end_offset - woody->text_start_offset;
+    if (!(woody->cipher = (void *)malloc(text_len)))
+        error(ERROR_MALLOC, woody);
+    memcpy(woody->cipher, woody->mmap_ptr + woody->text_start_offset, text_len);
 
     key_generator(woody);
-    if (!(woody->cipher = (char *)malloc(sizeof(char) * text_len)))
-        error(ERROR_MALLOC, woody);
-    printf("textlen: %lu\n", text_len);
-    memcpy(woody->cipher, woody->mmap_ptr + woody->text_start_offset, text_len);
-    //woody->cipher = XORCipher(woody->mmap_ptr + woody->text_start_offset, key, text_len, strlen(key));
-    rc4_cipher_start(woody->cipher, text_len, woody->encryption_key, KEY_LEN);
+    if (ARCH_32)
+    {
+        printf("ARCH 32 CIPHER\n");
+        // asm_xor_cipher(woody->cipher, text_len, woody->encryption_key, KEY_LEN);
+    }
+    else
+    {
+        printf("ARCH 64 CIPHER\n");
+        rc4_cipher_start(woody->cipher, text_len, woody->encryption_key, KEY_LEN);
+    }
 }

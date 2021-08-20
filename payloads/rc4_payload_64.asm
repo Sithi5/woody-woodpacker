@@ -21,7 +21,7 @@ _start_payload:
 _infection:
     call _print_woody
     call _mprotect
-    call _getxorciphervar
+    call _getvar
     jmp rc4_cipher_start
 
 _end_payload:
@@ -77,7 +77,7 @@ _settextoffset:
     mov r14, 0x55555555
     ret
 
-_getxorciphervar:
+_getvar:
     call _ret2textsection
     call _settextoffset
     mov rdi, rax

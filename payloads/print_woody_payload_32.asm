@@ -2,22 +2,21 @@ BITS 32
 
 SECTION .text
 %define syscall int 0x80
+%define write 4
+%define STDOUT 1
 
 _start_payload:
+    enter 0,0 ; push ebp, mov ebp, sub esp, N
     push eax                 ; save all clobbered registers
     push ecx                 ; (rcx and r11 destroyed by kernel)
     push edx
     push esi
     push edi
 
-    jmp _infection
-
 _infection:
     call _print_woody
-    jmp _end_payload
 
 _end_payload:
-
 
     pop edi
     pop esi
@@ -25,6 +24,7 @@ _end_payload:
     pop ecx
     pop eax
 
+    leave
     call _ret2oep           ; jump to original entry point(oep)
     push eax
     ret
@@ -41,22 +41,38 @@ _ret2oep:
     ret
 
 _print_woody:
-    ; Setting the string woody on stack
-    sub esp, 0xf
+    enter 0,0 ; push ebp, mov ebp, esp
+
+    ;Save registers on stack
+    push eax
+    push ebx
+    push ecx
+    push edx
+
+    ; Pushing string on stack
     push 10
     push '...'
     push 'OODY'
     push '...W'
-	mov ecx, esp        ; string to writef
 
-    mov eax,4            ; 'write' system call = 4
-	mov ebx,1            ; file descriptor 1 = STDOUT
-	mov edx, 13     ; length of string to write
+    ; do write call
+	mov ecx, esp        ; string to write
+    mov eax,write
+	mov ebx,STDOUT
+	mov edx, 16     ; length of string to write
 	syscall              ; call the kernel
 
-    add esp, 0xf
-    pop edi
-    pop edi
-    pop edi
-    pop edi
+    ; Removing string on stack to restore it.
+    pop eax
+    pop eax
+    pop eax
+    pop eax
+
+    ;Get back registers from stack
+    pop edx
+    pop ecx
+    pop ebx
+    pop eax
+
+    leave ; = mov esp, ebp et pop ebp => la pile reprend son ancien etat
     ret

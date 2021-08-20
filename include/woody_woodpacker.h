@@ -156,6 +156,7 @@ size_t find_keysection_offset(t_woody *woody);
 size_t find_ret2oep_offset(t_woody *woody);
 size_t find_ret2textsection_offset_elf64(t_woody *woody);
 size_t find_settextsectionsize_offset_elf64(t_woody *woody);
+
 void overwrite_payload_ret2oep(t_woody *woody);
 void overwrite_payload_ret2textsection(t_woody *woody);
 void overwrite_payload_settextsectionsize(t_woody *woody);
@@ -167,8 +168,9 @@ void set_woody_ptrs_to_null(t_woody *woody);
 /****************************************************************************/
 /*                          ASM FUNCTIONS DEFINITIONS                       */
 /****************************************************************************/
-extern void rc4_cipher_start(char *data, int datalen, char *key, int keylen);
-extern char *asmxorcipher(void *data, char *key, int datalen, int keylen);
+
+extern char *rc4_cipher_start(void *data, int datalen, char *key, int keylen);
+extern char *asm_xor_cipher(char *data, int datalen, char *key, int keylen);
 
 /****************************************************************************/
 /*                          GLOBAL VARIABLES                                */

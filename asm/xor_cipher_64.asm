@@ -1,3 +1,7 @@
+GLOBAL asmxorcipher
+
+section .text
+
 asmxorcipher:
 
 push rbp
@@ -41,7 +45,7 @@ jle xorloop			; jump if lencounter < len
 
 
 
-; return function 
+; return function
 return:
 pop rsi             ; remove key address from stack
 pop rdi				; retreave data from the stack
@@ -50,8 +54,3 @@ mov rsp,rbp
 pop rbp
 ret
 
-
-section .data
-
-section .text
-    GLOBAL asmxorcipher
