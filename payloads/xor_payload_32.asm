@@ -13,11 +13,8 @@ _start_payload:
     push esi
     push edi
 
-    jmp _infection
-
 _infection:
     call _print_woody
-    jmp _end_payload
 
 _end_payload:
 
@@ -28,8 +25,6 @@ _end_payload:
     pop eax
 
     leave
-    call _ret2oep           ; jump to original entry point(oep)
-    push eax
     ret
 
 _get_rip:
@@ -43,27 +38,27 @@ _ret2oep:
     add eax, 0x77777777 ; old entry_point
     ret
 
-_ret2textsection:
-    call _get_rip
-    sub eax, 0x66666666 ; virus size without ret2oep
-    sub eax, 0x66666666 ; new_entry_point
-    add eax, 0x66666666 ; start of text section
-    ret
+; _ret2textsection:
+;     call _get_rip
+;     sub eax, 0x66666666 ; virus size without ret2oep
+;     sub eax, 0x66666666 ; new_entry_point
+;     add eax, 0x66666666 ; start of text section
+;     ret
 
-_ret2textoffset:
-    mov eax, 0x55555555
-    ret
+; _ret2textoffset:
+;     mov eax, 0x55555555
+;     ret
 
-_mprotect:
-    call _ret2textsection
-    mov edi,  eax
-    and edi, -0x1000
-    call _ret2textoffset
-    mov esi, eax
-    mov eax, 0xa
-    mov edx, 0x07
-    syscall
-    ret
+; _mprotect:
+;     call _ret2textsection
+;     mov edi,  eax
+;     and edi, -0x1000
+;     call _ret2textoffset
+;     mov esi, eax
+;     mov eax, 0xa
+;     mov edx, 0x07
+;     syscall
+;     ret
 
 _print_woody:
     enter 0,0 ; push ebp, mov ebp, esp
@@ -84,7 +79,7 @@ _print_woody:
 	mov ecx, esp        ; string to write
     mov eax,write
 	mov ebx,STDOUT
-	mov edx, 8     ; length of string to write
+	mov edx, 16     ; length of string to write
 	syscall              ; call the kernel
 
     ; Removing string on stack to restore it.

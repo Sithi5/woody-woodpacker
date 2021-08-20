@@ -156,6 +156,7 @@ size_t find_keysection_offset(t_woody *woody);
 size_t find_ret2oep_offset(t_woody *woody);
 size_t find_ret2textsection_offset_elf64(t_woody *woody);
 size_t find_settextsectionsize_offset_elf64(t_woody *woody);
+
 void overwrite_payload_ret2oep(t_woody *woody);
 void overwrite_payload_ret2textsection(t_woody *woody);
 void overwrite_payload_settextsectionsize(t_woody *woody);

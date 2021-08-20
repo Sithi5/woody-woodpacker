@@ -61,13 +61,13 @@ void pt_note_to_pt_load_infection(t_woody *woody)
             woody->shdr[i].sh_size += woody->payload_size;
     }
 
-    printf("LAAA\n");
     overwrite_keysection_payload(woody);
     overwrite_payload_ret2textsection(woody);
     overwrite_payload_ret2oep(woody);
     overwrite_payload_settextsectionsize(woody);
 
-    printf("ICI\n");
+    printf("headersize = %i\n", sizeof(t_elf_ehdr));
+    printf("inf_sec_start_off %li\n text_start_off %li\n text_end_off %li\n", infected_section_start_offset, woody->text_start_offset, woody->text_end_offset);
 
     // Insert binary before text section
     memcpy(woody->infected_file, woody->mmap_ptr, (size_t)woody->text_start_offset);

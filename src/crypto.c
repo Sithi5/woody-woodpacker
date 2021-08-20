@@ -24,7 +24,7 @@ void cipher_woody_file_data(t_woody *woody)
     if (ARCH_32)
     {
         printf("ARCH 32 CIPHER\n");
-        asm_xor_cipher(woody->cipher, text_len, woody->encryption_key, KEY_LEN);
+        // asm_xor_cipher(woody->cipher, text_len, woody->encryption_key, KEY_LEN);
     }
     else
     {

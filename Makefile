@@ -18,7 +18,7 @@ WALL				:=	yes
 WEXTRA				:=	yes
 WSHADOW				:=	yes
 WERROR				:=	no
-FSANITIZE			:=	no
+FSANITIZE			:=	yes
 DEBUG				:=	yes
 O2					:=	no
 

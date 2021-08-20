@@ -22,7 +22,7 @@ void choose_infection_method(t_woody *woody)
         {
             //text found here, get the offset of the end of the section;
             woody->text_start_offset = woody->phdr[i].p_offset;
-            woody->text_end_offset = woody->text_start_offset + woody->phdr[i].p_filesz;
+            woody->text_end_offset = woody->phdr[i].p_offset + woody->phdr[i].p_filesz;
             woody->text_section_size = woody->phdr[i].p_filesz;
 
             cipher_woody_file_data(woody);
