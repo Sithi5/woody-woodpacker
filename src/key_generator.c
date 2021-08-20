@@ -23,12 +23,6 @@ void random_string(t_woody *woody)
     close(fd) == -1 ? error(ERROR_CLOSE, woody) : 0;
     memcpy((void *)woody->encryption_key, key, KEY_LEN);
     woody->encryption_key[KEY_LEN] = '\0';
-    // printf("KEY IN HEX: %lu\n", strlen(woody->encryption_key));
-    // for (int n = 0; n < KEY_LEN; n++)
-    // {
-    //     printf("%x |", ((char *)woody->encryption_key)[n]);
-    // }
-    // printf("\n");
 }
 
 void print_key(t_woody *woody)
