@@ -26,10 +26,10 @@ _encrypt:
     mov ebx, [ebp + 16] ; key
 
     cmp edx, 0
-    jge continue
+    jge .continue
     mov edx, [ebp + 20] ; keylen
     dec edx ; dec keylen
-    continue:
+    .continue:
     mov esi, [eax + ecx]
     mov bl, byte[ebx + edx] ; getting key char
     xor byte[eax + ecx], bl
