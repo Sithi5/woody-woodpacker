@@ -42,7 +42,7 @@ void check_elf_header(t_woody *woody)
     {
         error(ERROR_NOT_ELF, woody);
     }
-    else if (!ARCH_32 && ehdr->e_ident[EI_CLASS] != ELFCLASS64)
+    else if (ARCH_64 && ehdr->e_ident[EI_CLASS] != ELFCLASS64)
     {
         error(ERROR_NOT_ELF, woody);
     }
