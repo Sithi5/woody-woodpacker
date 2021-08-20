@@ -42,8 +42,9 @@ void pt_note_to_pt_load_infection(t_woody *woody)
             woody->payload_vaddr = infected_section_p_vaddr;
             woody->ehdr->e_entry = woody->payload_vaddr;
             woody->new_entry_point = woody->payload_vaddr;
-
+            printf("pmemsz %li \n", woody->phdr[i].p_memsz);
             woody->phdr[i].p_memsz = woody->payload_size;
+            printf("pmemsz %li \n", woody->phdr[i].p_memsz);
 
             for (int j = i + 1; j < woody->ehdr->e_phnum; j++)
                 woody->phdr[j].p_offset += PAGE_SIZE;
@@ -61,13 +62,10 @@ void pt_note_to_pt_load_infection(t_woody *woody)
             woody->shdr[i].sh_size += woody->payload_size;
     }
 
-    printf("LAAA\n");
     overwrite_keysection_payload(woody);
     overwrite_payload_ret2textsection(woody);
     overwrite_payload_ret2oep(woody);
     overwrite_payload_settextsectionsize(woody);
-
-    printf("ICI\n");
 
     // Insert binary before text section
     memcpy(woody->infected_file, woody->mmap_ptr, (size_t)woody->text_start_offset);
@@ -76,7 +74,8 @@ void pt_note_to_pt_load_infection(t_woody *woody)
     memcpy(woody->infected_file + woody->text_start_offset, woody->cipher, (size_t)(woody->text_end_offset - woody->text_start_offset));
 
     // Copy until reach section PT_NOTE
-    memcpy(woody->infected_file + woody->text_end_offset, woody->mmap_ptr + woody->text_end_offset, (size_t)(infected_section_start_offset - woody->text_end_offset));
+    printf("inf_sec_start_off %li\n text_start_off %li\n text_end_off %li\n", infected_section_start_offset,woody->text_start_offset, woody->text_end_offset);
+    //memcpy(woody->infected_file + woody->text_end_offset, woody->mmap_ptr + woody->text_end_offset, (size_t)(infected_section_start_offset - woody->text_end_offset));
 
     // Insert payload
     memcpy(woody->infected_file + infected_section_start_offset, woody->payload_data, woody->payload_size);
