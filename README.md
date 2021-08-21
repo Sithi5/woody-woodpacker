@@ -3,21 +3,12 @@ Projet qui a pour principe de modifier les headers d'un fichier de type ELF64. L
 
 # Usefull commands
 ```bash
-readelf -h # Display elf-header information for binaries files
-readelf -l # Display program-header info
-readelf -S # Display section header
-readelf --symbol # Display symbol information for binaries files
+readelf -h $(binary) # Display elf-header information for binaries files
+readelf -l $(binary) # Display program-header info
+readelf -S $(binary) # Display section header
+readelf --symbol $(binary) # Display symbol information for binaries files
+objdump -d $(binary) # Disassemble a binary file and show usefull info
 ```
-
-# Resources
-* [elf.h](https://code.woboq.org/linux/include/elf.h.html)
-* [UNIX ELF Parasites and virus](https://ivanlef0u.fr/repo/madchat/vxdevl/vdat/tuunix02.htm)
-* [Malware Engineering Part 0x2— Finding shelter for parasite](https://medium.com/analytics-vidhya/malware-engineering-part-0x2-finding-shelter-for-parasite-751145dd18d0)
-* [Linux x64 Infection for Lamers (by a Lamer)](https://vx-underground.org/archive/VxHeaven/lib/vjp01.html)
-* [Return To Original Entry Point Despite PIE](https://tmpout.sh/1/11.html)
-* [dcode.fr/rc4-cipher](https://www.dcode.fr/rc4-cipher)
-* [wikipedia.org/wiki/RC4](https://fr.wikipedia.org/wiki/RC4)
-* [geeksforgeeks.org/implementation-of-rc4-algorithm](https://www.geeksforgeeks.org/implementation-of-rc4-algorithm/)
 
 # Build and run
 ```bash
@@ -30,3 +21,20 @@ make all
 ```bash
 make tests
 ```
+
+# Resources
+#### elf file
+* [elf.h](https://code.woboq.org/linux/include/elf.h.html)
+
+
+#### Infection method
+* [UNIX ELF Parasites and virus](https://ivanlef0u.fr/repo/madchat/vxdevl/vdat/tuunix02.htm)
+* [Malware Engineering Part 0x2— Finding shelter for parasite](https://medium.com/analytics-vidhya/malware-engineering-part-0x2-finding-shelter-for-parasite-751145dd18d0)
+* [Linux x64 Infection for Lamers (by a Lamer)](https://vx-underground.org/archive/VxHeaven/lib/vjp01.html)
+* [Return To Original Entry Point Despite PIE](https://tmpout.sh/1/11.html)
+
+#### Encryptions
+* [blue-team-vs-red-team-how-to-run-your-encrypted-binary-in-memory-and-go-undetected](https://www.redtimmy.com/blue-team-vs-red-team-how-to-run-your-encrypted-binary-in-memory-and-go-undetected/)
+* [dcode.fr/rc4-cipher](https://www.dcode.fr/rc4-cipher)
+* [wikipedia.org/wiki/RC4](https://fr.wikipedia.org/wiki/RC4)
+* [geeksforgeeks.org/implementation-of-rc4-algorithm](https://www.geeksforgeeks.org/implementation-of-rc4-algorithm/)
