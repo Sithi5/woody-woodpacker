@@ -38,15 +38,24 @@ void free_woody(t_woody *woody)
 void print_woody_infos(t_woody *woody)
 {
     printf("\n");
+    printf("Elf ehdr:\n");
+    printf("\twoody->ehdr->e_phoff:\t\t\t\t%u\n", woody->ehdr->e_phoff);       /* Program header table file offset */
+    printf("\twoody->ehdr->e_shoff:\t\t\t\t%u\n", woody->ehdr->e_shoff);       /* Section header table file offset */
+    printf("\twoody->ehdr->e_flags:\t\t\t\t%u\n", woody->ehdr->e_flags);       /* Processor-specific flags */
+    printf("\twoody->ehdr->e_ehsize:\t\t\t\t%u\n", woody->ehdr->e_ehsize);     /* ELF header size in bytes */
+    printf("\twoody->ehdr->e_phentsize:\t\t\t%u\n", woody->ehdr->e_phentsize); /* Program header table entry size */
+    printf("\twoody->ehdr->e_phnum:\t\t\t\t%u\n", woody->ehdr->e_phnum);       /* Program header table entry count */
+    printf("\twoody->ehdr->e_shentsize:\t\t\t%u\n", woody->ehdr->e_shentsize); /* Section header table entry size */
+    printf("\twoody->ehdr->e_shnum:\t\t\t\t%u\n", woody->ehdr->e_shnum);       /* Section header table entry count */
+    printf("\twoody->ehdr->e_shstrndx:\t\t\t%u\n", woody->ehdr->e_shstrndx);   /* Section header string table index */
     printf("Offsets:\n");
-    printf("\twoody->text_s_offset:\t\t\t\t%u\n", woody->text_s_offset);
-    printf("\twoody->text_s_size:\t\t\t\t%u\n", woody->text_s_size);
-    printf("\twoody->encrypt_start_offset:\t\t\t%u\n", woody->encrypt_start_offset);
-    printf("\twoody->encrypt_end_offset:\t\t\t%u\n", woody->encrypt_end_offset);
+    printf("\twoody->text_p_start_offset:\t\t\t%lu\n", woody->text_p_start_offset);
+    printf("\twoody->encrypt_s_start_offset:\t\t\t%lu\n", woody->encrypt_s_start_offset);
+    printf("\twoody->encrypt_s_end_offset:\t\t\t%lu\n", woody->encrypt_s_end_offset);
     printf("Adresses:\n");
-    printf("\twoody->old_entry_point:\t\t\t\t0x%x -> %u\n", woody->old_entry_point, woody->old_entry_point);
-    printf("\twoody->new_entry_point:\t\t\t\t0x%x -> %u\n", woody->new_entry_point, woody->new_entry_point);
-    printf("\twoody->text_p_vaddr:\t\t\t\t0x%x -> %u\n", woody->text_p_vaddr, woody->text_p_vaddr);
+    printf("\twoody->old_entry_point:\t\t\t\t0x%lx -> %lu\n", woody->old_entry_point, woody->old_entry_point);
+    printf("\twoody->new_entry_point:\t\t\t\t0x%lx -> %lu\n", woody->new_entry_point, woody->new_entry_point);
+    printf("\twoody->text_p_vaddr:\t\t\t\t0x%lx -> %lu\n", woody->text_p_vaddr, woody->text_p_vaddr);
     printf("\n");
 }
 
