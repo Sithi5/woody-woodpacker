@@ -51,10 +51,16 @@ void silvio_text_infection(t_woody *woody)
     // Adding offset of one page in all section located after text section end.
     for (size_t i = 0; i < woody->ehdr->e_shnum; i++)
     {
-        if (woody->shdr[i].sh_offset > woody->text_end_offset)
+        if (woody->shdr[i].sh_offset > woody->text_p_end_offset)
+        {
             woody->shdr[i].sh_offset += PAGE_SIZE;
+        }
         else if (woody->shdr[i].sh_addr + woody->shdr[i].sh_size == woody->payload_vaddr)
+        {
+            woody->text_s_offset = woody->shdr[i].sh_offset;
+            woody->text_s_size = woody->shdr[i].sh_size;
             woody->shdr[i].sh_size += woody->payload_size;
+        }
     }
 
     if (ARCH_32)
@@ -69,16 +75,26 @@ void silvio_text_infection(t_woody *woody)
         overwrite_payload_settextsectionsize(woody);
     }
 
-    // Insert binary before text section
-    memcpy(woody->infected_file, woody->mmap_ptr, (size_t)woody->text_end_offset);
+    printf("\n");
+    printf("Offsets:\n");
+    printf("\twoody->text_s_offset:\t\t\t\t\t%lu\n", woody->text_s_offset);
+    printf("\twoody->text_s_size:\t\t\t\t\t%lu\n", woody->text_s_size);
+    printf("Adresses:\n");
+    printf("\twoody->old_entry_point:\t\t\t\t0x%lx -> %lu\n", woody->old_entry_point, woody->old_entry_point);
+    printf("\twoody->new_entry_point:\t\t\t\t0x%lx -> %lu\n", woody->new_entry_point, woody->new_entry_point);
+    printf("\twoody->text_p_vaddr:\t\t\t\t0x%lx -> %lu\n", woody->text_p_vaddr, woody->text_p_vaddr);
+    printf("\n");
+
+    // Copy until text end section
+    memcpy(woody->infected_file, woody->mmap_ptr, (size_t)woody->text_p_end_offset);
 
     if (ARCH_64)
     {
         // Rewrite text section with cipher data.
-        memcpy(woody->infected_file + woody->text_start_offset, woody->cipher, woody->cipher_size);
+        memcpy(woody->infected_file + woody->text_p_start_offset, woody->cipher, woody->cipher_size);
     }
-    // Insert payload
-    memcpy(woody->infected_file + woody->text_end_offset, woody->payload_data, woody->payload_size);
+    // Insert payload after text end section
+    memcpy(woody->infected_file + woody->text_p_end_offset, woody->payload_data, woody->payload_size);
     // Insert rest of binary
-    memcpy(woody->infected_file + woody->text_end_offset + PAGE_SIZE, woody->mmap_ptr + woody->text_end_offset, woody->binary_data_size - woody->text_end_offset);
+    memcpy(woody->infected_file + woody->text_p_end_offset + PAGE_SIZE, woody->mmap_ptr + woody->text_p_end_offset, woody->binary_data_size - woody->text_p_end_offset);
 }

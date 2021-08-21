@@ -56,7 +56,7 @@ void pt_note_to_pt_load_infection(t_woody *woody)
     // Adding offset of one page in all section located after text section end.
     for (size_t i = 0; i < woody->ehdr->e_shnum; i++)
     {
-        if (woody->shdr[i].sh_offset > woody->text_end_offset)
+        if (woody->shdr[i].sh_offset > woody->text_p_end_offset)
             woody->shdr[i].sh_offset += PAGE_SIZE;
         else if (woody->shdr[i].sh_addr + woody->shdr[i].sh_size == woody->payload_vaddr)
             woody->shdr[i].sh_size += woody->payload_size;
@@ -68,14 +68,14 @@ void pt_note_to_pt_load_infection(t_woody *woody)
     overwrite_payload_settextsectionsize(woody);
 
     // Insert binary before text section
-    memcpy(woody->infected_file, woody->mmap_ptr, (size_t)woody->text_start_offset);
+    memcpy(woody->infected_file, woody->mmap_ptr, (size_t)woody->text_p_start_offset);
 
     // Rewrite text section with cipher data.
-    memcpy(woody->infected_file + woody->text_start_offset, woody->cipher, (size_t)(woody->text_end_offset - woody->text_start_offset));
+    memcpy(woody->infected_file + woody->text_p_start_offset, woody->cipher, (size_t)(woody->text_p_end_offset - woody->text_p_start_offset));
 
     // Copy until reach section PT_NOTE
-    printf("inf_sec_start_off %li\n text_start_off %li\n text_end_off %li\n", infected_section_start_offset, woody->text_start_offset, woody->text_end_offset);
-    //memcpy(woody->infected_file + woody->text_end_offset, woody->mmap_ptr + woody->text_end_offset, (size_t)(infected_section_start_offset - woody->text_end_offset));
+    printf("inf_sec_start_off %li\n text_start_off %li\n text_end_off %li\n", infected_section_start_offset, woody->text_p_start_offset, woody->text_p_end_offset);
+    //memcpy(woody->infected_file + woody->text_p_end_offset, woody->mmap_ptr + woody->text_p_end_offset, (size_t)(infected_section_start_offset - woody->text_p_end_offset));
 
     // Insert payload
     memcpy(woody->infected_file + infected_section_start_offset, woody->payload_data, woody->payload_size);

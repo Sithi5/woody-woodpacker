@@ -130,10 +130,12 @@ typedef struct s_woody
     t_elf_addr old_entry_point;
     t_elf_addr payload_vaddr;
 
-    t_elf_off text_start_offset;
-    t_elf_off text_end_offset;
-    t_elf_off text_section_size;
+    t_elf_off text_p_start_offset;
+    t_elf_off text_p_end_offset;
+    t_elf_off text_p_size;
     t_elf_addr text_p_vaddr;
+    t_elf_off text_s_offset;
+    size_t text_s_size;
 
     int ret2oep_offset;
 

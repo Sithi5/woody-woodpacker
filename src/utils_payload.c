@@ -184,7 +184,7 @@ void overwrite_payload_settextsectionsize(t_woody *woody)
 {
     size_t settextsectionsize_offset = find_settextsectionsize_offset_elf64(woody);
     // Rewrite settextsectionsize_offset + 2 to skip two first instructions and go to textoffset value.
-    memcpy(woody->payload_data + settextsectionsize_offset + 2, (void *)&(woody->text_section_size), 4);
+    memcpy(woody->payload_data + settextsectionsize_offset + 2, (void *)&(woody->text_p_size), 4);
 }
 
 void overwrite_keysection_payload(t_woody *woody)

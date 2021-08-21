@@ -21,14 +21,14 @@ void choose_infection_method(t_woody *woody)
         if (woody->phdr[i].p_type == PT_LOAD && woody->phdr[i].p_flags == (PF_R | PF_X))
         {
             //text found here, get the offset of the end of the section;
-            woody->text_start_offset = woody->phdr[i].p_offset;
-            woody->text_end_offset = woody->phdr[i].p_offset + woody->phdr[i].p_filesz;
-            woody->text_section_size = woody->phdr[i].p_filesz;
+            woody->text_p_start_offset = woody->phdr[i].p_offset;
+            woody->text_p_end_offset = woody->phdr[i].p_offset + woody->phdr[i].p_filesz;
+            woody->text_p_size = woody->phdr[i].p_filesz;
 
             cipher_woody_file_data(woody);
 
             // Check if there is enought space for our payload in the text section.
-            if (woody->text_end_offset % PAGE_SIZE + woody->payload_size < PAGE_SIZE)
+            if (woody->text_p_end_offset % PAGE_SIZE + woody->payload_size < PAGE_SIZE)
             {
                 printf("USING SILVIO INFECTION\n");
                 silvio_text_infection(woody);
