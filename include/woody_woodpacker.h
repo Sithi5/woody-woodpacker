@@ -78,6 +78,8 @@ enum e_error
 #define OUTPUT_FILE_NAME "woody"
 #define PAYLOAD_NAME "payload"
 
+#define SECTION_TO_ENCRYPT_NAME ".text"
+
 /* Custom types for 32bit compatibility. */
 #ifdef ARCH_32
 
@@ -114,6 +116,7 @@ typedef Elf64_Off t_elf_off;
 typedef struct s_woody
 {
     void *mmap_ptr;
+    void *string_table_ptr;
     size_t binary_data_size;
 
     void *payload_data;
@@ -130,14 +133,15 @@ typedef struct s_woody
     t_elf_addr old_entry_point;
     t_elf_addr payload_vaddr;
 
-    t_elf_off encrypt_start_offset;
-    t_elf_off encrypt_end_offset;
+    t_elf_off encrypt_s_start_offset;
+    t_elf_off encrypt_s_end_offset;
+    t_elf_addr encrypt_s_addr;
+    size_t encrypt_s_size;
+
     t_elf_off text_p_start_offset;
     t_elf_off text_p_end_offset;
     t_elf_off text_p_size;
     t_elf_addr text_p_vaddr;
-    t_elf_off text_s_offset;
-    size_t text_s_size;
 
     int ret2oep_offset;
 
@@ -150,6 +154,7 @@ typedef struct s_woody
 /****************************************************************************/
 
 void check_elf_header(t_woody *woody);
+void set_string_table_ptr(t_woody *woody);
 
 void key_generator(t_woody *woody);
 void cipher_woody_file_data(t_woody *woody);

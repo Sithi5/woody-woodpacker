@@ -63,3 +63,10 @@ void check_elf_header(t_woody *woody)
         error(ERROR_NOT_EXECUTABLE_BINARY, woody);
     }
 }
+
+void set_string_table_ptr(t_woody *woody)
+{
+    t_elf_shdr *sh_table;
+    sh_table = woody->mmap_ptr + woody->ehdr->e_shoff;
+    woody->string_table_ptr = woody->mmap_ptr + sh_table[woody->ehdr->e_shstrndx].sh_offset;
+}

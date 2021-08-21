@@ -15,6 +15,7 @@
 void silvio_text_infection(t_woody *woody)
 {
 
+    print_woody_infos(woody);
     // Create the output file
     if (!(woody->infected_file = malloc(woody->binary_data_size + PAGE_SIZE)))
     {
@@ -22,8 +23,6 @@ void silvio_text_infection(t_woody *woody)
     }
     woody->infected_file_size = woody->binary_data_size + PAGE_SIZE;
 
-    // Increase section header offset by PAGE_SIZE
-    woody->ehdr->e_shoff += PAGE_SIZE;
     // Set a flag in the EI_PAD header padding that indicate the file have been infected.
     woody->ehdr->e_ident[EI_PAD + 3] = 7;
 
@@ -48,7 +47,7 @@ void silvio_text_infection(t_woody *woody)
         }
     }
 
-    // Adding offset of one page in all section located after text section end.
+    // Adding offset of one page in all section located after text section end. And get text section offset for the encryption.
     for (size_t i = 0; i < woody->ehdr->e_shnum; i++)
     {
         if (woody->shdr[i].sh_offset > woody->text_p_end_offset)
@@ -57,13 +56,21 @@ void silvio_text_infection(t_woody *woody)
         }
         else if (woody->shdr[i].sh_addr + woody->shdr[i].sh_size == woody->payload_vaddr)
         {
-            woody->text_s_offset = woody->shdr[i].sh_offset;
-            woody->encrypt_start_offset = woody->shdr[i].sh_offset + woody->old_entry_point - woody->shdr[i].sh_addr;
-            woody->encrypt_end_offset = woody->encrypt_start_offset + woody->shdr[i].sh_size;
-            woody->text_s_size = woody->shdr[i].sh_size;
             woody->shdr[i].sh_size += woody->payload_size;
         }
+        if (!strncmp(SECTION_TO_ENCRYPT_NAME, (woody->string_table_ptr + woody->shdr[i].sh_name), strlen(SECTION_TO_ENCRYPT_NAME)))
+        {
+            printf("find section name %s\n", SECTION_TO_ENCRYPT_NAME);
+            woody->encrypt_s_start_offset = woody->shdr[i].sh_offset;
+            woody->encrypt_s_size = woody->shdr[i].sh_size;
+            woody->encrypt_s_end_offset = woody->encrypt_s_start_offset + woody->encrypt_s_size;
+            woody->encrypt_s_addr = woody->shdr[i].sh_addr;
+            woody->shdr[i].sh_flags |= SHF_WRITE;
+        }
     }
+
+    // Increase section header offset by PAGE_SIZE
+    woody->ehdr->e_shoff += PAGE_SIZE;
 
     if (ARCH_32)
     {
@@ -76,6 +83,8 @@ void silvio_text_infection(t_woody *woody)
         overwrite_payload_ret2oep(woody);
         overwrite_payload_settextsectionsize(woody);
     }
+
+    print_woody_infos(woody);
 
     // Copy until text end section
     memcpy(woody->infected_file, woody->mmap_ptr, (size_t)woody->text_p_end_offset);

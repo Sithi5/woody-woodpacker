@@ -14,6 +14,7 @@
 
 void choose_infection_method(t_woody *woody)
 {
+    set_string_table_ptr(woody);
     load_payload(woody, PAYLOAD_NAME);
 
     for (size_t i = 0; i < woody->ehdr->e_phnum; i++)
