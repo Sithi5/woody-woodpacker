@@ -130,6 +130,8 @@ typedef struct s_woody
     t_elf_addr old_entry_point;
     t_elf_addr payload_vaddr;
 
+    t_elf_off encrypt_start_offset;
+    t_elf_off encrypt_end_offset;
     t_elf_off text_p_start_offset;
     t_elf_off text_p_end_offset;
     t_elf_off text_p_size;
@@ -147,17 +149,15 @@ typedef struct s_woody
 /*                          FUNCTIONS DEFINITIONS                           */
 /****************************************************************************/
 
-void error(int err, t_woody *woody);
-void free_woody(t_woody *woody);
-void pt_note_to_pt_load_infection(t_woody *woody);
-void cipher_woody_file_data(t_woody *woody);
-void print_memory(void *memory_ptr, size_t memory_size);
 void check_elf_header(t_woody *woody);
+
 void key_generator(t_woody *woody);
+void cipher_woody_file_data(t_woody *woody);
 char *rc4_cipher(t_woody *woody, char *data, int len);
 
 void choose_infection_method(t_woody *woody);
 void silvio_text_infection(t_woody *woody);
+void pt_note_to_pt_load_infection(t_woody *woody);
 
 size_t find_keysection_offset(t_woody *woody);
 size_t find_ret2oep_offset(t_woody *woody);
@@ -171,6 +171,10 @@ void overwrite_keysection_payload(t_woody *woody);
 void load_payload(t_woody *woody, char *payload_name);
 
 void set_woody_ptrs_to_null(t_woody *woody);
+void print_woody_infos(t_woody *woody);
+void print_memory(void *memory_ptr, size_t memory_size);
+void free_woody(t_woody *woody);
+void error(int err, t_woody *woody);
 
 /****************************************************************************/
 /*                          ASM FUNCTIONS DEFINITIONS                       */

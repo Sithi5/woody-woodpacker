@@ -58,6 +58,8 @@ void silvio_text_infection(t_woody *woody)
         else if (woody->shdr[i].sh_addr + woody->shdr[i].sh_size == woody->payload_vaddr)
         {
             woody->text_s_offset = woody->shdr[i].sh_offset;
+            woody->encrypt_start_offset = woody->shdr[i].sh_offset + woody->old_entry_point - woody->shdr[i].sh_addr;
+            woody->encrypt_end_offset = woody->encrypt_start_offset + woody->shdr[i].sh_size;
             woody->text_s_size = woody->shdr[i].sh_size;
             woody->shdr[i].sh_size += woody->payload_size;
         }
@@ -74,16 +76,6 @@ void silvio_text_infection(t_woody *woody)
         overwrite_payload_ret2oep(woody);
         overwrite_payload_settextsectionsize(woody);
     }
-
-    printf("\n");
-    printf("Offsets:\n");
-    printf("\twoody->text_s_offset:\t\t\t\t\t%lu\n", woody->text_s_offset);
-    printf("\twoody->text_s_size:\t\t\t\t\t%lu\n", woody->text_s_size);
-    printf("Adresses:\n");
-    printf("\twoody->old_entry_point:\t\t\t\t0x%lx -> %lu\n", woody->old_entry_point, woody->old_entry_point);
-    printf("\twoody->new_entry_point:\t\t\t\t0x%lx -> %lu\n", woody->new_entry_point, woody->new_entry_point);
-    printf("\twoody->text_p_vaddr:\t\t\t\t0x%lx -> %lu\n", woody->text_p_vaddr, woody->text_p_vaddr);
-    printf("\n");
 
     // Copy until text end section
     memcpy(woody->infected_file, woody->mmap_ptr, (size_t)woody->text_p_end_offset);
