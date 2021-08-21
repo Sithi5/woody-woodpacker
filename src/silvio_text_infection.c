@@ -75,7 +75,7 @@ void silvio_text_infection(t_woody *woody)
     if (ARCH_64)
     {
         // Rewrite text section with cipher data.
-        memcpy(woody->infected_file + woody->text_start_offset, woody->cipher, (size_t)(woody->text_end_offset - woody->text_start_offset));
+        memcpy(woody->infected_file + woody->text_start_offset, woody->cipher, woody->cipher_size);
     }
     // Insert payload
     memcpy(woody->infected_file + woody->text_end_offset, woody->payload_data, woody->payload_size);

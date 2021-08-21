@@ -121,6 +121,7 @@ typedef struct s_woody
     char *encryption_key;
 
     void *cipher;
+    size_t cipher_size;
 
     t_elf_ehdr *ehdr;
     t_elf_phdr *phdr;
