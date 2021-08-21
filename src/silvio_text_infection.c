@@ -72,8 +72,14 @@ void silvio_text_infection(t_woody *woody)
     // Insert binary before text section
     memcpy(woody->infected_file, woody->mmap_ptr, (size_t)woody->text_end_offset);
 
-    if (ARCH_64)
+    if (woody->text_start_offset <= sizeof(t_elf_ehdr))
     {
+        // Rewrite text section with cipher data exept for elfheader.
+        memcpy(woody->infected_file + woody->text_start_offset + sizeof(t_elf_ehdr), woody->cipher, woody->cipher_size);
+    }
+    else
+    {
+
         // Rewrite text section with cipher data.
         memcpy(woody->infected_file + woody->text_start_offset, woody->cipher, woody->cipher_size);
     }
