@@ -15,7 +15,6 @@
 void silvio_text_infection(t_woody *woody)
 {
 
-    // print_woody_infos(woody);
     // Create the output file
     if (!(woody->infected_file = malloc(woody->binary_data_size + PAGE_SIZE)))
     {
@@ -60,11 +59,9 @@ void silvio_text_infection(t_woody *woody)
         }
         if (!strncmp(SECTION_TO_ENCRYPT_NAME, (woody->string_table_ptr + woody->shdr[i].sh_name), strlen(SECTION_TO_ENCRYPT_NAME)))
         {
-            printf("find section name %s\n", SECTION_TO_ENCRYPT_NAME);
             woody->encrypt_s_start_offset = woody->shdr[i].sh_offset;
             woody->encrypt_s_size = woody->shdr[i].sh_size;
             woody->encrypt_s_end_offset = woody->encrypt_s_start_offset + woody->encrypt_s_size;
-            woody->encrypt_s_addr = woody->shdr[i].sh_addr;
             woody->shdr[i].sh_flags |= SHF_WRITE;
         }
     }
@@ -86,14 +83,11 @@ void silvio_text_infection(t_woody *woody)
         overwrite_payload_settextsectionsize(woody);
     }
 
-    print_woody_infos(woody);
-
-    // Copy until text end section
+    // Copy until text program end
     memcpy(woody->infected_file, woody->mmap_ptr, (size_t)woody->text_p_end_offset);
-
     // Rewrite text section with cipher data.
-    memcpy(woody->infected_file + woody->encrypt_s_start_offset, woody->cipher, woody->cipher_size);
-    // Insert payload after text end section
+    memcpy(woody->infected_file + woody->encrypt_s_start_offset, woody->cipher, woody->encrypt_s_size);
+    // Insert payload after text program end
     memcpy(woody->infected_file + woody->text_p_end_offset, woody->payload_data, woody->payload_size);
     // Insert rest of binary
     memcpy(woody->infected_file + woody->text_p_end_offset + PAGE_SIZE, woody->mmap_ptr + woody->text_p_end_offset, woody->binary_data_size - woody->text_p_end_offset);

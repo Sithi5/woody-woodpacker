@@ -124,7 +124,6 @@ typedef struct s_woody
     char *encryption_key;
 
     void *cipher;
-    size_t cipher_size;
 
     t_elf_ehdr *ehdr;
     t_elf_phdr *phdr;
@@ -140,7 +139,6 @@ typedef struct s_woody
 
     t_elf_off encrypt_s_start_offset;
     t_elf_off encrypt_s_end_offset;
-    t_elf_addr encrypt_s_addr;
     size_t encrypt_s_size;
 
     int ret2oep_offset;

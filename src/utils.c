@@ -39,8 +39,8 @@ void print_woody_infos(t_woody *woody)
 {
     printf("\n");
     printf("Elf ehdr:\n");
-    printf("\twoody->ehdr->e_phoff:\t\t\t\t%u\n", woody->ehdr->e_phoff);       /* Program header table file offset */
-    printf("\twoody->ehdr->e_shoff:\t\t\t\t%u\n", woody->ehdr->e_shoff);       /* Section header table file offset */
+    printf("\twoody->ehdr->e_phoff:\t\t\t\t%lu\n", woody->ehdr->e_phoff);      /* Program header table file offset */
+    printf("\twoody->ehdr->e_shoff:\t\t\t\t%lu\n", woody->ehdr->e_shoff);      /* Section header table file offset */
     printf("\twoody->ehdr->e_flags:\t\t\t\t%u\n", woody->ehdr->e_flags);       /* Processor-specific flags */
     printf("\twoody->ehdr->e_ehsize:\t\t\t\t%u\n", woody->ehdr->e_ehsize);     /* ELF header size in bytes */
     printf("\twoody->ehdr->e_phentsize:\t\t\t%u\n", woody->ehdr->e_phentsize); /* Program header table entry size */
@@ -57,7 +57,6 @@ void print_woody_infos(t_woody *woody)
     printf("\twoody->old_entry_point:\t\t\t\t0x%lx -> %lu\n", woody->old_entry_point, woody->old_entry_point);
     printf("\twoody->new_entry_point:\t\t\t\t0x%lx -> %lu\n", woody->new_entry_point, woody->new_entry_point);
     printf("\twoody->text_p_vaddr:\t\t\t\t0x%lx -> %lu\n", woody->text_p_vaddr, woody->text_p_vaddr);
-    printf("\twoody->encrypt_s_addr:\t\t\t\t0x%lx -> %lu\n", woody->encrypt_s_addr, woody->encrypt_s_addr);
     printf("\n");
 }
 

@@ -14,22 +14,19 @@
 
 void cipher_woody_file_data(t_woody *woody)
 {
-    woody->cipher_size = woody->encrypt_s_size;
-    printf("woody->cipher_size = %u\n", woody->cipher_size);
-    printf("woody->encrypt_s_start_offset = %u\n", woody->encrypt_s_start_offset);
-    if (!(woody->cipher = (void *)malloc(woody->cipher_size)))
+    if (!(woody->cipher = (void *)malloc(woody->encrypt_s_size)))
         error(ERROR_MALLOC, woody);
-    memcpy(woody->cipher, woody->mmap_ptr + woody->encrypt_s_start_offset, woody->cipher_size);
+    memcpy(woody->cipher, woody->mmap_ptr + woody->encrypt_s_start_offset, woody->encrypt_s_size);
 
     key_generator(woody);
     if (ARCH_32)
     {
         printf("ARCH 32 CIPHER\n");
-        // asm_xor_cipher(woody->cipher, woody->cipher_size, woody->encryption_key, KEY_LEN);
+        // asm_xor_cipher(woody->cipher, woody->encrypt_s_size, woody->encryption_key, KEY_LEN);
     }
     else if (ARCH_64)
     {
         printf("ARCH 64 CIPHER\n");
-        rc4_cipher_start(woody->cipher, woody->cipher_size, woody->encryption_key, KEY_LEN);
+        rc4_cipher_start(woody->cipher, woody->encrypt_s_size, woody->encryption_key, KEY_LEN);
     }
 }
