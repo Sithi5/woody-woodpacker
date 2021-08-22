@@ -14,21 +14,12 @@
 
 void cipher_woody_file_data(t_woody *woody)
 {
-    if (woody->text_p_start_offset <= sizeof(t_elf_ehdr))
-    {
-        // Do not encrypt elfheader
-        woody->cipher_size = woody->text_p_end_offset - woody->text_p_start_offset - sizeof(t_elf_ehdr);
-        if (!(woody->cipher = (void *)malloc(woody->cipher_size)))
-            error(ERROR_MALLOC, woody);
-        memcpy(woody->cipher, woody->mmap_ptr + woody->text_p_start_offset + sizeof(t_elf_ehdr), woody->cipher_size);
-    }
-    else
-    {
-        woody->cipher_size = woody->text_p_end_offset - woody->text_p_start_offset;
-        if (!(woody->cipher = (void *)malloc(woody->cipher_size)))
-            error(ERROR_MALLOC, woody);
-        memcpy(woody->cipher, woody->mmap_ptr + woody->text_p_start_offset, woody->cipher_size);
-    }
+    woody->cipher_size = woody->encrypt_s_size;
+    printf("woody->cipher_size = %u\n", woody->cipher_size);
+    printf("woody->encrypt_s_start_offset = %u\n", woody->encrypt_s_start_offset);
+    if (!(woody->cipher = (void *)malloc(woody->cipher_size)))
+        error(ERROR_MALLOC, woody);
+    memcpy(woody->cipher, woody->mmap_ptr + woody->encrypt_s_start_offset, woody->cipher_size);
 
     key_generator(woody);
     if (ARCH_32)

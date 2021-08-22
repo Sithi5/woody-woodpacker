@@ -176,7 +176,7 @@ void overwrite_payload_ret2textsection(t_woody *woody)
     // Rewrite new entry_point in payload ret2textsection.
     memcpy(woody->payload_data + ret2textsection_offset + 8, (void *)&(woody->new_entry_point), 4);
     // Rewrite old entry_point in payload ret2textsection.
-    memcpy(woody->payload_data + ret2textsection_offset + 14, (void *)&(woody->text_p_vaddr), 4);
+    memcpy(woody->payload_data + ret2textsection_offset + 14, (void *)&(woody->old_entry_point), 4);
 }
 
 // Rewrite info in payload settextsectionsize.
@@ -184,13 +184,12 @@ void overwrite_payload_settextsectionsize(t_woody *woody)
 {
     size_t settextsectionsize_offset = find_settextsectionsize_offset_elf64(woody);
     // Rewrite settextsectionsize_offset + 2 to skip two first instructions and go to textoffset value.
-    memcpy(woody->payload_data + settextsectionsize_offset + 2, (void *)&(woody->text_p_size), 4);
+    memcpy(woody->payload_data + settextsectionsize_offset + 2, (void *)&(woody->encrypt_s_size), 4);
 }
 
 void overwrite_keysection_payload(t_woody *woody)
 {
     size_t keysection_offset = find_keysection_offset(woody);
-    printf("\n\n");
     memcpy(woody->payload_data + keysection_offset, woody->encryption_key, KEY_LEN);
 }
 

@@ -133,15 +133,15 @@ typedef struct s_woody
     t_elf_addr old_entry_point;
     t_elf_addr payload_vaddr;
 
-    t_elf_off encrypt_s_start_offset;
-    t_elf_off encrypt_s_end_offset;
-    t_elf_addr encrypt_s_addr;
-    size_t encrypt_s_size;
-
     t_elf_off text_p_start_offset;
     t_elf_off text_p_end_offset;
     t_elf_off text_p_size;
     t_elf_addr text_p_vaddr;
+
+    t_elf_off encrypt_s_start_offset;
+    t_elf_off encrypt_s_end_offset;
+    t_elf_addr encrypt_s_addr;
+    size_t encrypt_s_size;
 
     int ret2oep_offset;
 
