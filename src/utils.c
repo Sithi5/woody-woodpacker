@@ -38,6 +38,10 @@ void free_woody(t_woody *woody)
 void print_woody_infos(t_woody *woody)
 {
     printf("\n");
+    printf("Infos:\n");
+    printf("\tARCHITECTURE:\t\t\t\t\t%s\n", ARCH_32 ? "ARCH_32" : "ARCH_64");
+    printf("\tPAGE_SIZE:\t\t\t\t\t%lu\n", PAGE_SIZE);
+    printf("\tPAYLOAD_SIZE:\t\t\t\t\t%lu\n", woody->payload_size);
     printf("Elf ehdr:\n");
     printf("\twoody->ehdr->e_phoff:\t\t\t\t%lu\n", woody->ehdr->e_phoff);      /* Program header table file offset */
     printf("\twoody->ehdr->e_shoff:\t\t\t\t%lu\n", woody->ehdr->e_shoff);      /* Section header table file offset */
@@ -60,12 +64,21 @@ void print_woody_infos(t_woody *woody)
     printf("\n");
 }
 
-void print_memory(void *memory_ptr, size_t memory_size)
+void print_memory_hex(void *memory_ptr, size_t memory_size)
 {
     printf("printing memory at address : %p :\n\n", memory_ptr);
     for (size_t i = 0; i < memory_size; i++)
     {
         printf("%x ", ((char *)(memory_ptr))[i]);
     }
-    printf("\n\n");
+    printf("\n");
+}
+
+void print_memory_char(void *memory_ptr, size_t memory_size)
+{
+    for (size_t i = 0; i < memory_size; i++)
+    {
+        printf("%c", ((char *)(memory_ptr))[i]);
+    }
+    printf("\n");
 }
