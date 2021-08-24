@@ -85,11 +85,11 @@ void silvio_text_infection(t_woody *woody)
     }
 
     // Copy until text program end
-    memcpy(woody->infected_file, woody->mmap_ptr, woody->text_p_end_offset);
+    ft_memcpy(woody->infected_file, woody->mmap_ptr, woody->text_p_end_offset);
     // Rewrite text section with cipher data.
-    memcpy(woody->infected_file + woody->encrypt_s_start_offset, woody->cipher, woody->encrypt_s_size);
+    ft_memcpy(woody->infected_file + woody->encrypt_s_start_offset, woody->cipher, woody->encrypt_s_size);
     // Insert payload after text program end
-    memcpy(woody->infected_file + woody->text_p_end_offset, woody->payload_data, woody->payload_size);
+    ft_memcpy(woody->infected_file + woody->text_p_end_offset, woody->payload_data, woody->payload_size);
     // Insert rest of binary
-    memcpy(woody->infected_file + woody->text_p_end_offset + PAGE_SIZE, woody->mmap_ptr + woody->text_p_end_offset, woody->binary_data_size - woody->text_p_end_offset);
+    ft_memcpy(woody->infected_file + woody->text_p_end_offset + PAGE_SIZE, woody->mmap_ptr + woody->text_p_end_offset, woody->binary_data_size - woody->text_p_end_offset);
 }

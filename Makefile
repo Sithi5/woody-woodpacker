@@ -225,8 +225,8 @@ help:
 	@echo "$(_YELLOW)Usage:                                                                    "
 	@echo "$(_YELLOW)   make                                runs all                           "
 	@echo "$(_YELLOW)   make all                            generates all binaries             "
-	@echo "$(_YELLOW)   make clean_payload                  clean payload binary               "
 	@echo "$(_YELLOW)   make clean                          remove the generated files         "
+	@echo "$(_YELLOW)   make fclean                  		clean and remove binaries files    "
 	@echo "$(_YELLOW)   make tests                          launch tests scripts               "
 	@echo "$(_YELLOW)   make help                           prints this message                $(_END)"
 

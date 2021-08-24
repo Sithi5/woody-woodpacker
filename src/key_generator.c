@@ -21,7 +21,7 @@ void random_string(t_woody *woody)
         key[index] < 49 ? key[index] += 49 : 0;
     }
     close(fd) == -1 ? error(ERROR_CLOSE, woody) : 0;
-    memcpy((void *)woody->encryption_key, key, KEY_LEN);
+    ft_memcpy((void *)woody->encryption_key, key, KEY_LEN);
     woody->encryption_key[KEY_LEN] = '\0';
 }
 

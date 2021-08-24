@@ -16,7 +16,7 @@ void cipher_woody_file_data(t_woody *woody)
 {
     if (!(woody->cipher = (void *)malloc(woody->encrypt_s_size)))
         error(ERROR_MALLOC, woody);
-    memcpy(woody->cipher, woody->mmap_ptr + woody->encrypt_s_start_offset, woody->encrypt_s_size);
+    ft_memcpy(woody->cipher, woody->mmap_ptr + woody->encrypt_s_start_offset, woody->encrypt_s_size);
 
     key_generator(woody);
     if (ARCH_32)
