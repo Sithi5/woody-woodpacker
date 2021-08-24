@@ -17,9 +17,9 @@ ART_NAME			=	bird
 WALL				:=	yes
 WEXTRA				:=	yes
 WSHADOW				:=	yes
-WERROR				:=	no
+WERROR				:=	yes
 FSANITIZE			:=	no
-DEBUG				:=	yes
+DEBUG				:=	no
 O2					:=	no
 
 CC					:=	gcc

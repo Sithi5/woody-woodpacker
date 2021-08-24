@@ -40,7 +40,7 @@ void print_woody_infos(t_woody *woody)
     printf("\n");
     printf("Infos:\n");
     printf("\tARCHITECTURE:\t\t\t\t\t%s\n", ARCH_32 ? "ARCH_32" : "ARCH_64");
-    printf("\tPAGE_SIZE:\t\t\t\t\t%lu\n", PAGE_SIZE);
+    printf("\tPAGE_SIZE:\t\t\t\t\t%u\n", PAGE_SIZE);
     printf("\tPAYLOAD_SIZE:\t\t\t\t\t%lu\n", woody->payload_size);
     printf("Elf ehdr:\n");
     printf("\twoody->ehdr->e_phoff:\t\t\t\t%lu\n", woody->ehdr->e_phoff);      /* Program header table file offset */
