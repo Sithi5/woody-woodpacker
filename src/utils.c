@@ -61,6 +61,7 @@ void print_woody_infos(t_woody *woody)
     printf("\twoody->old_entry_point:\t\t\t\t0x%lx -> %lu\n", woody->old_entry_point, woody->old_entry_point);
     printf("\twoody->new_entry_point:\t\t\t\t0x%lx -> %lu\n", woody->new_entry_point, woody->new_entry_point);
     printf("\twoody->text_p_vaddr:\t\t\t\t0x%lx -> %lu\n", woody->text_p_vaddr, woody->text_p_vaddr);
+    printf("\twoody->encrypt_s_addr:\t\t\t\t0x%lx -> %lu\n", woody->encrypt_s_addr, woody->encrypt_s_addr);
     printf("\n");
 }
 

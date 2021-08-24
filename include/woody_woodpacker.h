@@ -78,7 +78,7 @@ enum e_error
 #define OUTPUT_FILE_NAME "woody"
 #define PAYLOAD_NAME "payload"
 
-#define SECTION_TO_ENCRYPT_NAME ".text"
+#define SECTION_TO_ENCRYPT_NAME ".bss"
 
 /* Custom types for 32bit compatibility. */
 #ifdef ARCH_32
@@ -140,6 +140,7 @@ typedef struct s_woody
     t_elf_off encrypt_s_start_offset;
     t_elf_off encrypt_s_end_offset;
     size_t encrypt_s_size;
+    t_elf_addr encrypt_s_addr;
 
     int ret2oep_offset;
 
@@ -164,12 +165,12 @@ void pt_note_to_pt_load_infection(t_woody *woody);
 
 size_t find_keysection_offset(t_woody *woody);
 size_t find_ret2oep_offset(t_woody *woody);
-size_t find_ret2encryptedsection_offset_elf64(t_woody *woody);
-size_t find_retencryptedsectionsize_offset_elf64(t_woody *woody);
+size_t find_getencryptedsectionaddr_offset_elf64(t_woody *woody);
+size_t find_getencryptedsectionsize_offset_elf64(t_woody *woody);
 
 void overwrite_payload_ret2oep(t_woody *woody);
-void overwrite_payload_ret2encryptedsection(t_woody *woody);
-void overwrite_payload_retencryptedsectionsize(t_woody *woody);
+void overwrite_payload_getencryptedsectionaddr(t_woody *woody);
+void overwrite_payload_getencryptedsectionsize(t_woody *woody);
 void overwrite_keysection_payload(t_woody *woody);
 void load_payload(t_woody *woody, char *payload_name);
 

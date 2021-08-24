@@ -61,6 +61,7 @@ void silvio_text_infection(t_woody *woody)
             woody->encrypt_s_start_offset = woody->shdr[i].sh_offset;
             woody->encrypt_s_size = woody->shdr[i].sh_size;
             woody->encrypt_s_end_offset = woody->encrypt_s_start_offset + woody->encrypt_s_size;
+            woody->encrypt_s_addr = woody->shdr[i].sh_addr;
             woody->shdr[i].sh_flags |= SHF_WRITE;
         }
     }
@@ -78,9 +79,9 @@ void silvio_text_infection(t_woody *woody)
     else if (ARCH_64)
     {
         overwrite_keysection_payload(woody);
-        overwrite_payload_ret2encryptedsection(woody);
+        overwrite_payload_getencryptedsectionaddr(woody);
         overwrite_payload_ret2oep(woody);
-        overwrite_payload_retencryptedsectionsize(woody);
+        overwrite_payload_getencryptedsectionsize(woody);
     }
 
     // Copy until text program end
