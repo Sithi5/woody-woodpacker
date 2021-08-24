@@ -14,7 +14,6 @@
 
 void silvio_text_infection(t_woody *woody)
 {
-
     // Create the output file
     if (!(woody->infected_file = malloc(woody->binary_data_size + PAGE_SIZE)))
     {
@@ -68,6 +67,7 @@ void silvio_text_infection(t_woody *woody)
 
     // Increase section header offset by PAGE_SIZE
     woody->ehdr->e_shoff += PAGE_SIZE;
+    print_woody_infos(woody);
 
     cipher_woody_file_data(woody);
 
@@ -78,9 +78,9 @@ void silvio_text_infection(t_woody *woody)
     else if (ARCH_64)
     {
         overwrite_keysection_payload(woody);
-        overwrite_payload_ret2textsection(woody);
+        overwrite_payload_ret2encryptedsection(woody);
         overwrite_payload_ret2oep(woody);
-        overwrite_payload_settextsectionsize(woody);
+        overwrite_payload_retencryptedsectionsize(woody);
     }
 
     // Copy until text program end
