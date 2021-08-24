@@ -8,6 +8,8 @@ SECTION .data
         stream: times 256 db 0x00
 
 SECTION .text
+%define WRITE 1
+%define STDOUT 1
 
 _start_payload:
     push rax                 ; save all clobbered registers
@@ -37,8 +39,8 @@ _end_payload:
     ret
 
 _print_woody:
-    mov rax,1                       ; sys_write
-    mov rdi,1                       ; stdout
+    mov rax,WRITE                       ; sys_write
+    mov rdi,STDOUT                       ; stdout
     mov rdx,woody_msg_len           ;len
     lea rsi,[rel $+woody_msg-$]     ; woody
     syscall

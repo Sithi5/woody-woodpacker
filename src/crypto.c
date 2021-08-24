@@ -27,6 +27,6 @@ void cipher_woody_file_data(t_woody *woody)
     else if (ARCH_64)
     {
         printf("ARCH 64 CIPHER\n");
-        rc4_cipher_start(woody->cipher, woody->encrypt_s_size, woody->encryption_key, KEY_LEN);
+        // rc4_cipher_start(woody->cipher, woody->encrypt_s_size, woody->encryption_key, KEY_LEN);
     }
 }
