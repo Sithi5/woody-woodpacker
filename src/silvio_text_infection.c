@@ -21,9 +21,6 @@ void silvio_text_infection(t_woody *woody)
     }
     woody->infected_file_size = woody->binary_data_size + PAGE_SIZE;
 
-    // Set a flag in the EI_PAD header padding that indicate the file have been infected.
-    woody->ehdr->e_ident[EI_PAD + 3] = 7;
-
     for (size_t i = 0; i < woody->ehdr->e_phnum; i++)
     {
         if (woody->phdr[i].p_type == PT_LOAD && woody->phdr[i].p_flags == (PF_R | PF_X))
@@ -56,7 +53,9 @@ void silvio_text_infection(t_woody *woody)
         {
             woody->shdr[i].sh_size += woody->payload_size;
         }
-        if (!strncmp(SECTION_TO_ENCRYPT_NAME, (woody->string_table_ptr + woody->shdr[i].sh_name), strlen(SECTION_TO_ENCRYPT_NAME)))
+        if (!strncmp(SECTION_TO_ENCRYPT_NAME,
+                     (woody->string_table_ptr + woody->shdr[i].sh_name),
+                     strlen(SECTION_TO_ENCRYPT_NAME)))
         {
             woody->encrypt_s_start_offset = woody->shdr[i].sh_offset;
             woody->encrypt_s_size = woody->shdr[i].sh_size;
@@ -72,6 +71,11 @@ void silvio_text_infection(t_woody *woody)
 
     cipher_woody_file_data(woody);
 
+    for (int i = 0; i < woody->payload_size; i++)
+    {
+        printf("%x ", ((char *)woody->payload_data)[i]);
+    }
+
     if (ARCH_32)
     {
         overwrite_payload_ret2oep(woody);
@@ -82,6 +86,11 @@ void silvio_text_infection(t_woody *woody)
         overwrite_payload_getencryptedsectionaddr(woody);
         overwrite_payload_ret2oep(woody);
         overwrite_payload_getencryptedsectionsize(woody);
+    }
+
+    for (int i = 0; i < woody->payload_size; i++)
+    {
+        printf("%x ", ((char *)woody->payload_data)[i]);
     }
 
     // Copy until text program end

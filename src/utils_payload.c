@@ -183,7 +183,7 @@ void overwrite_payload_getencryptedsectionaddr(t_woody *woody)
 void overwrite_payload_getencryptedsectionsize(t_woody *woody)
 {
     size_t getencryptedsectionsize_offset = find_getencryptedsectionsize_offset_elf64(woody);
-    // Rewrite getencryptedsectionsize_offset + 2 to skip two first instructions and go to textoffset value.
+    // Rewrite getencryptedsectionsize_offset + 2 to skip two first instructions and go to encrypted_size value.
     memcpy(woody->payload_data + getencryptedsectionsize_offset + 2, (void *)&(woody->encrypt_s_size), 4);
 }
 

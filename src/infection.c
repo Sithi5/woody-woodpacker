@@ -17,6 +17,9 @@ void choose_infection_method(t_woody *woody)
     set_string_table_ptr(woody);
     load_payload(woody, PAYLOAD_NAME);
 
+    // Set a flag in the EI_PAD header padding that indicate the file have been infected.
+    woody->ehdr->e_ident[EI_PAD + 3] = 7;
+
     for (size_t i = 0; i < woody->ehdr->e_phnum; i++)
     {
         if (woody->phdr[i].p_type == PT_LOAD && woody->phdr[i].p_flags == (PF_R | PF_X))

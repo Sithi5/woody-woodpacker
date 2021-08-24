@@ -78,7 +78,7 @@ enum e_error
 #define OUTPUT_FILE_NAME "woody"
 #define PAYLOAD_NAME "payload"
 
-#define SECTION_TO_ENCRYPT_NAME ".bss"
+#define SECTION_TO_ENCRYPT_NAME ".text"
 
 /* Custom types for 32bit compatibility. */
 #ifdef ARCH_32
@@ -176,7 +176,8 @@ void load_payload(t_woody *woody, char *payload_name);
 
 void set_woody_ptrs_to_null(t_woody *woody);
 void print_woody_infos(t_woody *woody);
-void print_memory(void *memory_ptr, size_t memory_size);
+void print_memory_hex(void *memory_ptr, size_t memory_size);
+void print_memory_char(void *memory_ptr, size_t memory_size);
 void free_woody(t_woody *woody);
 void error(int err, t_woody *woody);
 
