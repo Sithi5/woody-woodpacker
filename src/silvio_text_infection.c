@@ -61,13 +61,12 @@ void silvio_text_infection(t_woody *woody)
             woody->encrypt_s_size = woody->shdr[i].sh_size;
             woody->encrypt_s_end_offset = woody->encrypt_s_start_offset + woody->encrypt_s_size;
             woody->encrypt_s_addr = woody->shdr[i].sh_addr;
-            // woody->shdr[i].sh_flags |= SHF_WRITE;
+            woody->shdr[i].sh_flags |= SHF_WRITE;
         }
     }
 
     // Increase section header offset by PAGE_SIZE
     woody->ehdr->e_shoff += PAGE_SIZE;
-    print_woody_infos(woody);
 
     cipher_woody_file_data(woody);
 

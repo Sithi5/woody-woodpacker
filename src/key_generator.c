@@ -27,7 +27,7 @@ void random_string(t_woody *woody)
 
 void print_key(t_woody *woody)
 {
-    printf("key :\n");
+    printf("key : ");
     printf("%s\n", woody->encryption_key);
 }
 

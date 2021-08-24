@@ -21,12 +21,10 @@ void cipher_woody_file_data(t_woody *woody)
     key_generator(woody);
     if (ARCH_32)
     {
-        printf("ARCH 32 CIPHER\n");
         // asm_xor_cipher(woody->cipher, woody->encrypt_s_size, woody->encryption_key, KEY_LEN);
     }
     else if (ARCH_64)
     {
-        printf("ARCH 64 CIPHER\n");
         rc4_cipher_start(woody->cipher, woody->encrypt_s_size, woody->encryption_key, KEY_LEN);
     }
 }

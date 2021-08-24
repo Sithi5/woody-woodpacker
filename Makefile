@@ -101,7 +101,6 @@ SRC_NAME			:=	main.c								\
 						infection.c							\
 						utils_payload.c						\
 						silvio_text_infection.c				\
-						pt_note_to_pt_load_infection.c		\
 						crypto.c							\
 						key_generator.c						\
 
