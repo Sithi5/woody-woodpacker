@@ -53,9 +53,9 @@ void silvio_text_infection(t_woody *woody)
         {
             woody->shdr[i].sh_size += woody->payload_size;
         }
-        if (!strncmp(SECTION_TO_ENCRYPT_NAME,
-                     (woody->string_table_ptr + woody->shdr[i].sh_name),
-                     strlen(SECTION_TO_ENCRYPT_NAME)))
+        if (!ft_strncmp(SECTION_TO_ENCRYPT_NAME,
+                        (woody->string_table_ptr + woody->shdr[i].sh_name),
+                        strlen(SECTION_TO_ENCRYPT_NAME)))
         {
             woody->encrypt_s_start_offset = woody->shdr[i].sh_offset;
             woody->encrypt_s_size = woody->shdr[i].sh_size;
