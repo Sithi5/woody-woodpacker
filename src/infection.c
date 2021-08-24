@@ -29,6 +29,9 @@ void choose_infection_method(t_woody *woody)
             woody->text_p_end_offset = woody->phdr[i].p_offset + woody->phdr[i].p_filesz;
             woody->text_p_size = woody->phdr[i].p_filesz;
 
+            reverse_text_infection(woody);
+            break;
+
             // Check if there is enought space for our payload in the text section.
             if (woody->text_p_end_offset % PAGE_SIZE + woody->payload_size < PAGE_SIZE)
             {
