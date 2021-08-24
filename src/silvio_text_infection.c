@@ -71,11 +71,6 @@ void silvio_text_infection(t_woody *woody)
 
     cipher_woody_file_data(woody);
 
-    for (int i = 0; i < woody->payload_size; i++)
-    {
-        printf("%x ", ((char *)woody->payload_data)[i]);
-    }
-
     if (ARCH_32)
     {
         overwrite_payload_ret2oep(woody);
@@ -86,11 +81,6 @@ void silvio_text_infection(t_woody *woody)
         overwrite_payload_getencryptedsectionaddr(woody);
         overwrite_payload_ret2oep(woody);
         overwrite_payload_getencryptedsectionsize(woody);
-    }
-
-    for (int i = 0; i < woody->payload_size; i++)
-    {
-        printf("%x ", ((char *)woody->payload_data)[i]);
     }
 
     // Copy until text program end

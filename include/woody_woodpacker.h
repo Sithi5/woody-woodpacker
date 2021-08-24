@@ -78,6 +78,7 @@ enum e_error
 #define OUTPUT_FILE_NAME "woody"
 #define PAYLOAD_NAME "payload"
 
+#define TEXT_SECTION_NAME ".text"
 #define SECTION_TO_ENCRYPT_NAME ".text"
 
 /* Custom types for 32bit compatibility. */
