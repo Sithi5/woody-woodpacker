@@ -50,8 +50,6 @@ void data_segment_infection(t_woody *woody)
         }
     }
 
-    printf("data_p_end_offset = %lu\n", data_p_end_offset);
-
     if (data_p_end_offset % PAGE_SIZE + woody->payload_size > PAGE_SIZE)
     {
         error(ERROR_NOT_ENOUGHT_SPACE_FOR_PAYLOAD, woody);
