@@ -14,7 +14,7 @@
 
 void cipher_woody_file_data(t_woody *woody)
 {
-    if (!(woody->cipher = (void *)malloc(woody->encrypt_s_size)))
+    if (!(woody->cipher = (void *)malloc(woody->encrypt_s_size + 8)))
         error(ERROR_MALLOC, woody);
     ft_memcpy(woody->cipher, woody->mmap_ptr + woody->encrypt_s_start_offset, woody->encrypt_s_size);
 

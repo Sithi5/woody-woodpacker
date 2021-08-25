@@ -5,6 +5,10 @@ void random_string(t_woody *woody)
     char key[KEY_LEN];
     int fd;
 
+    for (size_t n = 0; n < KEY_LEN; n++) 
+    {
+        key[n] = 0;
+    }
     if ((fd = open("/dev/random", O_RDONLY)) == -1)
     {
         error(ERROR_OPEN, woody);
@@ -27,8 +31,9 @@ void random_string(t_woody *woody)
 
 void print_key(t_woody *woody)
 {
-    printf("key : ");
-    printf("%s\n", woody->encryption_key);
+    write(1,"key : ",6);
+    write(1,woody->encryption_key,KEY_LEN);
+    write(1,"\n",1);
 }
 
 void key_generator(t_woody *woody)
