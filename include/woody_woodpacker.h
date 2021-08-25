@@ -185,6 +185,7 @@ void free_woody(t_woody *woody);
 void *ft_memcpy(void *dst, const void *src, size_t n);
 size_t ft_strncmp(const char *s1, const char *s2, size_t n);
 size_t ft_strlen(const char *s);
+void ft_bzero(void *s, size_t n);
 void error(int err, t_woody *woody);
 
 /****************************************************************************/
