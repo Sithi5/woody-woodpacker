@@ -134,7 +134,7 @@ typedef struct s_woody
 
     t_elf_off text_p_start_offset;
     t_elf_off text_p_end_offset;
-    t_elf_off text_p_size;
+    size_t text_p_size;
     t_elf_addr text_p_vaddr;
     size_t text_section_size;
 

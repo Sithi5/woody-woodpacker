@@ -44,12 +44,13 @@ void data_segment_infection(t_woody *woody)
 
             woody->phdr[i].p_filesz += woody->payload_size;
             woody->phdr[i].p_memsz += woody->payload_size;
-        }
-        if (woody->phdr[i].p_offset > data_p_end_offset)
-        {
-            woody->phdr[i].p_offset += PAGE_SIZE;
+
+            for (int j = i + 1; j < woody->ehdr->e_phnum; j++)
+                woody->phdr[j].p_offset += PAGE_SIZE;
         }
     }
+
+    printf("data_p_end_offset = %lu\n", data_p_end_offset);
 
     if (data_p_end_offset % PAGE_SIZE + woody->payload_size > PAGE_SIZE)
     {
