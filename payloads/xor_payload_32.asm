@@ -40,12 +40,24 @@ _ret2oep:
     add eax, 0x77777777 ; old entry_point
     ret
 
-; _ret2textsection:
-;     call _get_rip
-;     sub eax, 0x66666666 ; virus size without ret2oep
-;     sub eax, 0x66666666 ; new_entry_point
-;     add eax, 0x66666666 ; start of text section
-;     ret
+_ret2textsection:
+    call _get_rip
+    sub eax, 0x66666666 ; virus size without ret2oep
+    sub eax, 0x66666666 ; new_entry_point
+    add eax, 0x66666666 ; start of text section
+    ret
+
+_getkeylen:
+    mov eax, 0x88888888 ;
+    ret 
+
+_getdatalen:
+    mov eax, 0x33333333
+    ret
+
+_getkey:
+    mov eax, 0x44444444
+    ret
 
 ; _ret2textoffset:
 ;     mov eax, 0x55555555
@@ -61,6 +73,44 @@ _ret2oep:
 ;     mov edx, 0x07
 ;     syscall
 ;     ret
+
+asm_xor_cipher:
+    enter 0,0 ; push ebp, mov ebp, sub esp, N
+
+    call _getkeylen
+    mov edx, eax
+    dec edx ; keylen
+    call _getdatalen
+    mov ecx, eax
+    dec ecx ; datalen
+    call _getkey
+    mov ebx, eax
+    call _ret2textsection
+    jmp _encrypt
+
+_encrypt:
+
+    ;mov eax, [ebp + 8] ; data
+    ;mov ebx, [ebp + 16] ; key
+
+    cmp edx, 0
+    jge .continue
+    ;mov edx, [ebp + 20] ; keylen
+    dec edx ; dec keylen
+    .continue:
+
+    mov esi, [eax + ecx]
+    mov bl, byte[ebx + edx] ; getting key char
+    xor byte[eax + ecx], bl
+
+    dec edx ; dec keylen
+    dec ecx ; datalen
+    cmp ecx, 0
+    jge _encrypt
+
+return:
+    leave ; = mov esp, ebp et pop ebp => la pile reprend son ancien etat
+    ret
 
 _print_woody:
     enter 0,0 ; push ebp, mov ebp, esp

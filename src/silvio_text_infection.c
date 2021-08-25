@@ -77,6 +77,7 @@ void silvio_text_infection(t_woody *woody)
 
     if (ARCH_32)
     {
+        overwrite_keysection_payload(woody);
         overwrite_payload_ret2oep(woody);
     }
     else if (ARCH_64)
