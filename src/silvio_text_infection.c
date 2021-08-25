@@ -93,6 +93,8 @@ void silvio_text_infection(t_woody *woody)
     ft_memcpy(woody->infected_file, woody->mmap_ptr, woody->text_p_end_offset);
     // Rewrite text section with cipher data.
     ft_memcpy(woody->infected_file + woody->encrypt_s_start_offset, woody->cipher, woody->encrypt_s_size);
+    // Initialize value to zero for padding.
+    ft_bzero(woody->infected_file + woody->text_p_end_offset, PAGE_SIZE);
     // Insert payload after text section end
     ft_memcpy(woody->infected_file + woody->text_p_end_offset, woody->payload_data, woody->payload_size);
     // Insert rest of binary

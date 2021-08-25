@@ -118,3 +118,23 @@ size_t ft_strlen(const char *s)
         i++;
     return (i);
 }
+
+void *ft_memset(void *b, int c, size_t len)
+{
+    size_t i;
+
+    i = 0;
+    while (i < len)
+    {
+        ((char *)b)[i] = (char)c;
+        i++;
+    }
+    return (b);
+}
+
+void ft_bzero(void *s, size_t n)
+{
+    if (n == 0)
+        return;
+    ft_memset(s, 0, n);
+}

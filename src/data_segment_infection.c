@@ -115,10 +115,13 @@ void data_segment_infection(t_woody *woody)
     ft_memcpy(woody->infected_file + woody->text_p_end_offset,
               woody->mmap_ptr + woody->text_p_end_offset,
               data_p_end_offset - woody->text_p_end_offset);
+    // Initialize value to zero for padding.
+    ft_bzero(woody->infected_file + data_p_end_offset, PAGE_SIZE);
     // Copy parasite
     ft_memcpy(woody->infected_file + data_p_end_offset,
               woody->payload_data,
               woody->payload_size);
+    // Copy zero for padding
     // Copy rest of file
     ft_memcpy(woody->infected_file + data_p_end_offset + PAGE_SIZE,
               woody->mmap_ptr + data_p_end_offset,
