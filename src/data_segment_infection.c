@@ -25,7 +25,9 @@ void data_segment_infection(t_woody *woody)
         error(ERROR_MALLOC, woody);
     }
     woody->infected_file_size = woody->binary_data_size + PAGE_SIZE;
+    woody->encrypt_s_size = 0;
 
+    data_p_end_offset = 0;
     for (size_t i = 0; i < woody->ehdr->e_phnum; i++)
     {
         /* grab the data segment */
@@ -99,9 +101,6 @@ void data_segment_infection(t_woody *woody)
         overwrite_payload_gettextsize(woody);
     }
 
-    printf("woody->encrypt_s_start_offset = %lu\n", woody->encrypt_s_start_offset);
-    printf("woody->text_p_end_offset = %lu\n", woody->text_p_end_offset);
-    printf("data_p_end_offset = %lu\n", data_p_end_offset);
     // Copy until text section end
     ft_memcpy(woody->infected_file,
               woody->mmap_ptr,

@@ -26,7 +26,6 @@ void silvio_text_infection(t_woody *woody)
     {
         if (woody->phdr[i].p_type == PT_LOAD && woody->phdr[i].p_flags == (PF_R | PF_X))
         {
-            woody->text_p_vaddr = woody->phdr[i].p_vaddr;
 
             woody->payload_vaddr = woody->text_p_vaddr + woody->phdr[i].p_filesz;
             woody->ehdr->e_entry = woody->payload_vaddr;
