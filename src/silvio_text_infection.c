@@ -60,7 +60,7 @@ void silvio_text_infection(t_woody *woody)
         // get section to encrypt info.
         if (!ft_strncmp(SECTION_TO_ENCRYPT_NAME,
                         (woody->string_table_ptr + woody->shdr[i].sh_name),
-                        strlen(SECTION_TO_ENCRYPT_NAME)))
+                        ft_strlen(SECTION_TO_ENCRYPT_NAME)))
         {
             woody->encrypt_s_start_offset = woody->shdr[i].sh_offset;
             woody->encrypt_s_size = woody->shdr[i].sh_size;

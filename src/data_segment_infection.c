@@ -27,6 +27,7 @@ void data_segment_infection(t_woody *woody)
     woody->infected_file_size = woody->binary_data_size + PAGE_SIZE;
     woody->encrypt_s_size = 0;
 
+    data_p_start_offset = 0;
     data_p_end_offset = 0;
     for (size_t i = 0; i < woody->ehdr->e_phnum; i++)
     {
@@ -46,7 +47,9 @@ void data_segment_infection(t_woody *woody)
             woody->phdr[i].p_memsz += woody->payload_size;
 
             for (int j = i + 1; j < woody->ehdr->e_phnum; j++)
+            {
                 woody->phdr[j].p_offset += PAGE_SIZE;
+            }
         }
     }
 
@@ -69,7 +72,7 @@ void data_segment_infection(t_woody *woody)
         // get section to encrypt info.
         if (!ft_strncmp(SECTION_TO_ENCRYPT_NAME,
                         (woody->string_table_ptr + woody->shdr[i].sh_name),
-                        strlen(SECTION_TO_ENCRYPT_NAME)))
+                        ft_strlen(SECTION_TO_ENCRYPT_NAME)))
         {
             woody->encrypt_s_start_offset = woody->shdr[i].sh_offset;
             woody->encrypt_s_size = woody->shdr[i].sh_size;
