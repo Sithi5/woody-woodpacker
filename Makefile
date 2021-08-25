@@ -17,7 +17,7 @@ ART_NAME			=	bird
 WALL				:=	yes
 WEXTRA				:=	yes
 WSHADOW				:=	yes
-WERROR				:=	yes
+WERROR				:=	no
 FSANITIZE			:=	no
 DEBUG				:=	no
 O2					:=	no
@@ -88,7 +88,7 @@ ASM_SRC_NAME		:=	xor_cipher_32.asm					\
 
 else
 # Define for 64bits
-PAYLOAD_SRC_NAME	=	rc4_payload_64.asm
+PAYLOAD_SRC_NAME	=	print_woody_payload_64.asm
 
 ASM_SRC_NAME		:=	rc4_cipher_64.asm					\
 
@@ -101,6 +101,7 @@ SRC_NAME			:=	main.c								\
 						infection.c							\
 						utils_payload.c						\
 						silvio_text_infection.c				\
+						data_segment_infection.c			\
 						crypto.c							\
 						key_generator.c						\
 
