@@ -15,7 +15,10 @@
 void set_woody_ptrs_to_null(t_woody *woody)
 {
     woody->mmap_ptr = NULL;
+    woody->string_table_ptr = NULL;
+    woody->binary_data_size = 0;
     woody->payload_data = NULL;
+    woody->payload_size = 0;
     woody->infected_file = NULL;
     woody->cipher = NULL;
     woody->encryption_key = NULL;
