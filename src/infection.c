@@ -32,7 +32,11 @@ void choose_infection_method(t_woody *woody)
             woody->text_p_vaddr = woody->phdr[i].p_vaddr;
 
             // Check if there is enought space for our payload in the text section.
-            if (woody->text_p_end_offset % PAGE_SIZE + woody->payload_size < PAGE_SIZE)
+            if (woody->payload_size > PAGE_SIZE)
+            {
+                error(ERROR_NOT_ENOUGHT_SPACE_FOR_PAYLOAD, woody);
+            }
+            else if (woody->text_p_end_offset % PAGE_SIZE + woody->payload_size < PAGE_SIZE)
             {
                 silvio_text_infection(woody);
             }
