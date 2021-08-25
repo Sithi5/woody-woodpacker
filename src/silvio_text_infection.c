@@ -14,6 +14,7 @@
 
 void silvio_text_infection(t_woody *woody)
 {
+    printf("INSIDE SILVIO\n");
     // Create the output file
     if (!(woody->infected_file = malloc(woody->binary_data_size + PAGE_SIZE)))
     {
@@ -41,6 +42,11 @@ void silvio_text_infection(t_woody *woody)
         }
     }
 
+    if (woody->text_p_end_offset % PAGE_SIZE + woody->payload_size > PAGE_SIZE)
+    {
+        error(ERROR_NOT_ENOUGHT_SPACE_FOR_PAYLOAD, woody);
+    }
+
     // Adding offset of one page in all section located after text section end. And get text section offset for the encryption.
     for (size_t i = 0; i < woody->ehdr->e_shnum; i++)
     {
@@ -52,6 +58,7 @@ void silvio_text_infection(t_woody *woody)
         {
             woody->shdr[i].sh_size += woody->payload_size;
         }
+        // get section to encrypt info.
         if (!ft_strncmp(SECTION_TO_ENCRYPT_NAME,
                         (woody->string_table_ptr + woody->shdr[i].sh_name),
                         strlen(SECTION_TO_ENCRYPT_NAME)))
@@ -75,12 +82,12 @@ void silvio_text_infection(t_woody *woody)
     }
     else if (ARCH_64)
     {
-        // overwrite_keysection_payload(woody);
-        // overwrite_payload_getencryptedsectionaddr(woody);
+        overwrite_keysection_payload(woody);
+        overwrite_payload_getencryptedsectionaddr(woody);
         overwrite_payload_ret2oep(woody);
-        // overwrite_payload_getencryptedsectionsize(woody);
-        // overwrite_payload_gettextsectionaddr(woody);
-        // overwrite_payload_gettextsize(woody);
+        overwrite_payload_getencryptedsectionsize(woody);
+        overwrite_payload_gettextsectionaddr(woody);
+        overwrite_payload_gettextsize(woody);
     }
 
     // Copy until text section end

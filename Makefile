@@ -19,7 +19,7 @@ WEXTRA				:=	yes
 WSHADOW				:=	yes
 WERROR				:=	no
 FSANITIZE			:=	no
-DEBUG				:=	no
+DEBUG				:=	yes
 O2					:=	no
 
 CC					:=	gcc
@@ -88,7 +88,7 @@ ASM_SRC_NAME		:=	xor_cipher_32.asm					\
 
 else
 # Define for 64bits
-PAYLOAD_SRC_NAME	=	print_woody_payload_64.asm
+PAYLOAD_SRC_NAME	=	rc4_payload_64.asm
 
 ASM_SRC_NAME		:=	rc4_cipher_64.asm					\
 

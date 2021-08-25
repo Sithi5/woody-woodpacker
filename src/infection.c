@@ -33,6 +33,7 @@ void choose_infection_method(t_woody *woody)
             data_segment_infection(woody);
             break;
 
+            printf("size is %lu\n", woody->text_p_end_offset % PAGE_SIZE + woody->payload_size);
             // Check if there is enought space for our payload in the text section.
             if (woody->text_p_end_offset % PAGE_SIZE + woody->payload_size < PAGE_SIZE)
             {
@@ -40,7 +41,7 @@ void choose_infection_method(t_woody *woody)
             }
             else
             {
-                error(ERROR_NOT_ENOUGHT_SPACE_FOR_PAYLOAD, woody);
+                data_segment_infection(woody);
             }
             break;
         }
