@@ -17,9 +17,9 @@ ART_NAME			=	bird
 WALL				:=	yes
 WEXTRA				:=	yes
 WSHADOW				:=	yes
-WERROR				:=	yes
+WERROR				:=	no
 FSANITIZE			:=	no
-DEBUG				:=	no
+DEBUG				:=	yes
 O2					:=	no
 
 CC					:=	gcc
@@ -101,6 +101,7 @@ SRC_NAME			:=	main.c								\
 						infection.c							\
 						utils_payload.c						\
 						silvio_text_infection.c				\
+						data_segment_infection.c			\
 						crypto.c							\
 						key_generator.c						\
 

@@ -134,7 +134,7 @@ typedef struct s_woody
 
     t_elf_off text_p_start_offset;
     t_elf_off text_p_end_offset;
-    t_elf_off text_p_size;
+    size_t text_p_size;
     t_elf_addr text_p_vaddr;
     size_t text_section_size;
 
@@ -162,6 +162,7 @@ char *rc4_cipher(t_woody *woody, char *data, int len);
 
 void choose_infection_method(t_woody *woody);
 void silvio_text_infection(t_woody *woody);
+void data_segment_infection(t_woody *woody);
 
 size_t find_keysection_offset(t_woody *woody);
 size_t find_ret2oep_offset(t_woody *woody);
@@ -182,7 +183,9 @@ void print_memory_hex(void *memory_ptr, size_t memory_size);
 void print_memory_char(void *memory_ptr, size_t memory_size);
 void free_woody(t_woody *woody);
 void *ft_memcpy(void *dst, const void *src, size_t n);
-int ft_strncmp(const char *s1, const char *s2, size_t n);
+size_t ft_strncmp(const char *s1, const char *s2, size_t n);
+size_t ft_strlen(const char *s);
+void ft_bzero(void *s, size_t n);
 void error(int err, t_woody *woody);
 
 /****************************************************************************/

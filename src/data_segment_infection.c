@@ -1,33 +1,45 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   infection.c                                        :+:      :+:    :+:   */
+/*   data_segment_injection.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mabouce <ma.sithis@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/29 14:29:35 by mabouce           #+#    #+#             */
-/*   Updated: 2021/07/29 14:29:35 by mabouce          ###   ########.fr       */
+/*   Created: 2021/08/25 11:34:34 by mabouce           #+#    #+#             */
+/*   Updated: 2021/08/25 11:34:34 by mabouce          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "woody_woodpacker.h"
 
-void silvio_text_infection(t_woody *woody)
+void data_segment_infection(t_woody *woody)
 {
-    printf("INSIDE SILVIO\n");
+    printf("INSIDE DATASEGMENT\n");
+
+    t_elf_addr data_p_vaddr;
+    t_elf_off data_p_start_offset;
+    t_elf_off data_p_end_offset;
     // Create the output file
     if (!(woody->infected_file = malloc(woody->binary_data_size + PAGE_SIZE)))
     {
         error(ERROR_MALLOC, woody);
     }
     woody->infected_file_size = woody->binary_data_size + PAGE_SIZE;
+    woody->encrypt_s_size = 0;
 
+    data_p_start_offset = 0;
+    data_p_end_offset = 0;
     for (size_t i = 0; i < woody->ehdr->e_phnum; i++)
     {
-        if (woody->phdr[i].p_type == PT_LOAD && woody->phdr[i].p_flags == (PF_R | PF_X))
+        /* grab the data segment */
+        if (woody->phdr[i].p_type == PT_LOAD && woody->phdr[i].p_flags == (PF_R | PF_W))
         {
+            woody->phdr[i].p_flags = (PF_R | PF_W | PF_X);
+            data_p_vaddr = woody->phdr[i].p_vaddr;
+            data_p_start_offset = woody->phdr[i].p_offset;
+            data_p_end_offset = data_p_start_offset + woody->phdr[i].p_filesz;
 
-            woody->payload_vaddr = woody->text_p_vaddr + woody->phdr[i].p_filesz;
+            woody->payload_vaddr = data_p_vaddr + woody->phdr[i].p_filesz;
             woody->ehdr->e_entry = woody->payload_vaddr;
             woody->new_entry_point = woody->payload_vaddr;
 
@@ -35,21 +47,21 @@ void silvio_text_infection(t_woody *woody)
             woody->phdr[i].p_memsz += woody->payload_size;
 
             for (int j = i + 1; j < woody->ehdr->e_phnum; j++)
+            {
                 woody->phdr[j].p_offset += PAGE_SIZE;
-
-            break;
+            }
         }
     }
 
-    if (woody->text_p_end_offset % PAGE_SIZE + woody->payload_size > PAGE_SIZE)
+    if (data_p_end_offset % PAGE_SIZE + woody->payload_size > PAGE_SIZE)
     {
         error(ERROR_NOT_ENOUGHT_SPACE_FOR_PAYLOAD, woody);
     }
 
-    // Adding offset of one page in all section located after text section end. And get text section offset for the encryption.
+    /* modify sections here */
     for (size_t i = 0; i < woody->ehdr->e_shnum; i++)
     {
-        if (woody->shdr[i].sh_offset > woody->text_p_end_offset)
+        if (woody->shdr[i].sh_offset > data_p_end_offset)
         {
             woody->shdr[i].sh_offset += PAGE_SIZE;
         }
@@ -70,8 +82,10 @@ void silvio_text_infection(t_woody *woody)
         }
     }
 
-    // Increase section header offset by PAGE_SIZE
-    woody->ehdr->e_shoff += PAGE_SIZE;
+    if (woody->ehdr->e_shoff > (data_p_end_offset))
+    {
+        woody->ehdr->e_shoff += PAGE_SIZE;
+    }
 
     cipher_woody_file_data(woody);
 
@@ -90,13 +104,26 @@ void silvio_text_infection(t_woody *woody)
     }
 
     // Copy until text section end
-    ft_memcpy(woody->infected_file, woody->mmap_ptr, woody->text_p_end_offset);
+    ft_memcpy(woody->infected_file,
+              woody->mmap_ptr,
+              woody->text_p_end_offset);
     // Rewrite text section with cipher data.
-    ft_memcpy(woody->infected_file + woody->encrypt_s_start_offset, woody->cipher, woody->encrypt_s_size);
+    ft_memcpy(woody->infected_file + woody->encrypt_s_start_offset,
+              woody->cipher,
+              woody->encrypt_s_size);
+    // Copy until data section end
+    ft_memcpy(woody->infected_file + woody->text_p_end_offset,
+              woody->mmap_ptr + woody->text_p_end_offset,
+              data_p_end_offset - woody->text_p_end_offset);
     // Initialize value to zero for padding.
-    ft_bzero(woody->infected_file + woody->text_p_end_offset, PAGE_SIZE);
-    // Insert payload after text section end
-    ft_memcpy(woody->infected_file + woody->text_p_end_offset, woody->payload_data, woody->payload_size);
-    // Insert rest of binary
-    ft_memcpy(woody->infected_file + woody->text_p_end_offset + PAGE_SIZE, woody->mmap_ptr + woody->text_p_end_offset, woody->binary_data_size - woody->text_p_end_offset);
+    ft_bzero(woody->infected_file + data_p_end_offset, PAGE_SIZE);
+    // Copy parasite
+    ft_memcpy(woody->infected_file + data_p_end_offset,
+              woody->payload_data,
+              woody->payload_size);
+    // Copy zero for padding
+    // Copy rest of file
+    ft_memcpy(woody->infected_file + data_p_end_offset + PAGE_SIZE,
+              woody->mmap_ptr + data_p_end_offset,
+              woody->binary_data_size - data_p_end_offset);
 }

@@ -15,7 +15,10 @@
 void set_woody_ptrs_to_null(t_woody *woody)
 {
     woody->mmap_ptr = NULL;
+    woody->string_table_ptr = NULL;
+    woody->binary_data_size = 0;
     woody->payload_data = NULL;
+    woody->payload_size = 0;
     woody->infected_file = NULL;
     woody->cipher = NULL;
     woody->encryption_key = NULL;
@@ -84,9 +87,9 @@ void print_memory_char(void *memory_ptr, size_t memory_size)
     printf("\n");
 }
 
-int ft_strncmp(const char *s1, const char *s2, size_t n)
+size_t ft_strncmp(const char *s1, const char *s2, size_t n)
 {
-    unsigned int i;
+    size_t i;
 
     i = 0;
     if (n == 0)
@@ -107,4 +110,34 @@ void *ft_memcpy(void *dst, const void *src, size_t n)
         i++;
     }
     return (dst);
+}
+
+size_t ft_strlen(const char *s)
+{
+    size_t i;
+
+    i = 0;
+    while (s[i])
+        i++;
+    return (i);
+}
+
+void *ft_memset(void *b, int c, size_t len)
+{
+    size_t i;
+
+    i = 0;
+    while (i < len)
+    {
+        ((char *)b)[i] = (char)c;
+        i++;
+    }
+    return (b);
+}
+
+void ft_bzero(void *s, size_t n)
+{
+    if (n == 0)
+        return;
+    ft_memset(s, 0, n);
 }
