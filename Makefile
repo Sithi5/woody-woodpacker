@@ -82,7 +82,7 @@ endif
 
 ifeq ($(LONG_BITS),32)
 # Define for 32bits
-PAYLOAD_SRC_NAME	=	print_woody_payload_32.asm
+PAYLOAD_SRC_NAME	=	xor_payload_32.asm
 
 ASM_SRC_NAME		:=	xor_cipher_32.asm					\
 

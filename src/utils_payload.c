@@ -90,6 +90,34 @@ size_t find_ret2oep_offset(t_woody *woody)
 }
 
 // Find the ret2textsection offset in the payload. return true if ret2textsection have been found.
+size_t find_getencryptedsectionaddr_offset_elf32(t_woody *woody)
+{
+    for (size_t i = 0; i < woody->payload_size; i++)
+    {
+        if (((char *)woody->payload_data)[i] == 0x66)
+        {
+            if (woody->payload_size - i > 14)
+            {
+                // Actually checking we are in ret2textsection
+                if (((char *)woody->payload_data)[i + 1] == 0x66 && ((char *)woody->payload_data)[i + 2] == 0x66 &&
+                    ((char *)woody->payload_data)[i + 3] == 0x66 && ((char *)woody->payload_data)[i + 4] == 0x2d &&
+                    ((char *)woody->payload_data)[i + 5] == 0x66 && ((char *)woody->payload_data)[i + 6] == 0x66 &&
+                    ((char *)woody->payload_data)[i + 7] == 0x66 && ((char *)woody->payload_data)[i + 8] == 0x66 &&
+                    ((char *)woody->payload_data)[i + 9] == 0x05 &&
+                    ((char *)woody->payload_data)[i + 10] == 0x66 && ((char *)woody->payload_data)[i + 11] == 0x66 &&
+                    ((char *)woody->payload_data)[i + 12] == 0x66 && ((char *)woody->payload_data)[i + 13] == 0x66)
+                {
+                    // Removing 1 to go to actual start of ret2textsection (go back to instructions sub).
+                    return i - 1;
+                }
+            }
+        }
+    }
+    error(ERROR_RET2TEXTSECTION_NOT_FOUND, woody);
+    return -1;
+}
+
+// Find the ret2textsection offset in the payload. return true if ret2textsection have been found.
 size_t find_getencryptedsectionaddr_offset_elf64(t_woody *woody)
 {
     for (size_t i = 0; i < woody->payload_size; i++)
@@ -110,6 +138,34 @@ size_t find_getencryptedsectionaddr_offset_elf64(t_woody *woody)
                 {
                     // Removing 2 to go to actual start of ret2textsection (go back to instructions sub).
                     return i - 2;
+                }
+            }
+        }
+    }
+    error(ERROR_RET2TEXTSECTION_NOT_FOUND, woody);
+    return -1;
+}
+
+// Find the gettextsectionadd offset in the payload. return true if gettextsectionadd have been found.
+size_t find_gettextsectionaddr_offset_elf32(t_woody *woody)
+{
+    for (size_t i = 0; i < woody->payload_size; i++)
+    {
+        if (((char *)woody->payload_data)[i] == 0x22)
+        {
+            if (woody->payload_size - i > 17)
+            {
+                // Actually checking we are in gettextsectionadd
+                if (((char *)woody->payload_data)[i + 1] == 0x22 && ((char *)woody->payload_data)[i + 2] == 0x22 &&
+                    ((char *)woody->payload_data)[i + 3] == 0x22 && ((char *)woody->payload_data)[i + 4] == 0x2d &&
+                    ((char *)woody->payload_data)[i + 5] == 0x22 && ((char *)woody->payload_data)[i + 6] == 0x22 &&
+                    ((char *)woody->payload_data)[i + 7] == 0x22 && ((char *)woody->payload_data)[i + 8] == 0x22 &&
+                    ((char *)woody->payload_data)[i + 9] == 0x05 &&
+                    ((char *)woody->payload_data)[i + 10] == 0x22 && ((char *)woody->payload_data)[i + 11] == 0x22 &&
+                    ((char *)woody->payload_data)[i + 12] == 0x22 && ((char *)woody->payload_data)[i + 13] == 0x22)
+                {
+                    // Removing 1 to go to actual start of gettextsectionadd (go back to instructions sub).
+                    return i - 1;
                 }
             }
         }
@@ -148,6 +204,29 @@ size_t find_gettextsectionaddr_offset_elf64(t_woody *woody)
 }
 
 // Find the getencryptedsectionsize offset in the payload. return true if getencryptedsectionsize have been found.
+size_t find_getencryptedsectionsize_offset_elf32(t_woody *woody)
+{
+    for (size_t i = 0; i < woody->payload_size; i++)
+    {
+        if (((char *)woody->payload_data)[i] == 0x55)
+        {
+            if (woody->payload_size - i > 4)
+            {
+                if (((char *)woody->payload_data)[i + 1] == 0x55 &&
+                    ((char *)woody->payload_data)[i + 2] == 0x55 &&
+                    ((char *)woody->payload_data)[i + 3] == 0x55)
+                {
+                    // Removing 1 to go to actual start of getencryptedsectionsize (go back to instructions mov).
+                    return i - 1;
+                }
+            }
+        }
+    }
+    error(ERROR_SETTEXTSECTIONSIZE_NOT_FOUND, woody);
+    return -1;
+}
+
+// Find the getencryptedsectionsize offset in the payload. return true if getencryptedsectionsize have been found.
 size_t find_getencryptedsectionsize_offset_elf64(t_woody *woody)
 {
     for (size_t i = 0; i < woody->payload_size; i++)
@@ -162,6 +241,29 @@ size_t find_getencryptedsectionsize_offset_elf64(t_woody *woody)
                 {
                     // Removing 2 to go to actual start of getencryptedsectionsize (go back to instructions mov).
                     return i - 2;
+                }
+            }
+        }
+    }
+    error(ERROR_SETTEXTSECTIONSIZE_NOT_FOUND, woody);
+    return -1;
+}
+
+// Find the gettextsize offset in the payload. return true if gettextsize have been found.
+size_t find_gettextsize_offset_elf32(t_woody *woody)
+{
+    for (size_t i = 0; i < woody->payload_size; i++)
+    {
+        if (((char *)woody->payload_data)[i] == 0x33)
+        {
+            if (woody->payload_size - i > 4)
+            {
+                if (((char *)woody->payload_data)[i + 1] == 0x33 &&
+                    ((char *)woody->payload_data)[i + 2] == 0x33 &&
+                    ((char *)woody->payload_data)[i + 3] == 0x33)
+                {
+                    // Removing 1 to go to actual start of gettextsize (go back to instructions mov).
+                    return i - 1;
                 }
             }
         }
@@ -222,41 +324,89 @@ void overwrite_payload_ret2oep(t_woody *woody)
 // Rewrite info in payload getencryptedsectionaddr.
 void overwrite_payload_getencryptedsectionaddr(t_woody *woody)
 {
-    size_t getencryptedsectionaddr_offset = find_getencryptedsectionaddr_offset_elf64(woody);
-    // Rewrite payload size without getencryptedsectionaddr. + 2 to skip two first instructions and go to address.
-    ft_memcpy(woody->payload_data + getencryptedsectionaddr_offset + 2, (void *)(&(getencryptedsectionaddr_offset)), 4);
-    // Rewrite new entry_point in payload getencryptedsectionaddr.
-    ft_memcpy(woody->payload_data + getencryptedsectionaddr_offset + 8, (void *)&(woody->new_entry_point), 4);
-    // Rewrite old entry_point in payload getencryptedsectionaddr.
-    ft_memcpy(woody->payload_data + getencryptedsectionaddr_offset + 14, (void *)&(woody->encrypt_s_addr), 4);
+    size_t getencryptedsectionaddr_offset;
+    if (ARCH_32)
+    {
+        getencryptedsectionaddr_offset = find_getencryptedsectionaddr_offset_elf32(woody);
+        // Rewrite payload size without getencryptedsectionaddr. + 2 to skip two first instructions and go to address.
+        ft_memcpy(woody->payload_data + getencryptedsectionaddr_offset + 1, (void *)(&(getencryptedsectionaddr_offset)), 4);
+        // Rewrite new entry_point in payload getencryptedsectionaddr.
+        ft_memcpy(woody->payload_data + getencryptedsectionaddr_offset + 6, (void *)&(woody->new_entry_point), 4);
+        // Rewrite old entry_point in payload getencryptedsectionaddr.
+        ft_memcpy(woody->payload_data + getencryptedsectionaddr_offset + 11, (void *)&(woody->encrypt_s_addr), 4);
+    }
+    else if (ARCH_64)
+    {
+        getencryptedsectionaddr_offset = find_getencryptedsectionaddr_offset_elf64(woody);
+        // Rewrite payload size without getencryptedsectionaddr. + 2 to skip two first instructions and go to address.
+        ft_memcpy(woody->payload_data + getencryptedsectionaddr_offset + 2, (void *)(&(getencryptedsectionaddr_offset)), 4);
+        // Rewrite new entry_point in payload getencryptedsectionaddr.
+        ft_memcpy(woody->payload_data + getencryptedsectionaddr_offset + 8, (void *)&(woody->new_entry_point), 4);
+        // Rewrite old entry_point in payload getencryptedsectionaddr.
+        ft_memcpy(woody->payload_data + getencryptedsectionaddr_offset + 14, (void *)&(woody->encrypt_s_addr), 4);
+    }
 }
 
 // Rewrite info in payload gettextsectionaddr.
 void overwrite_payload_gettextsectionaddr(t_woody *woody)
 {
-    size_t gettextsectionaddr_offset = find_gettextsectionaddr_offset_elf64(woody);
-    // Rewrite payload size without gettextsectionaddr. + 2 to skip two first instructions and go to address.
-    ft_memcpy(woody->payload_data + gettextsectionaddr_offset + 2, (void *)(&(gettextsectionaddr_offset)), 4);
-    // Rewrite new entry_point in payload gettextsectionaddr.
-    ft_memcpy(woody->payload_data + gettextsectionaddr_offset + 8, (void *)&(woody->new_entry_point), 4);
-    // Rewrite woody->text_p_vaddr.
-    ft_memcpy(woody->payload_data + gettextsectionaddr_offset + 14, (void *)&(woody->text_p_vaddr), 4);
+    size_t gettextsectionaddr_offset;
+    if (ARCH_32)
+    {
+        gettextsectionaddr_offset = find_gettextsectionaddr_offset_elf32(woody);
+        // Rewrite payload size without gettextsectionaddr. + 2 to skip two first instructions and go to address.
+        ft_memcpy(woody->payload_data + gettextsectionaddr_offset + 1, (void *)(&(gettextsectionaddr_offset)), 4);
+        // Rewrite new entry_point in payload gettextsectionaddr.
+        ft_memcpy(woody->payload_data + gettextsectionaddr_offset + 6, (void *)&(woody->new_entry_point), 4);
+        // Rewrite woody->text_p_vaddr.
+        ft_memcpy(woody->payload_data + gettextsectionaddr_offset + 11, (void *)&(woody->text_p_vaddr), 4);
+    }
+    else if (ARCH_64)
+    {
+        gettextsectionaddr_offset = find_gettextsectionaddr_offset_elf64(woody);
+        // Rewrite payload size without gettextsectionaddr. + 2 to skip two first instructions and go to address.
+        ft_memcpy(woody->payload_data + gettextsectionaddr_offset + 2, (void *)(&(gettextsectionaddr_offset)), 4);
+        // Rewrite new entry_point in payload gettextsectionaddr.
+        ft_memcpy(woody->payload_data + gettextsectionaddr_offset + 8, (void *)&(woody->new_entry_point), 4);
+        // Rewrite woody->text_p_vaddr.
+        ft_memcpy(woody->payload_data + gettextsectionaddr_offset + 14, (void *)&(woody->text_p_vaddr), 4);
+    }
 }
 
 // Rewrite info in payload getencryptedsectionsize.
 void overwrite_payload_getencryptedsectionsize(t_woody *woody)
 {
-    size_t getencryptedsectionsize_offset = find_getencryptedsectionsize_offset_elf64(woody);
-    // Rewrite getencryptedsectionsize_offset + 2 to skip two first instructions and go to encrypted_size value.
-    ft_memcpy(woody->payload_data + getencryptedsectionsize_offset + 2, (void *)&(woody->encrypt_s_size), 4);
+    size_t getencryptedsectionsize_offset;
+    if (ARCH_32)
+    {
+        getencryptedsectionsize_offset = find_getencryptedsectionsize_offset_elf32(woody);
+        // Rewrite getencryptedsectionsize_offset + 2 to skip two first instructions and go to encrypted_size value.
+        ft_memcpy(woody->payload_data + getencryptedsectionsize_offset + 1, (void *)&(woody->encrypt_s_size), 4);
+    }
+    else if (ARCH_64)
+    {
+        getencryptedsectionsize_offset = find_getencryptedsectionsize_offset_elf64(woody);
+        // Rewrite getencryptedsectionsize_offset + 2 to skip two first instructions and go to encrypted_size value.
+        ft_memcpy(woody->payload_data + getencryptedsectionsize_offset + 2, (void *)&(woody->encrypt_s_size), 4);
+    }
 }
 
 // Rewrite info in payload gettextsize.
 void overwrite_payload_gettextsize(t_woody *woody)
 {
-    size_t gettextsize_offset = find_gettextsize_offset_elf64(woody);
-    // Rewrite gettextsize_offset + 2 to skip two first instructions and go to textsize value.
-    ft_memcpy(woody->payload_data + gettextsize_offset + 2, (void *)&(woody->text_section_size), 4);
+    size_t gettextsize_offset;
+    if (ARCH_32)
+    {
+        gettextsize_offset = find_gettextsize_offset_elf32(woody);
+        // Rewrite gettextsize_offset + 2 to skip two first instructions and go to textsize value.
+        ft_memcpy(woody->payload_data + gettextsize_offset + 2, (void *)&(woody->text_section_size), 4);
+    }
+    else if (ARCH_64)
+    {
+        gettextsize_offset = find_gettextsize_offset_elf64(woody);
+        // Rewrite gettextsize_offset + 2 to skip two first instructions and go to textsize value.
+        ft_memcpy(woody->payload_data + gettextsize_offset + 2, (void *)&(woody->text_section_size), 4);
+    }
 }
 
 void overwrite_keysection_payload(t_woody *woody)

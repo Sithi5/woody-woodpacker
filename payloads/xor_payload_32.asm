@@ -15,6 +15,7 @@ _start_payload:
 
 _infection:
     call _print_woody
+    call asm_xor_cipher
 
 _end_payload:
 
@@ -40,7 +41,7 @@ _ret2oep:
     add eax, 0x77777777 ; old entry_point
     ret
 
-_ret2textsection:
+_getencryptedsectionaddr:
     call _get_rip
     sub eax, 0x66666666 ; virus size without ret2oep
     sub eax, 0x66666666 ; new_entry_point
@@ -48,31 +49,41 @@ _ret2textsection:
     ret
 
 _getkeylen:
-    mov eax, 0x88888888 ;
-    ret 
+    mov eax, 4
+    ret
 
-_getdatalen:
-    mov eax, 0x33333333
+_getencryptedsectionsize:
+    mov eax, 0x55555555
     ret
 
 _getkey:
-    mov eax, 0x44444444
+    push 'BBBB'
+    pop eax
     ret
 
-; _ret2textoffset:
-;     mov eax, 0x55555555
-;     ret
+_gettextsectionaddr:
+    call _get_rip
+    sub eax, 0x22222222 ; virus size without ret2oep
+    sub eax, 0x22222222 ; new_entry_point
+    add eax, 0x22222222 ; start of text section
+    ret
 
-; _mprotect:
-;     call _ret2textsection
-;     mov edi,  eax
-;     and edi, -0x1000
-;     call _ret2textoffset
-;     mov esi, eax
-;     mov eax, 0xa
-;     mov edx, 0x07
-;     syscall
-;     ret
+_gettextsize:
+    mov eax, 0x33333333
+    ret
+
+_mprotect:
+    call _gettextsectionaddr
+    mov edi, eax
+    and edi, -0x1000
+    mov eax, 0xa
+    push eax
+    call _gettextsize
+    mov esi, eax
+    pop eax
+    mov edx, 0x07
+    syscall
+    ret
 
 asm_xor_cipher:
     enter 0,0 ; push ebp, mov ebp, sub esp, N
@@ -80,12 +91,10 @@ asm_xor_cipher:
     call _getkeylen
     mov edx, eax
     dec edx ; keylen
-    call _getdatalen
+    call _getencryptedsectionsize
     mov ecx, eax
     dec ecx ; datalen
-    call _getkey
-    mov ebx, eax
-    call _ret2textsection
+    
     jmp _encrypt
 
 _encrypt:
@@ -95,10 +104,14 @@ _encrypt:
 
     cmp edx, 0
     jge .continue
-    ;mov edx, [ebp + 20] ; keylen
+    call _getkeylen
+    mov edx, eax
     dec edx ; dec keylen
     .continue:
 
+    call _getkey
+    mov ebx, eax
+    call _getencryptedsectionaddr
     mov esi, [eax + ecx]
     mov bl, byte[ebx + edx] ; getting key char
     xor byte[eax + ecx], bl
@@ -107,8 +120,6 @@ _encrypt:
     dec ecx ; datalen
     cmp ecx, 0
     jge _encrypt
-
-return:
     leave ; = mov esp, ebp et pop ebp => la pile reprend son ancien etat
     ret
 

@@ -74,11 +74,18 @@ void silvio_text_infection(t_woody *woody)
     woody->ehdr->e_shoff += PAGE_SIZE;
 
     cipher_woody_file_data(woody);
-
+    for (size_t i = 0; i < woody->payload_size; i++)
+    {
+        printf("%x ", ((char *)woody->payload_data)[i]);
+    }
+    printf("\n");
     if (ARCH_32)
     {
-        overwrite_keysection_payload(woody);
         overwrite_payload_ret2oep(woody);
+        overwrite_payload_getencryptedsectionaddr(woody);
+        overwrite_payload_getencryptedsectionsize(woody);
+        overwrite_payload_gettextsectionaddr(woody);
+        overwrite_payload_gettextsize(woody);
     }
     else if (ARCH_64)
     {
@@ -89,7 +96,12 @@ void silvio_text_infection(t_woody *woody)
         overwrite_payload_gettextsectionaddr(woody);
         overwrite_payload_gettextsize(woody);
     }
-
+    printf("\n");
+    for (size_t i = 0; i < woody->payload_size; i++)
+    {
+        printf("%x ", ((char *)woody->payload_data)[i]);
+    }
+    printf("\n");
     // Copy until text section end
     ft_memcpy(woody->infected_file, woody->mmap_ptr, woody->text_p_end_offset);
     // Rewrite text section with cipher data.
