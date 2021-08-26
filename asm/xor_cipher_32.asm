@@ -26,7 +26,6 @@ _encrypt:
     dec edx ; dec keylen
     .continue:
 
-    mov esi, [eax + ecx]
     mov bl, byte[ebx + edx] ; getting key char
     xor byte[eax + ecx], bl
 

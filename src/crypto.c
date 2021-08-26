@@ -21,7 +21,7 @@ void cipher_woody_file_data(t_woody *woody)
     key_generator(woody);
     if (ARCH_32)
     {
-        // asm_xor_cipher(woody->cipher, woody->encrypt_s_size, woody->encryption_key, KEY_LEN);
+        // asm_xor_cipher(woody->cipher, woody->encrypt_s_size, "BBBB", 4);
     }
     else if (ARCH_64)
     {

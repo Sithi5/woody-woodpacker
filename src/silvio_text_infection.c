@@ -77,10 +77,6 @@ void silvio_text_infection(t_woody *woody)
     if (ARCH_32)
     {
         overwrite_payload_ret2oep(woody);
-        overwrite_payload_getencryptedsectionaddr(woody);
-        overwrite_payload_getencryptedsectionsize(woody);
-        overwrite_payload_gettextsectionaddr(woody);
-        overwrite_payload_gettextsize(woody);
     }
     else if (ARCH_64)
     {
@@ -91,6 +87,7 @@ void silvio_text_infection(t_woody *woody)
         overwrite_payload_gettextsectionaddr(woody);
         overwrite_payload_gettextsize(woody);
     }
+
     // Copy until text section end
     ft_memcpy(woody->infected_file, woody->mmap_ptr, woody->text_p_end_offset);
     // Rewrite text section with cipher data.

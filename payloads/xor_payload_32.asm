@@ -14,8 +14,46 @@ _start_payload:
     push edi
 
 _infection:
+    ; call _mprotect
     call _print_woody
     call asm_xor_cipher
+
+_print_woody:
+    enter 0,0 ; push ebp, mov ebp, esp
+
+    ;Save registers on stack
+    push eax
+    push ebx
+    push ecx
+    push edx
+
+    ; Pushing string on stack
+    push 10
+    push '...'
+    push 'OODY'
+    push '...W'
+
+    ; do write call
+	mov ecx, esp        ; string to write
+    mov eax,write
+	mov ebx,STDOUT
+	mov edx, 16     ; length of string to write
+	syscall              ; call the kernel
+
+    ; Removing string on stack to restore it.
+    pop eax
+    pop eax
+    pop eax
+    pop eax
+
+    ;Get back registers from stack
+    pop edx
+    pop ecx
+    pop ebx
+    pop eax
+
+    leave ; = mov esp, ebp et pop ebp => la pile reprend son ancien etat
+    ret
 
 _end_payload:
 
@@ -56,10 +94,6 @@ _getencryptedsectionsize:
     mov eax, 0x55555555
     ret
 
-_getkey:
-    push 'BBBB'
-    pop eax
-    ret
 
 _gettextsectionaddr:
     call _get_rip
@@ -94,10 +128,13 @@ asm_xor_cipher:
     call _getencryptedsectionsize
     mov ecx, eax
     dec ecx ; datalen
-    
-    jmp _encrypt
 
-_encrypt:
+_set_key:
+    times 4 db "B"
+    pop ebx
+    ret
+
+_decrypt:
 
     ;mov eax, [ebp + 8] ; data
     ;mov ebx, [ebp + 16] ; key
@@ -109,8 +146,6 @@ _encrypt:
     dec edx ; dec keylen
     .continue:
 
-    call _getkey
-    mov ebx, eax
     call _getencryptedsectionaddr
     mov esi, [eax + ecx]
     mov bl, byte[ebx + edx] ; getting key char
@@ -119,43 +154,6 @@ _encrypt:
     dec edx ; dec keylen
     dec ecx ; datalen
     cmp ecx, 0
-    jge _encrypt
-    leave ; = mov esp, ebp et pop ebp => la pile reprend son ancien etat
-    ret
-
-_print_woody:
-    enter 0,0 ; push ebp, mov ebp, esp
-
-    ;Save registers on stack
-    push eax
-    push ebx
-    push ecx
-    push edx
-
-    ; Pushing string on stack
-    push 10
-    push '...'
-    push 'OODY'
-    push '...W'
-
-    ; do write call
-	mov ecx, esp        ; string to write
-    mov eax,write
-	mov ebx,STDOUT
-	mov edx, 16     ; length of string to write
-	syscall              ; call the kernel
-
-    ; Removing string on stack to restore it.
-    pop eax
-    pop eax
-    pop eax
-    pop eax
-
-    ;Get back registers from stack
-    pop edx
-    pop ecx
-    pop ebx
-    pop eax
-
+    jge _decrypt
     leave ; = mov esp, ebp et pop ebp => la pile reprend son ancien etat
     ret
