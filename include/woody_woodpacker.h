@@ -65,10 +65,12 @@ enum e_error
     ERROR_ELF_NOT_LITTLE_ENDIAN,
     ERROR_NOT_ENOUGHT_SPACE_FOR_PAYLOAD,
     ERROR_RET2OEP_NOT_FOUND,
-    ERROR_RET2TEXTSECTION_NOT_FOUND,
-    ERROR_SETTEXTSECTIONSIZE_NOT_FOUND,
-    ERROR_KEYSECTION_NOT_FOUND,
     ERROR_FILE_IS_ALREADY_INFECTED,
+    ERROR_GETENCRYPTEDSECTIONADDR_NOT_FOUND,
+    ERROR_KEYSECTION_NOT_FOUND,
+    ERROR_GETENCRYPTEDSECTIONSIZE_NOT_FOUND,
+    ERROR_GETTEXTSECTIONADDR_NOT_FOUND,
+    ERROR_GETTEXTSIZE_NOT_FOUND,
     NB_OF_ERROR_CODES /* Always keep last */
 };
 
@@ -164,8 +166,8 @@ void choose_infection_method(t_woody *woody);
 void silvio_text_infection(t_woody *woody);
 void data_segment_infection(t_woody *woody);
 
-size_t find_keysection_offset(t_woody *woody);
-size_t find_ret2oep_offset(t_woody *woody);
+size_t find_keysection_offset_elf64(t_woody *woody);
+size_t find_ret2oep_offset_elf64(t_woody *woody);
 size_t find_getencryptedsectionaddr_offset_elf64(t_woody *woody);
 size_t find_getencryptedsectionsize_offset_elf64(t_woody *woody);
 
@@ -176,6 +178,18 @@ void overwrite_keysection_payload(t_woody *woody);
 void overwrite_payload_gettextsectionaddr(t_woody *woody);
 void overwrite_payload_gettextsize(t_woody *woody);
 void load_payload(t_woody *woody, char *payload_name);
+
+size_t find_gettextsize_offset_elf32(t_woody *woody);
+size_t find_getencryptedsectionsize_offset_elf32(t_woody *woody);
+size_t find_gettextsectionaddr_offset_elf32(t_woody *woody);
+size_t find_getencryptedsectionaddr_offset_elf32(t_woody *woody);
+size_t find_ret2oep_offset_elf32(t_woody *woody);
+
+size_t find_getencryptedsectionaddr_offset_elf64(t_woody *woody);
+size_t find_gettextsectionaddr_offset_elf64(t_woody *woody);
+size_t find_getencryptedsectionsize_offset_elf64(t_woody *woody);
+size_t find_gettextsize_offset_elf64(t_woody *woody);
+size_t find_ret2oep_offset_elf64(t_woody *woody);
 
 void set_woody_ptrs_to_null(t_woody *woody);
 void print_woody_infos(t_woody *woody);

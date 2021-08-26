@@ -43,16 +43,20 @@ static void error_msg(int err)
                                        : 0;
     err == ERROR_RET2OEP_NOT_FOUND ? fprintf(stderr, RED "error" END ": %d -> ERROR_RET2OEP_NOT_FOUND\n", err)
                                    : 0;
-    err == ERROR_RET2TEXTSECTION_NOT_FOUND ? fprintf(stderr, RED "error" END ": %d -> ERROR_RET2TEXTSECTION_NOT_FOUND\n", err)
-                                           : 0;
     err == ERROR_FILE_IS_ALREADY_INFECTED ? fprintf(stderr, RED "error" END ": %d -> ERROR_FILE_IS_ALREADY_INFECTED\n", err)
                                           : 0;
     err == ERROR_NOT_ENOUGHT_SPACE_FOR_PAYLOAD ? fprintf(stderr, RED "error" END ": %d -> ERROR_NOT_ENOUGHT_SPACE_FOR_PAYLOAD\n", err)
                                                : 0;
-    err == ERROR_SETTEXTSECTIONSIZE_NOT_FOUND ? fprintf(stderr, RED "error" END ": %d -> ERROR_SETTEXTSECTIONSIZE_NOT_FOUND\n", err)
-                                              : 0;
+    err == ERROR_GETENCRYPTEDSECTIONADDR_NOT_FOUND ? fprintf(stderr, RED "error" END ": %d -> ERROR_GETENCRYPTEDSECTIONADDR_NOT_FOUND\n", err)
+                                                   : 0;
     err == ERROR_KEYSECTION_NOT_FOUND ? fprintf(stderr, RED "error" END ": %d -> ERROR_KEYSECTION_NOT_FOUND\n", err)
+                                      : 0;
+    err == ERROR_GETTEXTSECTIONADDR_NOT_FOUND ? fprintf(stderr, RED "error" END ": %d -> ERROR_GETTEXTSECTIONADDR_NOT_FOUND\n", err)
                                               : 0;
+    err == ERROR_GETENCRYPTEDSECTIONSIZE_NOT_FOUND ? fprintf(stderr, RED "error" END ": %d -> ERROR_GETENCRYPTEDSECTIONSIZE_NOT_FOUND\n", err)
+                                                   : 0;
+    err == ERROR_GETTEXTSIZE_NOT_FOUND ? fprintf(stderr, RED "error" END ": %d -> ERROR_GETTEXTSIZE_NOT_FOUND\n", err)
+                                       : 0;
     if (errno != 0)
     {
         fprintf(stderr, RED "errno " END ": %d -> %s\n", errno, strerror(errno));

