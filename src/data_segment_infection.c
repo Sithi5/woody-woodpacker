@@ -14,8 +14,6 @@
 
 void data_segment_infection(t_woody *woody)
 {
-    printf("INSIDE DATASEGMENT\n");
-
     t_elf_addr data_p_vaddr;
     t_elf_off data_p_start_offset;
     t_elf_off data_p_end_offset;

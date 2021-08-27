@@ -14,7 +14,6 @@
 
 void silvio_text_infection(t_woody *woody)
 {
-    printf("INSIDE SILVIO\n");
     // Create the output file
     if (!(woody->infected_file = malloc(woody->binary_data_size + PAGE_SIZE)))
     {
