@@ -164,7 +164,6 @@ char *rc4_cipher(t_woody *woody, char *data, int len);
 
 void choose_infection_method(t_woody *woody);
 void silvio_text_infection(t_woody *woody);
-void data_segment_infection(t_woody *woody);
 
 size_t find_keysection_offset_elf64(t_woody *woody);
 size_t find_ret2oep_offset_elf64(t_woody *woody);
