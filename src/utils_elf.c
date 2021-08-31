@@ -40,11 +40,11 @@ void check_elf_header(t_woody *woody)
     // Checking if class is well define.
     if (ARCH_32 && ehdr->e_ident[EI_CLASS] != ELFCLASS32)
     {
-        error(ERROR_NOT_ELF, woody);
+        error(ERROR_NOT_ELF32, woody);
     }
     else if (ARCH_64 && ehdr->e_ident[EI_CLASS] != ELFCLASS64)
     {
-        error(ERROR_NOT_ELF, woody);
+        error(ERROR_NOT_ELF64, woody);
     }
 
     // Check if file have already been infected
