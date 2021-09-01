@@ -43,7 +43,6 @@ void choose_infection_method(t_woody *woody)
             else
             {
                 error(ERROR_NOT_ENOUGHT_SPACE_FOR_PAYLOAD, woody);
-                // data_segment_infection(woody);
             }
             break;
         }
