@@ -1,7 +1,7 @@
 BITS 64
 
 SECTION .data
-        woody_msg: db "...WOODY...",10
+        woody_msg: db "....WOODY....",10
         woody_msg_len  : equ $-woody_msg
 
 SECTION .text

@@ -29,15 +29,16 @@ _print_woody:
 
     ; Pushing string on stack
     push 10
-    push '...'
+   push '....'
     push 'OODY'
     push '...W'
+    push '.'
 
     ; do write call
 	mov ecx, esp        ; string to write
     mov eax,write
 	mov ebx,STDOUT
-	mov edx, 16     ; length of string to write
+	mov edx, 20     ; length of string to write
 	syscall              ; call the kernel
 
     ; Removing string on stack to restore it.
